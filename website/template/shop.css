@@ -1,0 +1,144 @@
+body {
+    background-color: #2f3136;
+    font-family: 'DM Sans',sans-serif;
+    overflow-x: hidden;
+}
+.pageBody {
+    margin: 100px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+}
+.cardPackContainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin: 50px;
+    align-items: center;
+    width: 100%;
+}
+
+.cardPack {
+    display: flex;
+    width: 60%;
+    background-color: #292b2f;
+    border-radius: 10px;
+    flex-direction: column;
+    margin: 20px;
+    border: solid 2px rgba(255,255,255,.1);
+    padding: 30px;
+}
+
+.packInfosContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.cardPackHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    border-radius: 10px;
+    padding: 0 10px;
+    align-items: center;
+}
+
+
+.cardPackHeader h3 {
+    font-size: 1em;
+    text-transform: uppercase;
+}
+.greeny {
+    color: #43b581;
+}
+
+.cardPackDesc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.selectButton {
+    white-space: nowrap;
+    border: solid 2px rgba(255,255,255,.05);
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    flex-direction: column;
+    padding: 15px 15px;
+    flex: .3;
+    border-radius: 10px;
+    transition: ease-in-out .1s;
+    color: #e6e6e6;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 15px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.selectButton:hover {
+    border: 2px solid #5764f1;
+    color: #fff;
+    background-color: #36393f;
+}
+.active {
+    background-color: #5764f1;
+}
+
+
+.selectButtonPart {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.regularText {
+    color: #e6e6e6;
+}
+
+.remise {
+    position: relative;
+    display: flex;
+    border-radius: 10px;
+    background-color: #cf4f4f;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    left: 10px;
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.selectButtonPartImg {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    margin-left: 0!important;
+    margin-bottom: 2px;
+}
+
+.selectButton img {
+    margin-left: 20px;
+    width: 15px;
+    height: 15px;
+}
+
+.priceText {
+    color: #8896a0;
+}
+
+.description {
+    justify-content: flex-start;
+    margin-left: 10px;
+}
