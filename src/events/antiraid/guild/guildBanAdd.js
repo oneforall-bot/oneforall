@@ -9,7 +9,8 @@ module.exports = async (oneforall, ban) => {
     const eventName = "antiMassBan"
     if (!guildData.antiraid.enable[eventName]) return;
     const action = await guild.fetchAuditLogs({type: "MEMBER_BAN_ADD"}).then(async (audit) => audit.entries.first());
-     if(!action || action.executor.id === oneforall.user.id || oneforall.isOwner(action.executor.id)) return
+
+     if(!action || action.executor.id === oneforall.user.id || oneforall.isGuildOwner(action.executor.id, guildData.guildOwners)) return
     const memberData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${guild.id}-${action.executor.id}`, {
         guildId: guild.id,
         memberId: action.executor.id

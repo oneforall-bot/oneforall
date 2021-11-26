@@ -4,12 +4,12 @@ module.exports = async (oneforall, message) => {
     const {guild} = message;
     if (!message.guild) return;
     if (message.webhookId) return;
-    if(message.author.id === oneforall.user.id || oneforall.isOwner(message.author.id)) return
-    if (!guild.me.permissions.has("MANAGE_MESSAGES")) return console.log("Permissions manage message is missing to the client");
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(guild.id, {
         guildId: guild.id
     })
     const eventName = "antiMassMention"
+    if(message.author.id === oneforall.user.id || oneforall.isGuildOwner(message.author.id, guildData.guildOwners)) return
+    if (!guild.me.permissions.has("MANAGE_MESSAGES")) return console.log("Permissions manage message is missing to the client");
     if (!guildData.antiraid.enable[eventName]) return;
     const memberData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${guild.id}-${message.author.id}`, {
         guildId: guild.id,
@@ -24,7 +24,7 @@ module.exports = async (oneforall, message) => {
     const time = ms(rawLimit[1]);
     const {mentions} = memberData.antiraidLimits
     const { roles, members } = message.mentions;
-    if(roles.size < 1 || members.size < 1) return
+    if(roles.size < 1 && members.size < 1) return
     if (mentions.date) {
         const diff = new Date() - new Date(mentions.date)
         const count = mentions.count

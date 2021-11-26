@@ -6,7 +6,7 @@ module.exports = async (oneforall, member, role) => {
     const roleLogs = guildData.logs.moderation;
     if(!role.guild.me.permissions.has("VIEW_AUDIT_LOG")) return;
     const action = await role.guild.fetchAuditLogs({type: "MEMBER_ROLE_UPDATE"}).then(async (audit) => audit.entries.first());
-  if(!action || action.executor.id === oneforall.user.id || oneforall.isOwner(action.executor.id)) return
+  if(!action || action.executor.id === oneforall.user.id) return
     const channel = role.guild.channels.cache.get(roleLogs);
     const {logs} = oneforall.handlers.langHandler.get(guildData.lang);
     const {template} = logs;

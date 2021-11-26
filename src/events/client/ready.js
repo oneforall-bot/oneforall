@@ -2,10 +2,9 @@ const checkSoutien = require('../../utils/check/soutien')
 const checkMute = require('../../utils/check/mute')
 const GiveawaysManager = require("../../utils/Giveaway/Manager");
 module.exports = async (oneforall) => {
-    console.log(`oneforall is ready`);
+    console.log(`${oneforall.user.username} is ready`);
     await checkSoutien(oneforall)
     await checkMute(oneforall)
-    console.log(oneforall.user.username)
     oneforall.giveawaysManager = new GiveawaysManager(oneforall, {
         updateCountdownEvery: 5000,
         hasGuildMembersIntent: true,

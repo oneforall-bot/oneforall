@@ -8,7 +8,7 @@ module.exports = async (oneforall, member, role) => {
     const eventName = "roleAdd"
     if (!guildData.antiraid.enable[eventName]) return;
     const action = await guild.fetchAuditLogs({type: "MEMBER_ROLE_UPDATE"}).then(async (audit) => audit.entries.first());
-     if(!action || action.executor.id === oneforall.user.id || oneforall.isOwner(action.executor.id)) return
+     if(!action || action.executor.id === oneforall.user.id || oneforall.isGuildOwner(action.executor.id, guildData.guildOwners)) return
     const timeOfAction = action.createdAt.getTime();
     const now = new Date().getTime()
     const diff = now - timeOfAction

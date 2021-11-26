@@ -14,7 +14,6 @@ module.exports = class extends Client {
         this.login(this.config.token).catch((e) => {
             console.log(e)
         });
-        this._maxListeners = 0
         this.database = new OFADatabase(this);
         this._fs = require('fs');
         this._fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));

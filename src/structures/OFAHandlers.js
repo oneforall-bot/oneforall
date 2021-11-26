@@ -50,7 +50,6 @@ class EventHandler {
     constructor(ofaHandlers) {
         this.ofaHandlers = ofaHandlers;
         console.log(`EventHandler Loaded`);
-
         this.ofaHandlers.getFiles(path.resolve(__dirname, "..", "events"), this);
     }
 

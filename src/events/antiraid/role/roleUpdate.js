@@ -9,7 +9,7 @@ module.exports = async (oneforall, oldRole, newRole) => {
     const eventName = "roleUpdate"
     if (!guildData.antiraid.enable[eventName]) return;
     const action = await guild.fetchAuditLogs({type: "ROLE_UPDATE"}).then(async (audit) => audit.entries.first());
-     if(!action || action.executor.id === oneforall.user.id || oneforall.isOwner(action.executor.id)) return
+     if(!action || action.executor.id === oneforall.user.id || oneforall.isGuildOwner(action.executor.id, guildData.guildOwners)) return
     const memberData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${guild.id}-${action.executor.id}`, {
         guildId: guild.id,
         memberId: action.executor.id
@@ -61,7 +61,7 @@ module.exports = async (oneforall, oldRole, newRole) => {
             memberExecutor.roles.add(guildData.mute, `oneforall - ${eventName}`)
         })
     }
-    
+
     if (newRole.editable)
         newRole.edit({
             name: oldRole.name,

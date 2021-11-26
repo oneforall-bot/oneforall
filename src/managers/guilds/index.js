@@ -141,7 +141,8 @@ module.exports = function (database, modelName, config) {
             {
                 name: 'guildOwners',
                 isValue: true,
-                type: DataTypes.JSON
+                type: DataTypes.JSON,
+                default: []
             }
         ]
         const t = {};
