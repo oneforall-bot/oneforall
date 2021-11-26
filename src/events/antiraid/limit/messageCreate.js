@@ -5,6 +5,7 @@ const ms = require('ms'),
     spammer = new Map()
 const moment = require("moment");
 module.exports = async (oneforall, message) => {
+    if(!message.guild) return
     const {guild} = message;
     if(message.author.id === oneforall.user.id || oneforall.isOwner(message.author.id)) return
 

@@ -1,5 +1,6 @@
 const cooldown = new Map();
 const moment = require('moment');
+const {on} = require("cluster");
 let slashReloaded = [];
 let antiraidCmdLoaded = false;
 module.exports = async (oneforall, message) => {
@@ -55,6 +56,10 @@ module.exports = async (oneforall, message) => {
 
     }
     if (command) {
+
+        if(command.guildOwnersOnly && !oneforall.isGuildOwner(message.author.id, guildData.owners)){
+            return message.reply(oneforall.langManager().get(guildData.lang).notGuildOwner(prefix, command))
+        }
         if (command.ownersOnly && !oneforall.config.owners.includes(message.author.id))
             return message.reply(oneforall.langManager().get(guildData.lang).notOwner(prefix, command));
 

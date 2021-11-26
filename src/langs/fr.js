@@ -6,8 +6,9 @@ module.exports = {
         notEnoughPermissions: (command) => `Vous n'avez pas assez de permissions pour exécuter la commande \`${command}\``,
         cooldownMessage: (prefix, command, timeRemaining) => `Vous devez attendre \`${timeRemaining}\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         notOwner: (prefix, command) => `Vous devez être \`Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
+        notGuildOwner: (prefix, command) => `Vous devez être \`Guild Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         botAdded: (guild, member, owner) => `Votre bot a été ajouté sur ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
-        botRemved: (guild, member, owner) => `Votre bot a été enlevé de ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
+        botRemoved: (guild, member, owner) => `Votre bot a été enlevé de ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
         managedRole: `Ce rôle ne peut pas être ajouté car c'est un rôle **géré par une application**`,
         tryToPermsRole: `Vous ne pouvez pas ajouter un role ayant des permissions sensible`,
         undefined: 'Non définie',
@@ -174,6 +175,16 @@ module.exports = {
             backupNotFound: "La backup n'a pas été trouvé",
             delete: {
               success : backupId => `La backup **${backupId}** a été supprimé`
+            },
+        },
+        owners: {
+            add: {
+                alreadyOwner: `Ce membre est déjà **owner**`,
+                success: user => `${user} est maintenant dans liste des owners`
+            },
+            remove: {
+                alreadyOwner: `Ce membre n'est pas dans la liste des **owner**`,
+                success: user => `${user} n'est plus dans liste des **owners**`
             },
         },
         autorole: {

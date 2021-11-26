@@ -1,25 +1,22 @@
-const {MessageSelectMenu, MessageActionRow} = require('discord.js');
-
+const {MessageSelectMenu, MessageActionRow} = require("discord.js");
 module.exports = {
-    name: "group",
-    description: "group commands",
-    usage: "group",
-
-    cooldown: 1000,
-    ownersOnly: true,
-    run: async (oneforall, message, guildData, memberData, args) => {
-        message.channel.send({
+    data: {
+        name: 'group',
+        description: 'Manage the groups system'
+    },
+    guildOwnersOnly: true,
+    run: async (oneforall, interaction, memberData, guildData) => {
+        interaction.reply({
             embeds: [
                 {
                     title: `Liste des groupes`,
-                    description: [...oneforall.managers.groupsManager.keys()].filter(g => g.startsWith(message.guild.id)).map(g => `\`${g.split("-")[1]}\``).join("\n\n")
+                    description: [...oneforall.managers.groupsManager.keys()].filter(g => g.startsWith(interaction.guild.id)).map(g => `\`${g.split("-")[1]}\``).join("\n\n")
                 }
             ]
         })
-        createOrEditGroup(oneforall, message, guildData, memberData, args);
+        createOrEditGroup(oneforall, interaction, guildData, memberData);
     }
 }
-
 function changePermissions(message, defaultMessage, memberData, roleData) {
     return new Promise((resolve) => {
         const enumPermissions = memberData.permissionManager.enumPermissions;
@@ -112,7 +109,7 @@ function changePermissions(message, defaultMessage, memberData, roleData) {
             components: components.map(c => new MessageActionRow({components: [c]}))
         });
         const collector = message.channel.createMessageComponentCollector({
-            filter: interaction => [`group.edit.add.${message.id}`, `group.edit.remove.${message.id}`].includes(interaction.customId) && interaction.user.id === message.author.id,
+            filter: interaction => [`group.edit.add.${message.id}`, `group.edit.remove.${message.id}`].includes(interaction.customId) && interaction.user.id === message.user.id,
             time: 60 * 1000
         })
         collector.on('collect', async interaction => {
@@ -144,7 +141,7 @@ function changePermissions(message, defaultMessage, memberData, roleData) {
         })
 
         defaultMessage.awaitReactions({
-            filter: (reaction, user) => reaction.emoji.name === "✅" && user.id === message.author.id,
+            filter: (reaction, user) => reaction.emoji.name === "✅" && user.id === message.user.id,
             time: 60 * 1000,
             max: 1
         })
@@ -155,7 +152,7 @@ function changePermissions(message, defaultMessage, memberData, roleData) {
 }
 
 
-async function createOrEditGroup(oneforall, message, guildData, memberData, args) {
+async function createOrEditGroup(oneforall, message, guildData, memberData) {
     const defaultMessage = await message.channel.send({
         embeds: [
             {
@@ -165,7 +162,7 @@ async function createOrEditGroup(oneforall, message, guildData, memberData, args
     });
 
     message.channel.awaitMessages({
-        filter: m => m.author.id === message.author.id,
+        filter: m => m.author.id === message.user.id,
         max: 1,
         time: 30000,
         errors: ['time']

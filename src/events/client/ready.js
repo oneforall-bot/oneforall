@@ -5,12 +5,21 @@ module.exports = async (oneforall) => {
     console.log(`${oneforall.user.username} is ready`);
     await checkSoutien(oneforall)
     await checkMute(oneforall)
+
+    setInterval(async () => {
+
+        oneforall.user.setPresence({
+            status: 'online',
+            activities: [{name: `${oneforall.guilds.cache.size} Servers | .gg/oneforall`, type: 'WATCHING'}]
+        })
+    }, 60000);
+
     oneforall.giveawaysManager = new GiveawaysManager(oneforall, {
         updateCountdownEvery: 5000,
         hasGuildMembersIntent: true,
         default: {
             botsCanWin: false,
-            // exemptPermissions: ['MANAGE_MESSAGES', 'ADMINISTRATOR'],
+            exemptPermissions: ['MANAGE_MESSAGES', 'ADMINISTRATOR'],
             embedColor: "#36393F",
             embedColorEnd: "#36393F",
             reaction: '🎉',

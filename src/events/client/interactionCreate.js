@@ -1,21 +1,33 @@
+const {on} = require("cluster");
 module.exports = async (oneforall, interaction) => {
     const handlers = oneforall.handlers;
     const slash = (interaction.isCommand() ? handlers.slashCommandHandler.slashCommandList : (interaction.isContextMenu() ? handlers.contextMenuHandler.contextMenuList : null))?.get(interaction.commandName.toLowerCase());
 
     if (slash && interaction.inGuild()) {
-        const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(`${interaction.member.guild.id}`, {
-            guildId: interaction.member.guild.id
+        const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(`${interaction.guildId}`, {
+            guildId: interaction.guildId
         });
 
         if (!guildData) return;
 
-        const memberData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${interaction.member.guild.id}-${interaction.member.id}`, {
-            guildId: interaction.member.guild.id,
+        const memberData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${interaction.guildId}-${interaction.member.id}`, {
+            guildId: interaction.guildId,
             memberId: interaction.member.id
         });
 
 
         if (!memberData) return;
+        if(!oneforall.isOwner(interaction.user.id)) {
+            if (slash.guildOwnersOnly && !oneforall.isGuildOwner(interaction.user.id, guildData.owners)) {
+                return interaction.reply(oneforall.langManager().get(guildData.lang).notGuildOwner("/", slash.data))
+            }
+            if (slash.ownersOnly && !oneforall.config.owners.includes(interaction.user.id))
+                return interaction.reply({content: oneforall.langManager().get(guildData.lang).notOwner("/", slash.data)});
+
+            if (slash.guildCrownOnly && interaction.guild.ownerId !== interaction.user.id) {
+                return interaction.reply(oneforall.langManager().get(guildData.lang).notGuildOwner("/", slash.data))
+            }
+        }
         guildData.langManager = oneforall.handlers.langHandler.get(guildData.lang);
         memberData.permissionManager = new oneforall.Permission(oneforall, interaction.member.guild.id, interaction.member.id, memberData, guildData);
 

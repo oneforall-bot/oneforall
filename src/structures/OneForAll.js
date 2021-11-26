@@ -18,7 +18,7 @@ module.exports = class extends Client {
         this._fs = require('fs');
         this._fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-
+        this.DataMenu = require('../utils/DataMenu')
         this.Permission = Permission;
 
         this.database.authenticate().then(async () => {

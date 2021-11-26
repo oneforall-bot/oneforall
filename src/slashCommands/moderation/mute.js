@@ -113,10 +113,8 @@ module.exports = {
                     totalPage = Math.ceil(guildMuted.size / maxPerPage)
 
                 const embedPageChanger = (page) => {
-                    i = 0
-                    mutedEmbed.description = guildMuted.map((muteManager, _, k, p) => {
-                        i++
-                        return `${i} ・ <@${muteManager.memberId}> ・ Expire ${!muteManager.expiredAt ? 'Never' : `<t:${oneforall.functions.dateToEpoch(new Date(muteManager.expiredAt))}:R>`}- Reason: \`${muteManager.reason}\` - Author: <@${muteManager.authorId}>`
+                    mutedEmbed.description = guildMuted.map((muteManager, k, u, p) => {
+                        return `${p + 1} ・ <@${muteManager.memberId}> ・ Expire  ${!muteManager.expiredAt ? 'Never' : `<t:${oneforall.functions.dateToEpoch(new Date(muteManager.expiredAt))}:R>`} - Reason: \`${muteManager.reason}\` - Author: <@${muteManager.authorId}>`
                     }).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n')
                     mutedEmbed.footer.text = `Page ${page + 1} / ${totalPage}`
                     return mutedEmbed
