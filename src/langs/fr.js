@@ -173,6 +173,8 @@ module.exports = {
             }
         },
         counter: {
+            missingCount: `Il manque {count} dans votre nom`,
+            invalidChannel: 'Le channel est invalide.',
             configMenu : [
                 {
                     label: 'Channel',
@@ -182,10 +184,11 @@ module.exports = {
                     question: 'Quel est le channel pour le compteur ?'
                 },
                 {
-                    label: 'Enable',
-                    value: 'enable',
-                    description: 'Activer ou désactiver le compteur',
-                    emoji: '✅',
+                    label: 'Nom',
+                    value: 'name',
+                    description: 'Le nom pour le compteur',
+                    emoji: '🏓',
+                    question: 'Quel est le nom que doit avoir le compteur ? \n \`Exemple: Membre : {count}\`'
                 },
                 {
                     label: 'Retour',
@@ -239,27 +242,27 @@ module.exports = {
                     fields: [
                         {
                             name: '\`👥\`・ Compteur de membres:',
-                            value: member
+                            value: (member.channel ? `<#${member.channel}>` : `Non définie`) + `- ${member.name ? member.name : 'Non définie'}`
                         },
                         {
                             name: '\`🔊\`・ Compteur de membres en vocal:',
-                            value: voice
+                            value: (voice.channel ? `<#${voice.channel}>` : `Non définie`) + `- ${voice.name ? voice.name : 'Non définie'}`
                         },
                         {
                             name: '\`🟢\`・ Compteur de membres en ligne:',
-                            value: online
+                            value: (online.channel ? `<#${online.channel}>` : `Non définie`) + `- ${online.name ? online.name : 'Non définie'}`
                         },
                         {
                             name: '\`⭕\`・ Compteur de membres hors ligne:',
-                            value: offline
+                            value: (offline.channel ? `<#${offline.channel}>` : `Non définie`) + `- ${offline.name ? offline.name : 'Non définie'}`
                         },
                         {
                             name: '\`✨\`・ Compteur de boost du serveur:',
-                            value: boostCount
+                            value: (boostCount.channel ? `<#${boostCount.channel}>` : `Non définie`) + `- ${boostCount.name ? boostCount.name : 'Non définie'}`
                         },
                         {
                             name: '\`💠\`・ Compteur de membres boostant le serveur:',
-                            value: boosterCount
+                            value: (boosterCount.channel ? `<#${boosterCount.channel}>` : `Non définie`) + `- ${boosterCount.name ? boosterCount.name : 'Non définie'}`
                         },
                     ]
                 }

@@ -1,9 +1,9 @@
 const {Collection} = require('../utils/collection');
 
 class Manager extends Collection {
-    constructor(ftManager, modelName) {
+    constructor(ofaManager, modelName) {
         super();
-        this.ftManager = ftManager;
+        this.ofaManager = ofaManager;
         this.modelName = modelName;
         this.initTable();
     }
@@ -21,7 +21,7 @@ class Manager extends Collection {
     }
 
     initTable() {
-        require(`./${this.modelName}`)(this.ftManager.oneforall.database, this.modelName, this.ftManager.oneforall.config).then(data => {
+        require(`./${this.modelName}`)(this.ofaManager.oneforall.database, this.modelName, this.ofaManager.oneforall.config).then(data => {
             this.model = data;
             this.loadTable();
         });
@@ -31,7 +31,7 @@ class Manager extends Collection {
     loadTable() {
         const key = [];
         this.model.filter(m => m.name !== "id" && m.isWhere).forEach(m => key.push(`{${m.name}}`, "-"));
-        this.ftManager.oneforall.functions.loadTable(this, {
+        this.ofaManager.oneforall.functions.loadTable(this, {
             model: this.modelName,
             key: key.slice(0, -1),
             add: 'add'
@@ -60,7 +60,7 @@ class DatabaseManager {
     }
 
     delete() {
-        this.manager.ftManager.oneforall.database.models[this.manager.modelName].destroy({
+        this.manager.ofaManager.oneforall.database.models[this.manager.modelName].destroy({
             where: this.wheres
         }).then(() => this.manager.delete(this.key)).catch(() => {})
         return this;
@@ -68,7 +68,7 @@ class DatabaseManager {
 
     async save() {
         Object.keys(this.values).forEach(k => this.values[k] = this[k]);
-        this.manager.ftManager.oneforall.functions.updateOrCreate(this.manager.ftManager.oneforall.database.models[this.manager.modelName], this.wheres, this.values).then(() => {}).catch(() => console.error("error saving"));
+        this.manager.ofaManager.oneforall.functions.updateOrCreate(this.manager.ofaManager.oneforall.database.models[this.manager.modelName], this.wheres, this.values).then(() => {}).catch(() => console.error("error saving"));
         return this;
     }
 }

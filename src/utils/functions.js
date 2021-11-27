@@ -26,13 +26,13 @@ module.exports = {
         })
     },
     async loadTable(manager, data = {}) {
-        for await (const element of (await manager.ftManager.oneforall.database.models[data.model].findAll()))
+        for await (const element of (await manager.ofaManager.oneforall.database.models[data.model].findAll()))
             manager[data.add](data.key.map(k => k.startsWith("{") && k.endsWith("}") ? element[k.slice(1, -1)] : k).join(''), element.get());
         console.log(`Successfully loaded ${manager.size} ${data.model.charAt(0).toUpperCase()}${data.model.slice(1)}`)
         actualModelLoad++;
-        if (actualModelLoad >= manager.ftManager.oneforall.database.modelManager.models.length) {
+        if (actualModelLoad >= manager.ofaManager.oneforall.database.modelManager.models.length) {
             actualModelLoad = 0
-            manager.ftManager.oneforall.startEventHandler();
+            manager.ofaManager.oneforall.startEventHandler();
         }
 
     },
