@@ -6,5 +6,5 @@ module.exports = {
         password: 'murphy7777',
         name: 'oneforall'
     },
-    owners: ["708047733994553344"]
+    owners: ["708047733994553344", "659038301331783680"]
 }

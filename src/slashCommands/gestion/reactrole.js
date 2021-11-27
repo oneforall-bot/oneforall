@@ -140,8 +140,8 @@ module.exports = {
                 if (fetchMessage) {
                     await fetchMessage.reactions.removeAll()
                 }
-                reactroles = reactroles.filter(react => react.message !== questionAnswer.content)
-                guildData.set('reactrole', reactroles).save()
+                guildData.reactroles = reactroles.filter(react => react.message !== questionAnswer.content)
+                guildData.save()
                 await updateEmbed()
                 errorMessage(guildData.langManager.reactrole.successDel)
             }
@@ -153,7 +153,8 @@ module.exports = {
                     await fetchedMsg.react(`${key}`)
                 }
                 reactRole.emojiRoleMapping = Object.fromEntries(reactRole.emojiRoleMapping);
-                guildData.set('reactroles', [...reactroles, reactRole]).save()
+                guildData.reactroles = [...reactroles, reactRole]
+                guildData.save()
                 panel.delete()
                 return errorMessage(guildData.langManager.reactrole.success)
             }

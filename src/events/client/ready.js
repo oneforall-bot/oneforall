@@ -5,7 +5,10 @@ module.exports = async (oneforall) => {
     console.log(`${oneforall.user.username} is ready`);
     await checkSoutien(oneforall)
     await checkMute(oneforall)
-
+    oneforall.user.setPresence({
+        status: 'online',
+        activities: [{name: `${oneforall.guilds.cache.size} Servers | .gg/oneforall`, type: 'WATCHING'}]
+    })
     setInterval(async () => {
 
         oneforall.user.setPresence({

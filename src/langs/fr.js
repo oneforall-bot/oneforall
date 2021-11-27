@@ -166,6 +166,103 @@ module.exports = {
             BACKUP_CMD: {
                 label: "Pouvoir utiliser la commande backup",
                 description: "Permet de créer, load des backup"
+            },
+            COUNTER_CMD: {
+                label: "Pouvoir créer des compteur",
+                description: "Permet de créer des compteur sur le serveur"
+            }
+        },
+        counter: {
+            configMenu : [
+                {
+                    label: 'Channel',
+                    value: 'channel',
+                    description: 'Le channel pour le compteur',
+                    emoji: '🏷',
+                    question: 'Quel est le channel pour le compteur ?'
+                },
+                {
+                    label: 'Enable',
+                    value: 'enable',
+                    description: 'Activer ou désactiver le compteur',
+                    emoji: '✅',
+                },
+                {
+                    label: 'Retour',
+                    value: 'back',
+                    description: 'Retourner à la selection de compteur',
+                    emoji: '↩️',
+                },
+            ],
+            selectMenu: [
+                {
+                    label: 'Membre',
+                    value: 'member',
+                    description: 'Gérer le compteur de membres',
+                    emoji: '👥'
+                },
+                {
+                    label: 'Vocal',
+                    value: 'voice',
+                    description: 'Gérer le compteur de membres en vocal',
+                    emoji: '🔊',
+                },
+                {
+                    label: 'En ligne',
+                    value: 'online',
+                    description: 'Gérer le compteur de membres en ligne',
+                    emoji: '🟢',
+                },
+                {
+                    label: 'Hors ligne',
+                    value: 'offline',
+                    description: 'Gérer le compteur de membres en hors ligne',
+                    emoji: '⭕',
+                },
+                {
+                    label: 'Serveur boost',
+                    value: 'boostCount',
+                    description: 'Gérer le compteur de boost du serveur',
+                    emoji: '✨',
+                },
+                {
+                    label: 'Member boost',
+                    value: 'boosterCount',
+                    description: 'Gérer le compteur de membres boostant ',
+                    emoji: '💠',
+                }
+            ],
+            embed: (member =  "Non définie", voice = "Non définie",  online =  "Non définie", offline =  "Non définie", boostCount =  "Non définie", boosterCount =  "Non définie") => {
+                return {
+                    description: `> *Pour désactiver un compteur il suffit de mettre off comme channel*`,
+                    title: 'Counters settings',
+                    fields: [
+                        {
+                            name: '\`👥\`・ Compteur de membres:',
+                            value: member
+                        },
+                        {
+                            name: '\`🔊\`・ Compteur de membres en vocal:',
+                            value: voice
+                        },
+                        {
+                            name: '\`🟢\`・ Compteur de membres en ligne:',
+                            value: online
+                        },
+                        {
+                            name: '\`⭕\`・ Compteur de membres hors ligne:',
+                            value: offline
+                        },
+                        {
+                            name: '\`✨\`・ Compteur de boost du serveur:',
+                            value: boostCount
+                        },
+                        {
+                            name: '\`💠\`・ Compteur de membres boostant le serveur:',
+                            value: boosterCount
+                        },
+                    ]
+                }
             }
         },
         backup: {

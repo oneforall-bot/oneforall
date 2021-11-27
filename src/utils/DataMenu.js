@@ -1,6 +1,13 @@
-const {MessageActionRow, MessageButton} = require("discord.js");
+const {MessageActionRow, MessageButton, CommandInteraction} = require("discord.js");
 
 class DataMenu {
+    /**
+     *
+     * @param data
+     * @param {Function} embedPageChanger
+     * @param {CommandInteraction} interaction
+     * @param oneforall
+     */
     constructor(data, embedPageChanger, interaction, oneforall) {
         this.data = data;
         this.interaction = interaction;

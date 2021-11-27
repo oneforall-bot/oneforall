@@ -167,6 +167,11 @@ class Permissions {
                 emoji: ``,
                 label: langManager.permissions["BACKUP_CMD"].label,
                 description: langManager.permissions["BACKUP_CMD"].description,
+            },
+            COUNTER_CMD: {
+                emoji: ``,
+                label: langManager.permissions["COUNTER_CMD"].label,
+                description: langManager.permissions["COUNTER_CMD"].description,
             }
         }
 

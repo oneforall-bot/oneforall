@@ -143,7 +143,14 @@ module.exports = function (database, modelName, config) {
                 isValue: true,
                 type: DataTypes.JSON,
                 default: []
+            },
+            {
+                name: 'counters',
+                isValue: true,
+                type: DataTypes.JSON,
+                default: {}
             }
+
         ]
         const t = {};
         data.forEach(y => {
