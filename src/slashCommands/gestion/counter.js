@@ -49,15 +49,14 @@ module.exports = {
             await interactionCollector.deferUpdate()
             if (interactionCollector.componentType === 'BUTTON') {
                 guildData.counters = tempCouter
-                console.log(guildData.counters)
                 return guildData.save().then(async () => {
                     for (const key in guildData.counters) {
                         if (guildData.counters[key]) {
                             const channel = interaction.guild.channels.cache.get(guildData.counters[key]?.channel)
                             if (channel) {
                                 const value = key === 'member' ? interaction.guild.memberCount : key === 'voice' ? (await interaction.guild.members.fetch()).filter(member => member.voice.channelId).size
-                                    : key === 'online' ? (await interaction.guild.members.fetch({withPresences: true})).filter(member => member.presence.status !== 'offline').size :
-                                        key === 'offline' ? (await interaction.guild.members.fetch({withPresences: true})).filter(member => member.presence.status === 'offline').size :
+                                    : key === 'online' ? (await interaction.guild.members.fetch({withPresences: true})).filter(member => member.presence?.status === 'online' || member.presence?.status === 'dnd' || member.presence?.status === 'idle').size :
+                                        key === 'offline' ? (await interaction.guild.members.fetch({withPresences: true})).filter(member =>  member.presence?.status !== 'online' || member.presence?.status !== 'dnd' || member.presence?.status !== 'idle' ).size :
                                             key === 'boostCount' ? interaction.guild.premiumSubscriptionCount : (await interaction.guild.members.fetch()).filter(member => member.premiumSince).size
                                 channel.edit({name:`${guildData.counters[key].name.replace('{count}', value.toLocaleString())}`
                             })
@@ -82,7 +81,10 @@ module.exports = {
                 default:
                     const questionAnswer = await generateQuestion(lang.counter.configMenu.find(sl => sl.value === selectedOption)?.question)
                     if (selectedOption === 'channel') {
-                        if (questionAnswer.content === 'off') return tempCouter[selectedMenu] = undefined
+                        if (questionAnswer.content === 'off') {
+                             tempCouter[selectedMenu].channel = undefined
+                            return updateEmbed()
+                        }
                         const channel = questionAnswer.mentions.channels.first() || interaction.guild.channels.cache.get(questionAnswer.content)
                         if (!channel || !channel.isVoice()) return oneforall.functions.tempMessage(interaction, lang.counter.invalidChannel)
                         questionAnswer.content = channel.id
