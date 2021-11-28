@@ -4,7 +4,7 @@ module.exports = async (oneforall, message) => {
     })
     const messageLogs = guildData.logs.message
     if(!message.author || message.author.bot) return
-    if(!messageLogs && !message.guild && message.partial && !message.guild.me.permissions.has("VIEW_AUDIT_LOG")) return
+    if(!messageLogs || !message.guild || message.partial || !message.guild.me.permissions.has("VIEW_AUDIT_LOG")) return
     let action = await message.guild.fetchAuditLogs({
             limit: 1,
             type: 'MESSAGE_DELETE',
