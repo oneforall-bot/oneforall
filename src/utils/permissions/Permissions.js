@@ -172,6 +172,11 @@ class Permissions {
                 emoji: ``,
                 label: langManager.permissions["COUNTER_CMD"].label,
                 description: langManager.permissions["COUNTER_CMD"].description,
+            },
+            LOCK_CMD: {
+                emoji: ``,
+                label: langManager.permissions["LOCK_CMD"].label,
+                description: langManager.permissions["LOCK_CMD"].description,
             }
         }
 

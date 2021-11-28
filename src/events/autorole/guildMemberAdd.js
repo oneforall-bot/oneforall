@@ -1,7 +1,7 @@
 const ms = require('ms')
 module.exports = async (oneforall, member) => {
     const {guild} = member
-    if(!guild.me.permissions.has("MANAGE_MEMBERS")) return console.log("Permissions manage member missing")
+    if(!guild.me.permissions.has("MANAGE_GUILD")) return console.log("Permissions manage member missing")
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(guild.id, {
         guildId: guild.id
     })

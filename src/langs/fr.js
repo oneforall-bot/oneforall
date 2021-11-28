@@ -11,6 +11,7 @@ module.exports = {
         botRemoved: (guild, member, owner) => `Votre bot a été enlevé de ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
         managedRole: `Ce rôle ne peut pas être ajouté car c'est un rôle **géré par une application**`,
         tryToPermsRole: `Vous ne pouvez pas ajouter un role ayant des permissions sensible`,
+        noSetup: 'Vous devez setup le bot pour utiliser cette commande',
         undefined: 'Non définie',
         cancel: 'Opération annulé',
         error: "Une erreur s'est produite",
@@ -170,12 +171,22 @@ module.exports = {
             COUNTER_CMD: {
                 label: "Pouvoir créer des compteur",
                 description: "Permet de créer des compteur sur le serveur"
+            },
+            LOCK_CMD: {
+                label: "Pouvoir lock des channel",
+                description: "Permet de lock des channel sur le serveur"
+            }
+        },
+        lock: {
+            success: (subCommand) => `Le salon est ${subCommand === 'on' ? 'fermé' : 'ouvert'}`,
+            all: {
+                success: (subCommand) => `Les salons sont ${subCommand === 'on' ? 'fermés' : 'ouverts'}`,
             }
         },
         counter: {
             missingCount: `Il manque {count} dans votre nom`,
             invalidChannel: 'Le channel est invalide.',
-            configMenu : [
+            configMenu: [
                 {
                     label: 'Channel',
                     value: 'channel',
@@ -235,7 +246,7 @@ module.exports = {
                     emoji: '💠',
                 }
             ],
-            embed: (member =  "Non définie", voice = "Non définie",  online =  "Non définie", offline =  "Non définie", boostCount =  "Non définie", boosterCount =  "Non définie") => {
+            embed: (member = "Non définie", voice = "Non définie", online = "Non définie", offline = "Non définie", boostCount = "Non définie", boosterCount = "Non définie") => {
                 return {
                     description: `> *Pour désactiver un compteur il suffit de mettre off comme channel*`,
                     title: 'Counters settings',
@@ -269,12 +280,12 @@ module.exports = {
             }
         },
         backup: {
-            create : {
-                success : backupId => `La backup a été créé avec success avec l'id **${backupId}**`
+            create: {
+                success: backupId => `La backup a été créé avec success avec l'id **${backupId}**`
             },
             backupNotFound: "La backup n'a pas été trouvé",
             delete: {
-              success : backupId => `La backup **${backupId}** a été supprimé`
+                success: backupId => `La backup **${backupId}** a été supprimé`
             },
         },
         owners: {

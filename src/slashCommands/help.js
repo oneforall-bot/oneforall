@@ -13,9 +13,11 @@ module.exports = {
     },
     run: async (oneforall, interaction, memberData, guildData) => {
         const {options} = interaction
-        let command = oneforall.handlers.commandHandler.commandList.get(options?.getString("command")?.toLowerCase()) || oneforall.handlers.slashCommandHandler.slashCommandList.get(options?.getString("command")?.toLowerCase())
-        if(command?.data) command = {...command.data}
+        let command = oneforall.handlers.slashCommandHandler.slashCommandList.get(options?.getString("command")?.toLowerCase())
         await interaction.deferReply({ephemeral: true})
+        if (!command)
+            return interaction.editReply({content: 'Command not found'})
+        command = {...command.data}
         let embed = {
             footer: {
                 icon_url: interaction.user.displayAvatarURL({dynamic: true}) || ''
@@ -24,7 +26,7 @@ module.exports = {
             color: '#393B48',
 
         }
-        if(command) {
+        if (command) {
             embed.title = 'Help for the command' + command.name
             embed.fields = [
                 {
@@ -37,22 +39,15 @@ module.exports = {
                     value: command.description,
                     inline: true
                 },
-                {
-                    name: 'Slash:',
-                    value: oneforall.handlers.slashCommandHandler.slashCommandList.has(command.name) ? '\`✅\`' : '\`❌\`',
-                    inline: true
-
-                },
-
             ]
-            if(command.options)
+            if (command.options)
                 embed.fields.push({
                     name: 'Options:',
                     value: command.options.map(option => `${option.name} - ${option.description} - Required: ${option.required ? '\`✅\`' : '\`❌\`'}`).join('\n')
                 })
             await interaction.editReply({embeds: [embed]})
 
-        }else{
+        } else {
             const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
@@ -122,7 +117,7 @@ module.exports = {
             })
             console.log(embedPageChanger(page))
             embed.title = 'Help for all commands'
-            await interaction.editReply({embeds: [embedPageChanger(page)],components: [row]})
+            await interaction.editReply({embeds: [embedPageChanger(page)], components: [row]})
         }
 
 
