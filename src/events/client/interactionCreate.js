@@ -18,7 +18,7 @@ module.exports = async (oneforall, interaction) => {
 
         if (!memberData) return;
         if(!oneforall.isOwner(interaction.user.id)) {
-            if (slash.guildOwnersOnly && !oneforall.isGuildOwner(interaction.user.id, guildData.owners)) {
+            if (slash.guildOwnersOnly && !oneforall.isGuildOwner(interaction.user.id, guildData.owners) && interaction.guild.ownerId !== interaction.user.id) {
                 return interaction.reply(oneforall.langManager().get(guildData.lang).notGuildOwner("/", slash.data))
             }
             if (slash.ownersOnly && !oneforall.config.owners.includes(interaction.user.id))

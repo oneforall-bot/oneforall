@@ -53,7 +53,7 @@ module.exports = {
             embed.fields = commandFolder.map(folder => {
                 return {
                     name: folder.toUpperCase(),
-                    value: oneforall._fs.readdirSync(`./src/slashCommands/${folder}`).map(file => `\`${file.split('/').pop().split('.')[0]}\``).join(', ')
+                    value: '> ' + oneforall._fs.readdirSync(`./src/slashCommands/${folder}`).map(file => `\`${file.split('/').pop().split('.')[0]}\``).join(', ')
                 }
             })
             await interaction.editReply({embeds: [embed]})

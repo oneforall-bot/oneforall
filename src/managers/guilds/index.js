@@ -150,6 +150,13 @@ module.exports = function (database, modelName, config) {
                 type: DataTypes.JSON,
                 allowNull: true,
                 default: {member:{channel: undefined, name: undefined}, voice:{channel: undefined, name: undefined}, online:{channel: undefined, name: undefined}, offline:{channel: undefined, name: undefined}, boostCount:{channel: undefined, name: undefined}, boosterCount:{channel: undefined, name: undefined}}
+            },
+            {
+                name: 'tempvoc',
+                isValue: true,
+                type: DataTypes.JSON,
+                allowNull: true,
+                default: {category: undefined, channel: undefined, enable: false, name: '{member} - ✨'}
             }
 
         ]

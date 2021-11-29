@@ -175,7 +175,53 @@ module.exports = {
             LOCK_CMD: {
                 label: "Pouvoir lock des channel",
                 description: "Permet de lock des channel sur le serveur"
+            },
+            TEMPVOC_CMD: {
+                label: "Pouvoir gérer les tempvoc",
+                description: "Permet de gérer les vocals temporaire sur le serveur"
             }
+        },
+        tempvoc: {
+            missingValues: `Il manque des informations pour créer le tempvoc...`,
+            invalidChannel: type => `Vous devez uniquement entrer un salon ${type}.`,
+            placeholder: 'Gérer le vocal temporaire',
+            selectMenuOptions: [
+                {
+                    label: 'Category',
+                    value: 'category',
+                    description: 'Définir la category ou sera créé les salon temporaire sur le serveur',
+                    question: 'Quelle est la category ou sera créé les salon temporaire sur le serveur ?',
+                    emoji: '📖',
+                },
+                {
+                    label: 'Channel',
+                    value: 'channel',
+                    description: "Définir le salon ou les membres devront entrer",
+                    question: 'Quel est le salon ou les membres devront se connecter créer leur salon temporaire ?',
+                    emoji: '🎮',
+                },
+                {
+                    label: 'Name',
+                    value: 'name',
+                    description: "Définir le nom des salons temporaire",
+                    question: 'Quel est le nom que doit avoir les salons ?\n \`Exemple: {membre} - ✨\`',
+                    emoji: '✨'
+                },
+                {
+                    label:  "Activer",
+                    value: 'enable',
+                    description: "Activer ou désactiver le vocal temporaire",
+                    emoji: "🟢",
+                },
+                {
+                    label: 'Sauvegarder',
+                    value: 'save',
+                    description: "Sauvegarder la configuration",
+                    emoji: '✅',
+                }
+            ],
+
+
         },
         lock: {
             success: (subCommand) => `Le salon est ${subCommand === 'on' ? 'fermé' : 'ouvert'}`,
