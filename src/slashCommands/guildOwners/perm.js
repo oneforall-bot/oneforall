@@ -17,6 +17,7 @@ module.exports = {
         createOrEditGroup(oneforall, interaction, guildData, memberData);
     }
 }
+
 function changePermissions(message, defaultMessage, guildData, memberToEditData) {
     return new Promise((resolve) => {
 
@@ -140,7 +141,7 @@ function changePermissions(message, defaultMessage, guildData, memberToEditData)
         defaultMessage.edit({
             embeds: [
                 {
-                    description: `D'accord, voici le membre que vous modifié: <@${memberToEditData.memberId}> \n\n Maintenant, je vous demande de choisir les permissions ou les groupes. \n\nGroupes actuel: \n\n ${groupsIn.size > 0 ? groupsIn.map(g => `\`${g.groupName}\``) : `\`Aucun groupe\``}  \n\n Permissions actuellement acordé:  \n\n ${allowPermissions.length > 0 ? allowPermissions.map(v => `\`${v}\` (*${enumPermissions.permissions[v].description}*)`).join('\n') : `\`Aucune permissions\``}`,
+                    description: `D'accord, voici le membre ou le role que vous modifié: <@${memberToEditData.roleId ? '&' : ""}${memberToEditData.memberId ||memberToEditData.roleId}> \n\n Maintenant, je vous demande de choisir les permissions ou les groupes. \n\nGroupes actuel: \n\n ${groupsIn.size > 0 ? groupsIn.map(g => `\`${g.groupName}\``) : `\`Aucun groupe\``}  \n\n Permissions actuellement acordé:  \n\n ${allowPermissions.length > 0 ? allowPermissions.map(v => `\`${v}\` (*${enumPermissions.permissions[v].description}*)`).join('\n') : `\`Aucune permissions\``}`,
                 }
             ],
             components: components.map(c => new MessageActionRow({components: [c]}))
@@ -201,11 +202,10 @@ async function createOrEditGroup(oneforall, message, guildData, memberData, args
     const defaultMessage = await message.channel.send({
         embeds: [
             {
-                description: "Pouvez mentionner le membre à modifier les permissions ?"
+                description: "Pouvez mentionner le membre ou le role à modifier les permissions ?"
             }
         ]
     });
-
     message.channel.awaitMessages({
         filter: m => m.author.id === message.user.id,
         max: 1,
@@ -213,31 +213,31 @@ async function createOrEditGroup(oneforall, message, guildData, memberData, args
         errors: ['time']
     }).then(async collected => {
         const messageGroupId = collected.first();
-        const memberToEdit = messageGroupId.mentions.members.first() || (await message.guild.members.fetch(messageGroupId.content));
-
-        const memberToEditData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${message.guild.id}-${memberToEdit.id}`, {
+        const memberToEdit = messageGroupId.mentions.members.first() || message.guild.roles.cache.get(message.content) || messageGroupId.mentions.roles.first() || (await message.guild.members.fetch(messageGroupId.content).catch(() => {}));
+        console.log(memberToEdit)
+        const memberToEditData = oneforall.managers[memberToEdit.toString().includes("&") ? 'rolesManager' : 'membersManager'].getAndCreateIfNotExists(`${message.guild.id}-${memberToEdit.id}`, {
             guildId: message.guild.id,
             memberId: memberToEdit.id,
+            roleId: memberToEdit.id
         });
-        memberToEditData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, message.user.id, memberToEditData, guildData);
+        memberToEditData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, memberToEdit.id, memberToEditData, guildData);
         messageGroupId.delete();
         defaultMessage.react("✅");
-
         changePermissions(message, defaultMessage, guildData, memberToEditData).then((groups) => {
             defaultMessage.reactions.removeAll();
             defaultMessage.edit({
                 embeds: [
                     {
-                        description: `Le membre ${memberToEdit.toString()} viens d'etre modifié avec succès. \n\n  Voici les groupes et les permissions du membre: Groupes:\n\n Groupes actuel: \n\n ${memberToEditData.groups.length > 0 ? memberToEditData.groups.map(g => `\`${g}\``) : `\`Aucun groupe\``}  Permissions: \n\n ${memberToEditData.permissionManager.list().length > 0 ? memberToEditData.permissionManager.list().map(k => `\`${k}\` (*${memberToEditData.permissionManager.enumPermissions.permissions[k].description}*)`).join("\n") : `\`Aucune permissions\``}`
+                        description: `Le membre ou le role ${memberToEdit.toString()} viens d'etre modifié avec succès. \n\n  Voici les groupes et les permissions du membre: Groupes:\n\n Groupes actuel: \n\n ${memberToEditData.groups.length > 0 ? memberToEditData.groups.map(g => `\`${g}\``) : `\`Aucun groupe\``}  Permissions: \n\n ${memberToEditData.permissionManager.list().length > 0 ? memberToEditData.permissionManager.list().map(k => `\`${k}\` (*${memberToEditData.permissionManager.enumPermissions.permissions[k].description}*)`).join("\n") : `\`Aucune permissions\``}`
                     }
                 ],
                 components: []
             }).catch(e => console.log(e))
-            memberToEditData.groups.push(...groups)
             memberToEditData.save()
         }).catch((e) => {
             console.log(e)
         })
-    }).catch(() => {
+    }).catch((e) => {
+        console.log(e)
     });
 }

@@ -164,7 +164,7 @@ module.exports = {
                     collector.stop()
                     interactionReactrole.deleteReply()
                     errorMessage(lang.invite.config.success)
-                    await panel.delete()
+                    await panel.delete().catch(() => {})
 
                 }
             })
