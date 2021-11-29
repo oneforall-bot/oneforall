@@ -120,7 +120,7 @@ module.exports = {
             if(!backupData) return interaction.editReply({content: lang.backup.backupNotFound})
             await backup.load(backupData, interaction.guild, {
                 clearGuildBeforeRestore: true
-            })
+            }).catch(() => {}).then(() => interaction.editReply({content: 'Backup loaded'}))
         }
         if(subCommand === 'delete'){
             const backupId = options.getString("backup")

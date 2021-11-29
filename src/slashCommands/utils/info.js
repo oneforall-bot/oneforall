@@ -1,10 +1,22 @@
 const {MessageButton, MessageActionRows, MessageActionRow} = require('discord.js'),
     moment = require('moment')
+const {version} = require('../../../package.json'),
+    {version: djsversion} = require('discord.js')
+const ms = require("ms");
+const os = require("os");
+
+
+
 module.exports = {
     data: {
         name: 'info',
         description: 'Get information about a user, the guild or a role',
         options: [
+            {
+              name: 'bot',
+              type: 'SUB_COMMAND',
+              description: 'Get information about the bot',
+            },
             {
                 name: 'user',
                 type: 'SUB_COMMAND_GROUP',
@@ -96,6 +108,24 @@ module.exports = {
             color: '#36393F',
             fields: []
         }]
+        if(subCommand === 'bot'){
+            const takefy = await oneforall.users.fetch("708047733994553344")
+            embeds[0].title = 'Bot info'
+            embeds[0].fields = [
+                {
+                    name: 'INFORMATION',
+                    value: `Date de création: <t:${oneforall.functions.dateToEpoch(oneforall.user.createdAt)}:R>\nDevelopers: **${takefy.tag}**\nNode.js: **${process.version}**\nVersion: **v${version}**\nDiscord.js: **${djsversion}**\nBot Uptime: **${ms(oneforall.uptime)}**\u200b`
+                },
+                {
+                    name: 'STATISTICS',
+                    value: `Serveurs: **${oneforall.guilds.cache.size.toLocaleString()}**\nUsers: **${oneforall.guilds.cache.filter(guild => guild.available).reduce((acc, guild) => acc + guild.memberCount, 0).toLocaleString()}**\nChannels: **${oneforall.channels.cache.size.toLocaleString()}**\u200b`
+                },
+                {
+                    name: 'SYSTEM',
+                    value: `Plateforme: **${process.platform}**\nUptime: **${ms(os.uptime() * 1000, {long: true})}**\nCPU:\n \u3000Coeurs: **${os.cpus().length}**\n`
+                }
+            ]
+        }
         if (subCommandGroup === 'user') {
             const {user, member} = interaction.options.get('user')
             if (subCommand === 'ban') {

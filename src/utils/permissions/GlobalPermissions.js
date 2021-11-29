@@ -14,7 +14,7 @@ class GlobalPermission {
     }
 
     has(permission) {
-        return this.oneforall.guilds.cache.get(this.guildId).ownerId === this.memberId || this.oneforall.config.owners.includes(this.memberId) || this.list().includes(permission);
+        return this.oneforall.guilds.cache.get(this.guildId)?.ownerId === this.memberId || this.oneforall.config.owners.includes(this.memberId) || this.list().includes(permission);
 
     }
 

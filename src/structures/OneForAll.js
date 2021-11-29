@@ -7,7 +7,12 @@ const Permission = require('../utils/permissions/GlobalPermissions');
 const logs = require('discord-logs')
 module.exports = class extends Client {
     constructor() {
-        super({partials: ['MESSAGE', 'REACTION', 'CHANNEL'], intents: Object.keys(Intents.FLAGS)});
+        super({
+            partials: ['MESSAGE', 'REACTION', 'CHANNEL'],
+            intents: Object.keys(Intents.FLAGS),
+            restTimeOffset: 0,
+
+        });
         this.Collection = Collection;
         this.functions = require('../utils/functions');
         this.config = require('../config');
@@ -31,24 +36,24 @@ module.exports = class extends Client {
 
     startEventHandler() {
         this.handlers = new OFAHandlers(this);
-        if (this.isReady()){
+        if (this.isReady()) {
             setTimeout(() => this.emit('ready'), 100);
 
         }
     }
 
-    get embed () {
+    get embed() {
         return {
             color: "#36393E",
             timestamp: new Date()
         }
     }
 
-    isOwner(authorId){
+    isOwner(authorId) {
         return !!this.config.owners.includes(authorId)
     }
 
-    isGuildOwner(authorId, guildOwners){
+    isGuildOwner(authorId, guildOwners) {
         return !!(this.isOwner(authorId) && guildOwners.includes(authorId))
     }
 

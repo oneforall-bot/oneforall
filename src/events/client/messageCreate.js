@@ -8,6 +8,9 @@ module.exports = async (oneforall, message) => {
     const guildData = await oneforall.managers.guildsManager.getAndCreateIfNotExists(message.guild.id, {
         guildId: message.guild.id
     });
+    if(message.mentions.has(oneforall.user.id) && !message.content.includes('@here') && !message.content.includes('@everyone')){
+        message.reply({content: oneforall.handlers.langHandler.get(guildData.lang).pingOneforall})
+    }
     const prefix = oneforall.config.prefix;
     if (message.author.bot || message.author.system || !message.content.startsWith(prefix)) {
         if (!slashReloaded.includes(message.guild.id)) {
