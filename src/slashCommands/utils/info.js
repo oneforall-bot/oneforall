@@ -232,7 +232,7 @@ module.exports = {
                         {
                             name: 'oneforall Permissions:',
                             value: targetData.permissionManager.list().map((permission => `${permission} \`(${targetData.permissionManager.enumPermissions.permissions[permission]?.description})\``)).join(',\n') || "None",
-                            inline: true
+                            inline: false
                         },
                         {
                             name: 'oneforall Groups:',
