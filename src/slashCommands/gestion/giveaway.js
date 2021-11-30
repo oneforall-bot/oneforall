@@ -1,7 +1,6 @@
 const ms = require('ms'),
-    {Collection, MessageActionRow, MessageSelectMenu} = require('discord.js')
-const {managers} = require("../../structures/oneforall");
-oldGiveawayOptions = new Collection()
+    {Collection, MessageActionRow, MessageSelectMenu} = require('discord.js'),
+    oldGiveawayOptions = new Collection()
 
 
 module.exports = {
