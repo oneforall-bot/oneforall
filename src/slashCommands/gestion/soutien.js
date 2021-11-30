@@ -106,7 +106,7 @@ module.exports = {
                     await soutienCheck(oneforall)
                     return guildData.set('soutien', tempSoutien).save().then(() => {
                         panel.delete()
-                        oneforall.functions.tempMessage(interaction, lang.soutien.config.success)
+                        oneforall.functions.tempMessage(interaction, lang.save)
                     })
                 }
                 return updateEmbed()
