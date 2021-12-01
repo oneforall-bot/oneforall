@@ -15,6 +15,5 @@ module.exports = async (oneforall, member, role) => {
     const now = new Date().getTime();
     const diff = now - timeOfAction;
     if (diff > 600 || action.changes[0].key !== "$add") return;
-    const executor = await member.guild.members.fetch(action.executor.id);
-    channel.send({embeds : [template.role.add(executor, member.user, role)]});
+    channel.send({embeds : [template.role.add(action.executor, member, role)]});
 }
