@@ -14,9 +14,8 @@ module.exports = async (oneforall, member) => {
     const newInv = await guild.invites.fetch()
     const usedInv = await newInv.find(inv => cachedInv.get(inv.code) < inv.uses);
     for (const [code, invite] of newInv) cachedInv.set(code, invite.uses)
-    let finalMsg;
+    let finalMsg = lang.invite.cantTrace(member.toString());
     if (!usedInv) {
-        finalMsg = lang.invite.cantTrace(member.toString())
         if (guild.vanityURLCode) finalMsg = lang.invite.vanity(member.toString())
         if (member.user.bot) finalMsg = lang.invite.oauth(member.toString())
     } else {
@@ -38,7 +37,7 @@ module.exports = async (oneforall, member) => {
             });
             invitedData.invites.invitedBy = inviter.id
             invitedData.save()
-            let join = invites.join.toString();
+            let join = invites.total?.toString() || invites.join.toString();
             let memberTotal = guild.memberCount.toString()
 
             finalMsg = message.replace(/{invitedMention}/g, member).replace(/{inviterTag}/g, inviter.user.tag || `${inviter.user.username}#${inviter.user.discriminator}`).replace(/{count}/g, join).replace(/{memberTotal}/g, memberTotal).replace(/{invitedTag}/g, member.user.tag || member.user.username).replace(/{inviterMention}/g, inviter).replace(/{fake}/g, invites.fake).replace(/{leave}/g, invites.leave).replace(/{creation}/g, moment(member.user.createdAt).format("DD/MM/YYYY"));

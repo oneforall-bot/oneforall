@@ -91,7 +91,7 @@ module.exports = class extends Client {
             await this.application?.commands.set(this.handlers.contextMenuHandler.contextMenuList.concat(this.handlers.slashCommandHandler.slashCommandList).sort((a, b) => a.order - b.order).map(s => s.data), guildId).then(e => {
             }).catch((e) => {
                 console.log(e)
-                this.slashReloaded.remove(guildId);
+                this.slashReloaded.delete(guildId);
             });
 
 
