@@ -1,6 +1,8 @@
 module.exports = async (oneforall, role) => {
+    if(role.managed) return;
+
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(role.guild.id, {
-        guildId: role.guild.id
+         guildId: role.guild.id
     })
     const roleLogs = guildData.logs.moderation
     if(!role.guild.me.permissions.has("VIEW_AUDIT_LOG")) return
