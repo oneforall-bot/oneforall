@@ -1,7 +1,6 @@
 const MemberPermissions = require('./MemberPermissions');
 const GroupPermissions = require('./GroupPermissions');
 const Permissions = require('./Permissions');
-const RolePermissions = require('./RolePermissions');
 class GlobalPermission {
     constructor(oneforall, guildId, memberId, memberData, guildData, roleData) {
         this.oneforall = oneforall;
@@ -29,10 +28,6 @@ class GlobalPermission {
 
     getMemberPermissionManager() {
         return new MemberPermissions(this.oneforall, this.guildId, this.memberId);
-    }
-
-    getRolePermissionManager() {
-        return new RolePermissions(this.oneforall, this.guildId, this.memberData)
     }
 
     list() {
