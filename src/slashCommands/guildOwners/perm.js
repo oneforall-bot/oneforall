@@ -213,8 +213,7 @@ async function createOrEditGroup(oneforall, message, guildData, memberData, args
         errors: ['time']
     }).then(async collected => {
         const messageGroupId = collected.first();
-        const memberToEdit = messageGroupId.mentions.members.first() || message.guild.roles.cache.get(message.content) || messageGroupId.mentions.roles.first() || (await message.guild.members.fetch(messageGroupId.content).catch(() => {}));
-        console.log(memberToEdit)
+        const memberToEdit = messageGroupId.mentions.members.first() ||  messageGroupId.mentions.roles.first() || message.guild.roles.cache.get(messageGroupId.content)  || (await message.guild.members.fetch(messageGroupId.content).catch(() => {}));
         const memberToEditData = oneforall.managers[memberToEdit.toString().includes("&") ? 'rolesManager' : 'membersManager'].getAndCreateIfNotExists(`${message.guild.id}-${memberToEdit.id}`, {
             guildId: message.guild.id,
             memberId: memberToEdit.id,
