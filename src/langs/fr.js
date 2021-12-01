@@ -24,6 +24,10 @@ module.exports = {
         incorrectTime: 'Le temps est incorrect',
         save: 'La configuration a été sauvegardé',
         permissions: {
+            ALL: {
+                label: "Avoir toutes les permissions.",
+                description: "Avoir toutes les permissions."
+            },
             GROUP_NEW_CMD: {
                 label: "Créer des groupes.",
                 description: "Permets de créer des groupes de permissions."

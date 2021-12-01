@@ -3,6 +3,11 @@ class Permissions {
         const langManager = oneforall.handlers.langHandler.get(guildData.lang);
 
         this.permissions = {
+            ALL: {
+                emoji: "🟢",
+                label: langManager.permissions["ALL"].label,
+                description: langManager.permissions["ALL"].description
+            },
             GROUP_NEW_CMD: {
                 emoji: "🔨",
                 label: langManager.permissions["GROUP_NEW_CMD"].label,
