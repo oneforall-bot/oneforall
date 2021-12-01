@@ -187,6 +187,11 @@ class Permissions {
                 emoji: ``,
                 label: langManager.permissions["TEMPVOC_CMD"].label,
                 description: langManager.permissions["TEMPVOC_CMD"].description,
+            },
+            ALL_CMD: {
+                emoji: ``,
+                label: langManager.permissions["ALL_CMD"].label,
+                description: langManager.permissions["ALL_CMD"].description,
             }
         }
 

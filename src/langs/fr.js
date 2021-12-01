@@ -185,6 +185,10 @@ module.exports = {
             TEMPVOC_CMD: {
                 label: "Pouvoir gérer les tempvoc",
                 description: "Permet de gérer les vocals temporaire sur le serveur"
+            },
+            ALL_CMD: {
+                label: "Permet d'executer la commande all",
+                description: "Permet de vour tous les admins ou bots du serveur"
             }
         },
         tempvoc: {
