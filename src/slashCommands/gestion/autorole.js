@@ -37,7 +37,8 @@ module.exports = {
                 footer: {
                     icon_url: interaction.user.displayAvatarURL({dynamic: true}) || '',
                     text: 'Autoroles'
-                }
+                },
+                ...oneforall.embed
             }
         }
         let defaultOptions = lang.autorole.baseMenu

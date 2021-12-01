@@ -43,7 +43,8 @@ module.exports = {
                     value: guildData.langManager.undefined
                 },
             ],
-            timestamp: new Date()
+            timestamp: new Date(),
+            ...oneforall.embed
         }
         const panel = await interaction.editReply({
             embeds: [embed], components: [row]

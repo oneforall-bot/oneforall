@@ -56,7 +56,8 @@ module.exports = {
                             name: 'Enable',
                             value: tempSoutien.enable ? '✅' : '❌'
                         }
-                    ]
+                    ],
+                    ...oneforall.embed
                 }
             }
             const row = new MessageActionRow()
