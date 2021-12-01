@@ -9,6 +9,10 @@ module.exports = async (oneforall, oldChannel, newChannel) => {
     const channel = oldChannel.guild.channels.cache.get(roleLogs);
     const {logs} = oneforall.handlers.langHandler.get(guildData.lang);
     const {template} = logs
+    const timeOfAction = action.createdAt.getTime();
+    const now = new Date().getTime();
+    const diff = now - timeOfAction;
+    if (diff > 600 ) return;
     if(!channel) return
     channel.send({embeds : [template.channel.update(action.executor, oldChannel, newChannel)]})
 }

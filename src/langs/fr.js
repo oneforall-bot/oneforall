@@ -214,7 +214,7 @@ module.exports = {
                     label: 'Name',
                     value: 'name',
                     description: "Définir le nom des salons temporaire",
-                    question: 'Quel est le nom que doit avoir les salons ?\n \`Exemple: {membre} - ✨\`',
+                    question: 'Quel est le nom que doit avoir les salons ?\n \`Exemple: {member} - ✨\`',
                     emoji: '✨'
                 },
                 {
