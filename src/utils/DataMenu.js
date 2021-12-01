@@ -23,7 +23,7 @@ class DataMenu {
     }
 
     getType() {
-        return this.data instanceof this.oneforall.Collection ? 'map' : 'array'
+        return this.data instanceof  Map ? 'map' : 'array'
     }
 
     get getLength() {
@@ -31,8 +31,7 @@ class DataMenu {
     }
 
     async sendEmbed(){
-
-        if(this.getLength > 10){
+        if(this.getLength > this.maxPerPage){
              this.row = new MessageActionRow().addComponents(
                 new MessageButton()
                     .setCustomId(`left.${this.interaction.id}`)
