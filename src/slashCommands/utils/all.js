@@ -6,7 +6,14 @@ module.exports = {
             {
                 type: 'SUB_COMMAND',
                 name: 'admins',
-                description: 'Get all the admins of the server'
+                description: 'Get all the admins of the server',
+                options: [
+                    {
+                        type: 'BOOLEAN',
+                        name: 'bot',
+                        description: 'Whether to include bot or not'
+                    }
+                ]
             },
             {
                 type: 'SUB_COMMAND',
@@ -23,7 +30,8 @@ module.exports = {
         await interaction.deferReply({ephemeral: (!!!hasPermission)});
         if (!hasPermission) return interaction.editReply({content: lang.notEnoughPermissions(`all`)})
         if(subCommand === 'admins'){
-            const admins = (await interaction.guild.members.fetch()).filter(member => member.permissions.has('ADMINISTRATOR'))
+            const bot = options.getBoolean('bot', false) ?? true
+            const admins = (await interaction.guild.members.fetch()).filter(member => member.permissions.has('ADMINISTRATOR') && bot ? true : member.user.bot === false)
             const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
                 let i = 0
                 return {
