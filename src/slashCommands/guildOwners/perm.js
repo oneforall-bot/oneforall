@@ -17,10 +17,9 @@ module.exports = {
         createOrEditGroup(oneforall, interaction, guildData, memberData);
         function changePermissions(message, defaultMessage, guildData, memberToEditData) {
             return new Promise((resolve) => {
-                console.log(memberToEditData)
                 const enumPermissions = memberToEditData.permissionManager.enumPermissions;
-                const allowPermissions = Object.keys(enumPermissions.permissions).filter(k => memberToEditData.permissions.includes(k));
-                const denyPermissions = Object.keys(enumPermissions.permissions).filter(k => !memberToEditData.permissions.includes(k));
+                const allowPermissions = Object.keys(enumPermissions.permissions).filter(k => memberToEditData.permissionManager.list().includes(k));
+                const denyPermissions = Object.keys(enumPermissions.permissions).filter(k => !memberToEditData.permissionManager.list().includes(k));
                 const groupsIn = message.client.managers.groupsManager.filter(g => g.key.startsWith(message.guild.id)).filter(group => memberToEditData.groups.includes(group.groupName))
                 const groupsNotIn = message.client.managers.groupsManager.filter(g => g.key.startsWith(message.guild.id)).filter(group => !memberToEditData.groups.includes(group.groupName))
                 const components = [];
@@ -220,7 +219,6 @@ module.exports = {
                     guildId: message.guild.id,
                     memberId: memberToEdit.id
                 });
-                console.log(memberToEditData)
                 memberToEditData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, memberToEdit.id, memberToEditData, guildData, isRole ? memberData : undefined);
                 messageGroupId.delete();
                 defaultMessage.react("✅");
