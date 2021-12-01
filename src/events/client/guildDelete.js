@@ -5,6 +5,7 @@ module.exports = async (oneforall, guild) => {
         guildId: guild.id
     })
     guildData.delete()
+    oneforall.slashReloaded.delete(guild.id)
     const embed = {
         title: `Oneforall retirer de ${guild.name}`,
         fields: [

@@ -31,6 +31,8 @@ module.exports = class extends Client {
         });
         this.cachedInv = new this.Collection()
         this.snipes = new this.Collection()
+        this.slashReloaded = new Set()
+        this.antiraidCmdLoaded = false
         logs(this)
     }
 
@@ -59,5 +61,40 @@ module.exports = class extends Client {
 
     langManager() {
         return this.handlers.langHandler
+    }
+
+    async setCommands(guildId, guildData){
+        if (!this.slashReloaded.has(guildId)) {
+            if (!this.application?.owner) await this.application?.fetch();
+            this.slashReloaded.add(guildId);
+            if (!this.antiraidCmdLoaded) {
+                const antiraidCmd = this.handlers.slashCommandHandler.slashCommandList.get('antiraid')
+                for (const options of Object.keys(guildData.antiraid.config)) {
+                    antiraidCmd.data.options[0].options[0].choices.push({
+                        name: options,
+                        value: options
+                    })
+                }
+                for (const options of Object.keys(guildData.antiraid.enable)) antiraidCmd.data.options[1].options[0].choices.push({
+                    name: options,
+                    value: options
+                })
+                for (const options of Object.keys(guildData.antiraid.limit)) {
+                    antiraidCmd.data.options[2].options[0].choices.push({
+                        name: options,
+                        value: options
+                    })
+                }
+                this.handlers.slashCommandHandler.slashCommandList.set('antiraid', antiraidCmd)
+                this.antiraidCmdLoaded = true
+            }
+            await this.application?.commands.set(this.handlers.contextMenuHandler.contextMenuList.concat(this.handlers.slashCommandHandler.slashCommandList).sort((a, b) => a.order - b.order).map(s => s.data), guildId).then(e => {
+            }).catch((e) => {
+                console.log(e)
+                this.slashReloaded.remove(guildId);
+            });
+
+
+        }
     }
 }
