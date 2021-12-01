@@ -31,7 +31,7 @@ module.exports = {
         if (!hasPermission) return interaction.editReply({content: lang.notEnoughPermissions(`all`)})
         if(subCommand === 'admins'){
             const bot = options.getBoolean('bot', false) ?? true
-            const admins = (await interaction.guild.members.fetch()).filter(member => member.permissions.has('ADMINISTRATOR') && bot ? true : member.user.bot === false)
+            const admins = (await interaction.guild.members.fetch()).filter(member => member.permissions.has(8n) && (bot ? true : member.user.bot === false))
             const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
                 let i = 0
                 return {
