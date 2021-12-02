@@ -14,7 +14,7 @@ module.exports = {
                 }
             ]
         })
-        createOrEditGroup(oneforall, interaction, guildData, memberData);
+        await createOrEditGroup(oneforall, interaction, guildData, memberData);
         function changePermissions(message, defaultMessage, guildData, memberToEditData) {
             return new Promise((resolve) => {
                 const enumPermissions = memberToEditData.permissionManager.enumPermissions;
@@ -165,16 +165,16 @@ module.exports = {
                     }
                     switch (interaction.customId) {
                         case `permissions.edit.remove.${message.id}`:
-                            memberToEditData.permissions = memberToEditData.permissions.filter(permission => !interaction.values.includes(permission));
+                            memberToEditData.set('permissions',memberToEditData.permissions.filter(permission => !interaction.values.includes(permission)))
                             break;
                         case `permissions.edit.group.add.${message.id}`:
-                            memberToEditData.groups.push(...interaction.values)
+                            memberToEditData.set('groups', [...memberToEditData.groups,...interaction.values.filter(p => !memberToEditData.groups.includes(p))]);
                             break;
                         case `permissions.edit.group.remove.${message.id}`:
-                            memberToEditData.groups = memberToEditData.groups.filter(group => !interaction.values.includes(group));
+                            memberToEditData.set('groups', memberToEditData.groups.filter(group => !interaction.values.includes(group)))
                             break;
                         default:
-                            memberToEditData.permissions.push(...interaction.values.filter(p => !memberToEditData.permissions.includes(p)));
+                            memberToEditData.set('permissions', [...memberToEditData.permissions,...interaction.values.filter(p => !memberToEditData.permissions.includes(p))]);
                     }
                     await interaction.deferUpdate()
                     changePermissions(message, defaultMessage, guildData, memberToEditData).then(() => resolve(memberToEditData.groups)).catch(() => {
@@ -219,6 +219,7 @@ module.exports = {
                     guildId: message.guild.id,
                     memberId: memberToEdit.id
                 });
+
                 memberToEditData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, memberToEdit.id, memberToEditData, guildData, isRole ? memberData : undefined);
                 messageGroupId.delete();
                 defaultMessage.react("✅");

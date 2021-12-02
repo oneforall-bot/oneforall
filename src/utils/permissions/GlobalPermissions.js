@@ -36,19 +36,22 @@ class GlobalPermission {
         permissions.push(...this.memberData.permissions.filter(p => !permissions.includes(p)));
         // const memberRolesHas = guildRoles.filter(async role => (await this.oneforall.guilds.cache.get(this.guildId).members.fetch(this.memberId).catch(() => {}))?.roles.cache.has(role.roleId))
         // console.log(memberRolesHas)
-        this.oneforall.managers.rolesManager.forEach(async roleManager => {
-            const member = this.oneforall.guilds.cache.get(this.guildId).members.cache.get(this.memberId)
-            if (member?.roles.cache.has(roleManager.roleId)) {
-                roleManager.groups.forEach(g => {
-                    const group = this.oneforall.managers.groupsManager.getIfExist(`${this.guildId}-${g}`);
-                    if (!group)
-                        this.memberData.groups = this.memberData.groups.filter(g_ => g_ !== g);
-                    else
-                        permissions.push(...group.permissions.filter(p => !permissions.includes(p)));
-                })
-                permissions.push(...roleManager.permissions.filter(p => !permissions.includes(p)))
-            }
-        })
+        if(!this.memberData.roleId){
+            this.oneforall.managers.rolesManager.forEach(async roleManager => {
+                const member = this.oneforall.guilds.cache.get(this.guildId).members.cache.get(this.memberId)
+                if (member?.roles.cache.has(roleManager.roleId)) {
+                    roleManager.groups.forEach(g => {
+                        const group = this.oneforall.managers.groupsManager.getIfExist(`${this.guildId}-${g}`);
+                        if (!group)
+                            this.memberData.groups = this.memberData.groups.filter(g_ => g_ !== g);
+                        else
+                            permissions.push(...group.permissions.filter(p => !permissions.includes(p)));
+                    })
+                    permissions.push(...roleManager.permissions.filter(p => !permissions.includes(p)))
+                }
+            })
+
+        }
 
         this.memberData.groups.forEach(g => {
             const group = this.oneforall.managers.groupsManager.getIfExist(`${this.guildId}-${g}`);

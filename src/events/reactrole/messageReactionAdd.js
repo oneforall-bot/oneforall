@@ -1,4 +1,4 @@
-module.exports = async (oneforall, reaction, user) => {
+    module.exports = async (oneforall, reaction, user) => {
     if (user.bot) return;
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(reaction.message.guild.id);
     const reactRoles =  guildData.reactroles;
