@@ -42,7 +42,7 @@ module.exports = async (oneforall, member) => {
 
             finalMsg = message.replace(/{invitedMention}/g, member).replace(/{inviterTag}/g, inviter.user.tag || `${inviter.user.username}#${inviter.user.discriminator}`).replace(/{count}/g, join).replace(/{memberTotal}/g, memberTotal).replace(/{invitedTag}/g, member.user.tag || member.user.username).replace(/{inviterMention}/g, inviter).replace(/{fake}/g, invites.fake).replace(/{leave}/g, invites.leave).replace(/{creation}/g, moment(member.user.createdAt).format("DD/MM/YYYY"));
         }
-        if (welcomeChannel && !welcomeChannel.deleted) welcomeChannel.send(finalMsg)
-
     }
+
+    if (welcomeChannel && !welcomeChannel.deleted) welcomeChannel.send(finalMsg)
 }
