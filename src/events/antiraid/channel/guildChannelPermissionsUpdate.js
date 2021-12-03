@@ -1,7 +1,7 @@
 const moment = require('moment')
 module.exports = async (oneforall, channel, oldPermissions, newPermissions) => {
     const {guild} = channel;
-
+    if(!channel.manageable) return
     if (!guild.me.permissions.has("VIEW_AUDIT_LOG")) return console.log("Permissions view audit logs is missing to the client");
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(guild.id, {
         guildId: guild.id

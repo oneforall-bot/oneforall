@@ -188,8 +188,16 @@ module.exports = {
             },
             ALL_CMD: {
                 label: "Permet d'executer la commande all",
-                description: "Permet de vour tous les admins ou bots du serveur"
+                description: "Permet de voir tous les admins ou bots du serveur"
+            },
+            UNRANK_CMD: {
+                label: "Permet de unrank un membre",
+                description: "Permet d'enleber tout les permissions sensible d'un membre"
             }
+        },
+        unrank: {
+            success: (member, number) => `${member} a perdu **${number} roles**.`,
+            memberNotManageable: (member) => `Je ne peux pas modifié les roles de ${member}`
         },
         tempvoc: {
             missingValues: `Il manque des informations pour créer le tempvoc...`,
