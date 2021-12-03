@@ -58,7 +58,7 @@ module.exports = async (oneforall, role) => {
 
         })
     }
-    if(role.deletable)
+    if(role.editable)
         role.delete(`oneforall - ${eventName}`)
     if(!channelLog || channelLog.deleted) return;
     channelLog.send({embeds: [log]})
