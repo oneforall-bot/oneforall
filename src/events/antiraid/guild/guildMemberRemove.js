@@ -39,7 +39,6 @@ module.exports = async (oneforall, member) => {
             kickMemberData.count++
         }
         if (diff >= time) {
-            kickMemberData.banned = [ban.user.id]
             kickMemberData.count = 1
         }
         kickMemberData.date = new Date()

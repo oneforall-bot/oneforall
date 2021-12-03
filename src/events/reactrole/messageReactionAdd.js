@@ -28,8 +28,8 @@ module.exports = async (oneforall, reaction, user) => {
         }
         let member = await reaction.message.guild.members.fetch(user.id);
         if (role && member) {
-            console.log('no member or role')
-            await member.roles.add(role, 'Reaction role add')
+            console.log('no member or role', role?.name, member?.id)
+            member.roles.add(role, 'Reaction role add').then(console.log)
 
         }
 

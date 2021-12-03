@@ -10,8 +10,6 @@ module.exports = class extends Client {
         super({
             partials: ['MESSAGE', 'REACTION', 'CHANNEL'],
             intents: Object.keys(Intents.FLAGS),
-            restTimeOffset: 0,
-
         });
         this.Collection = Collection;
         this.functions = require('../utils/functions');

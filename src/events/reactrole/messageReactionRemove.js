@@ -29,7 +29,7 @@ module.exports = async (oneforall, reaction, user) => {
         let member = await reaction.message.guild.members.fetch(user.id);
         if (role && member) {
             console.log('no member or role', role?.name, member?.id)
-            await member.roles.remove(role, 'Reaction role remove')
+            member.roles.remove(role, 'Reaction role remove').then(console.log)
 
         }
 
