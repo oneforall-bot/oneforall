@@ -24,12 +24,9 @@ module.exports = {
             }
         ]
     },
+    guildOwners: true,
     run: async (oneforall, interaction, memberData, guildData) => {
-
-        const isOwner = oneforall.config.owners.includes(interaction.user.id)
-        await interaction.deferReply({ephemeral: (!!!isOwner)});
         const lang = guildData.langManager;
-        if(!isOwner) return interaction.editReply({content: lang.notOwner('/', {name: 'setup'})})
         const { options } = interaction;
         const member = options.getRole('member')
         const mute = options.getRole('mute')
