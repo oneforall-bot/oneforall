@@ -3,6 +3,7 @@ const checkMute = require('../../utils/check/mute')
 const checkCounter = require('../../utils/check/counter')
 const GiveawaysManager = require("../../utils/Giveaway/Manager");
 module.exports = async (oneforall) => {
+    await oneforall.functions.sleep(2000)
     console.log(`${oneforall.user.username} is ready`);
     await checkSoutien(oneforall)
     await checkMute(oneforall)

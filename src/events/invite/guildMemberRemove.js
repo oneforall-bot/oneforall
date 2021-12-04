@@ -1,14 +1,9 @@
 module.exports = async (oneforall, member) => {
     const {guild} = member;
-    const guildData = await oneforall.managers.guildsManager.getAndCreateIfNotExists(guild.id, {
-        guildId: guild.id
-    });
-    if(guild.me?.permissions.has('MANAGE_GUILD')){
+
+    if(guild.me.permissions?.has('MANAGE_GUILD', true)){
         const guildInv = await guild.invites.fetch()
-        for (const [code, invite] of guildInv) {
-            oneforall.cachedInv.set(code, invite.uses)
-        }
-        if (guild.vanityURLCode) oneforall.cachedInv.set(guild.vanityURLCode, await guild.fetchVanityData());
+        oneforall.cachedInv.set(guild.id, guildInv)
     }
 
     const userData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${guild.id}-${member.id}`, {
