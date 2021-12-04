@@ -197,6 +197,11 @@ class Permissions {
                 emoji: ``,
                 label: langManager.permissions["UNRANK_CMD"].label,
                 description: langManager.permissions["UNRANK_CMD"].description,
+            },
+            PICONLY_CMD: {
+                emoji: ``,
+                label: langManager.permissions["PICONLY_CMD"].label,
+                description: langManager.permissions["PICONLY_CMD"].description,
             }
         }
 

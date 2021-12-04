@@ -192,8 +192,18 @@ module.exports = {
             },
             UNRANK_CMD: {
                 label: "Permet de unrank un membre",
-                description: "Permet d'enleber tout les permissions sensible d'un membre"
+                description: "Permet d'enlever tout les permissions sensible d'un membre"
+            },
+            PICONLY_CMD: {
+                label: "Permet d'utiliser le piconly",
+                description: "Permet de définir un salon en piconly"
             }
+        },
+        piconly: {
+            wrongType: 'Le type du channel est invalide',
+            alreadyPiconly: 'Le channel est déjà dans les piconly',
+            notPiconly: 'Le channel est pas piconly',
+            success: channel => `Le channel ${channel} est maintenant **ajouté en piconly**`
         },
         unrank: {
             success: (member, number) => `${member} a perdu **${number} roles**.`,
@@ -226,7 +236,7 @@ module.exports = {
                     emoji: '✨'
                 },
                 {
-                    label:  "Activer",
+                    label: "Activer",
                     value: 'enable',
                     description: "Activer ou désactiver le vocal temporaire",
                     emoji: "🟢",
