@@ -48,7 +48,7 @@ module.exports = {
         if(subCommand === 'list'){
             const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
                 return {
-                    ...oneforall.embed,
+                    ...oneforall.embed(guildData),
                     title: `All piconly channels (${guildData.piconly.length})`,
                     footer: {
                         text: `Page ${page + 1}/${totalPage ||1}`

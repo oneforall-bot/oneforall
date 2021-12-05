@@ -106,7 +106,7 @@ module.exports = {
                         value: invites.enable ? '\`✅\`' : '\`❌\`'
                     },
                 ],
-                ...oneforall.embed,
+                ...oneforall.embed(guildData),
                 timestamp: new Date()
             }
             const panel = await interaction.editReply({

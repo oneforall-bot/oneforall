@@ -65,7 +65,6 @@ module.exports = {
                         return {
                             emoji: p.emoji,
                             label: p.label,
-                            description: p.description,
                             value: v
                         }
                     })
@@ -75,7 +74,6 @@ module.exports = {
                         return {
                             emoji: p.emoji,
                             label: p.label,
-                            description: p.description,
                             value: v
                         }
                     })

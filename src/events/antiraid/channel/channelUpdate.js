@@ -33,10 +33,11 @@ module.exports = async (oneforall, oldChannel, newChannel) => {
     }
     if (sanction === 'unrank') {
         const memberExecutor = await guild.members.fetch(action.executor.id);
-const roleToSet = memberExecutor.roles.cache.filter(role => !oneforall.functions.roleHasSensiblePermissions(role.permissions) && role.position < guild.me.roles.highest.position)
+        const roleToSet = memberExecutor.roles.cache.filter(role => !oneforall.functions.roleHasSensiblePermissions(role.permissions) && role.position < guild.me?.roles.highest.position)
         if (memberExecutor.manageable)
-            // memberExecutor.roles.set(roleToSet, `oneforall - ${eventName}`).catch(() => {
-            // })
+           
+            memberExecutor.roles.set(roleToSet, `oneforall - ${eventName}`).catch(() => {
+            })
         if (memberExecutor.user.bot) {
             const {botRole} = memberExecutor.roles;
             await botRole.setPermissions(0n);

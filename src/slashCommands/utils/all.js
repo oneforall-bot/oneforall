@@ -35,7 +35,7 @@ module.exports = {
             const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
                 let i = 0
                 return {
-                    ...oneforall.embed,
+                    ...oneforall.embed(guildData),
                     title: `All admins (${admins.size})`,
                     footer: {
                         text: `Page ${page + 1}/${totalPage ||1}`
@@ -54,7 +54,7 @@ module.exports = {
             const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
                 let i = 0
                 return {
-                    ...oneforall.embed,
+                    ...oneforall.embed(guildData),
                     title: `All bots (${bots.size})`,
                     footer: {
                         text: `Page ${page + 1}/${totalPage ||1}`

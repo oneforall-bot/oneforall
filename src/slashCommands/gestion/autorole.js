@@ -38,7 +38,7 @@ module.exports = {
                     icon_url: interaction.user.displayAvatarURL({dynamic: true}) || '',
                     text: 'Autoroles'
                 },
-                ...oneforall.embed
+                ...oneforall.embed(guildData)
             }
         }
         let defaultOptions = lang.autorole.baseMenu

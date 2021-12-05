@@ -57,7 +57,7 @@ module.exports = {
                             value: tempSoutien.enable ? '✅' : '❌'
                         }
                     ],
-                    ...oneforall.embed
+                    ...oneforall.embed(guildData)
                 }
             }
             const row = new MessageActionRow()

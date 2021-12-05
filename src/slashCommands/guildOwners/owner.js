@@ -63,7 +63,7 @@ module.exports = {
         if(subCommand === 'list'){
             const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
                 return {
-                    ...oneforall.embed,
+                    ...oneforall.embed(guildData),
                     title: `Owner list (${guildOwners.length})`,
                     footer: {
                       text: `Owner Page ${page + 1}/${totalPage ||1}`

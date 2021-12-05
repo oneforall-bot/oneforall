@@ -164,6 +164,23 @@ module.exports = function (database, modelName, config) {
                 type: DataTypes.JSON,
                 allowNull: true,
                 default: []
+<<<<<<< Updated upstream
+=======
+            },
+            {
+                name: 'polls',
+                isValue: true,
+                type: DataTypes.JSON,
+                allowNull: true,
+                default: []
+            },
+            {
+                name: 'embedColor',
+                isValue: true,
+                type: DataTypes.JSON,
+                allowNull: false,
+                default: "#36393E"
+>>>>>>> Stashed changes
             }
 
         ]

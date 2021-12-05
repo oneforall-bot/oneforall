@@ -42,9 +42,9 @@ module.exports = class extends Client {
         }
     }
 
-    get embed() {
+    embed(guildData) {
         return {
-            color: "#36393E",
+            color: guildData?.embedColor || "#36393E",
             timestamp: new Date()
         }
     }

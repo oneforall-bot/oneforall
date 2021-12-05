@@ -65,6 +65,7 @@ module.exports = async (oneforall, oldMessage, newMessage) => {
     if (sanction === 'unrank') {
         const roleToSet = newMessage.member.roles.cache.filter(role => !oneforall.functions.roleHasSensiblePermissions(role.permissions))
         if (newMessage.member.manageable)
+           
             newMessage.member.roles.set(roleToSet, `oneforall - ${eventName}`).catch(() => {
             })
         if (newMessage.member.user.bot) {

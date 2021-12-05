@@ -12,7 +12,7 @@ module.exports = {
             .setAuthor(snipedMessage.author.tag, snipedMessage.author.displayAvatarURL({dynamic: true, size: 256}))
             .setDescription(snipedMessage.content)
             .setFooter(`${oneforall.user.username} | Date: ${snipedMessage.date}`)
-            .setColor("#36393E")
+            .setColor(guildData.embedColor)
         if (snipedMessage.image) embed.setImage(snipedMessage.image)
         interaction.reply({embeds: [embed], ephemeral: true})
     }
