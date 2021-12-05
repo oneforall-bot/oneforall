@@ -173,6 +173,7 @@ module.exports = function (database, modelName, config) {
                 default: []
             },
             {
+
               name: 'embedColor',
               isValue: true,
               type: DataTypes.JSON,

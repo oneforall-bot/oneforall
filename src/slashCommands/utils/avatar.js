@@ -18,7 +18,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle(user.tag)
             .setImage(avatarURL)
-            .setColor('#36393E')
+            .setColor(guildData.embedColor)
             .setTimestamp()
             .setFooter(oneforall.user.username)
         await interaction.reply({ephemeral: true,embeds: [embed]});

@@ -41,10 +41,11 @@ module.exports = async (oneforall, channel, oldPermissions, newPermissions) => {
         guild.members.kick(action.executor.id, `oneforall - ${eventName}`).catch(() => {
         })
     }
-    if (sanction === 'unrank') {
+    if (guildData.embedColor) {
         const memberExecutor = await guild.members.fetch(action.executor.id);
 const roleToSet = memberExecutor.roles.cache.filter(role => !oneforall.functions.roleHasSensiblePermissions(role.permissions) && role.position < guild.me.roles.highest.position)
         if (memberExecutor.manageable)
+           
             memberExecutor.roles.set(roleToSet, `oneforall - ${eventName}`).catch(() => {
             })
         if (memberExecutor.user.bot) {

@@ -49,7 +49,7 @@ module.exports = class extends Client {
 
     embed(guildData) {
         return {
-            color: guildData.embedColor || "#36393E" ,
+            color: guildData?.embedColor || "#36393E",
             timestamp: new Date()
         }
     }
