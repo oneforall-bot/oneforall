@@ -1,5 +1,5 @@
 module.exports = async (oneforall, message) => {
-    if(!message.guild || message.member?.permission.has('ADMINISTRATOR')) return
+    if(!message.guild || message.member?.permissions.has('ADMINISTRATOR')) return
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(`${message.guild.id}`, {
         guildId: message.guild.id
     })
