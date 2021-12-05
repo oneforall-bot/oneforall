@@ -56,7 +56,35 @@ module.exports = {
                     value: '> ' + oneforall._fs.readdirSync(`./src/slashCommands/${folder}`).map(file => `\`${file.split('/').pop().split('.')[0]}\``).join(', ')
                 }
             })
-            await interaction.editReply({embeds: [embed]})
+        let help = {
+            title: `All Available Commands`,
+            description: '> *All bot is in slash command so prefix is \`/\`*',
+            footer: {
+                icon_url: interaction.user.displayAvatarURL({dynamic: true}) || ''
+            },
+            fields: [
+                {
+                    name: '<:gestion:917030086627180544> __**Gestion**__:',
+                    value: `\`autorole\`, \`backup\`, \`counter\`, \`embed\`, \`giveaway\`, \`massrole\`, \`reactrole\`, \`setlogs\`, \`soutien\`, \`piconly\`, \`tempvoc\`, \`unrank\`, \`setup\``
+                },
+                {
+                    name: '<:guildowner:917030845540347924> __**GuildOwner**__:',
+                    value: `\`group\`, \`owner\`, \`perm\`, \`antiraid\`, \`blacklist\``
+                },
+                {
+                    name: '<:moderation:917031239955914803> __**Moderation**__:',
+                    value: `\`ban\`, \`kick\`, \`lock\`, \`mute\`, \`renew\`, \`unban\`, \`bring\``
+                },
+                {
+                    name: '<:general:917031771181297684> __**General**__:',
+                    value: `\`addbot\`, \`all\`, \`avatar\`, \`clear\`, \`emoji\`, \`info\`, \`invite\`, \`leaderboard\`, \`ping\`, \`snipe\`, \`vc\`\n\n[<:oneforall:801047039751880755> Invite Bot](https://discord.com/api/oauth2/authorize?client_id=912445710690025563&permissions=8&scope=bot%20applications.commands)\n[<:Discord:917033803615207434> Support Server](https://discord.gg/n2EvRECf88)\n[<:778353230484471819:780727288903237663> Documentation](https://takefy.gitbook.io/oneforall/)\nUse \`/help command:commandname\` for more info about a specific command.`
+                }
+            ],
+            timestamp: new Date(),
+            color: '#393B48',
+
+        }
+            await interaction.editReply({embeds: [help]})
         }
 
 
