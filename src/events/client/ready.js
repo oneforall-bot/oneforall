@@ -1,6 +1,7 @@
 const checkSoutien = require('../../utils/check/soutien')
 const checkMute = require('../../utils/check/mute')
 const checkCounter = require('../../utils/check/counter')
+const checkPolls = require('../../utils/check/polls')
 const GiveawaysManager = require("../../utils/Giveaway/Manager");
 module.exports = async (oneforall) => {
     await oneforall.functions.sleep(2000)
@@ -8,6 +9,7 @@ module.exports = async (oneforall) => {
     await checkSoutien(oneforall)
     await checkMute(oneforall)
     await checkCounter(oneforall)
+    await checkPolls(oneforall)
     oneforall.user.setPresence({
         status: 'online',
         activities: [{name: `${oneforall.guilds.cache.size} Servers | .gg/oneforall`, type: 'WATCHING'}]

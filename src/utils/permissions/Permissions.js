@@ -202,6 +202,11 @@ class Permissions {
                 emoji: ``,
                 label: langManager.permissions["PICONLY_CMD"].label,
                 description: langManager.permissions["PICONLY_CMD"].description,
+            },
+            POLL_CMD: {
+                emoji: ``,
+                label: langManager.permissions["POLL_CMD"].label,
+                description: langManager.permissions["POLL_CMD"].description,
             }
         }
 

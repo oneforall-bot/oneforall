@@ -164,6 +164,13 @@ module.exports = function (database, modelName, config) {
                 type: DataTypes.JSON,
                 allowNull: true,
                 default: []
+            },
+            {
+                name: 'polls',
+                isValue: true,
+                type: DataTypes.JSON,
+                allowNull: true,
+                default: []
             }
 
         ]
