@@ -156,7 +156,7 @@ module.exports = {
                 totalPage = Math.ceil(blacklist.size / maxPerPage)
             const embed = {
                 timestamp: new Date(),
-                color: '#36393F',
+                color: guildData.embedColor,
                 fields: fields.slice(0, maxPerPage),
                 title: `Blacklist (${blacklist.size})`,
                 footer: {

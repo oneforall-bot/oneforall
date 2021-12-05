@@ -105,7 +105,7 @@ module.exports = {
         const subCommandGroup = interaction.options.getSubcommandGroup(false)
         const subCommand = interaction.options.getSubcommand()
         const embeds = [{
-            color: '#36393F',
+            color: guildData.embedColor,
             fields: []
         }]
         if(subCommand === 'bot'){
@@ -253,7 +253,7 @@ module.exports = {
                     let row
                     embeds[1] = {
                         timestamp: new Date(),
-                        color: '#36393F',
+                        color: guildData.embedColor,
                         footer: {
                             text: `Page 1/1`,
                             icon_url: interaction.user.displayAvatarURL({dynamic: true}) || ''

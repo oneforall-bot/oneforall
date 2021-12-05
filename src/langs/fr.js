@@ -266,6 +266,17 @@ module.exports = {
                 success: (subCommand) => `Les salons sont ${subCommand === 'on' ? 'fermés' : 'ouverts'}`,
             }
         },
+        set: {
+            color: {
+                notValid: color =>  `${color} n'est pas une couleur valide`,
+                success: color => {
+                    return {
+                        description: 'Voici la nouvelle couleur',
+                        color
+                    }
+                }
+            }
+        },
         counter: {
             missingCount: `Il manque {count} dans votre nom`,
             invalidChannel: 'Le channel est invalide.',

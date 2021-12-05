@@ -110,8 +110,8 @@ module.exports = {
                     delete questionAnswer.content
                 }
                 if (menuSelected.value === 'color') {
-                    const color = colorNameToHex(questionAnswer.content.toLowerCase()) || oneforall.functions.hexColorCheck(questionAnswer.content)
-                    if (!color) return oneforall.functions.tempMessage(interaction, lang.embedBuilder.errorColor)
+                    const color = colorNameToHex(questionAnswer.content.toLowerCase())
+                    if (!color || oneforall.functions.hexColorCheck(questionAnswer.content)) return oneforall.functions.tempMessage(interaction, lang.embedBuilder.errorColor)
                     questionAnswer.content = color
                 }
                 if (menuSelected.value === 'thumbnail' || menuSelected.value === 'image') {

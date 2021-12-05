@@ -55,7 +55,7 @@ module.exports = {
         if (interaction.options.getSubcommand() === 'show') {
             const embed = {
                 timestamp: new Date(),
-                color: '#36393F',
+                color: guildData.embedColor,
                 title: `Configuration of logs`,
                 description: `**Message:** ${guildData.logs.message ? `<#${guildData.logs.message}>` : 'Non définie'}\n**Moderation:** ${guildData.logs.moderation ? `<#${guildData.logs.moderation}>` : 'Non définie'}\n**Antiraid:** ${guildData.logs.antiraid ? `<#${guildData.logs.antiraid}>` : 'Non définie'}\n**Voice:** ${guildData.logs.voice ? `<#${guildData.logs.voice}>` : 'Non définie'}`,
                 footer: {
