@@ -78,7 +78,7 @@ module.exports = {
                 },
                 {
                     name: '<:general:917031771181297684> __**General**__:',
-                    value: `\`addbot\`, \`all\`, \`avatar\`, \`clear\`, \`emoji\`, \`info\`, \`invite\`, \`leaderboard\`, \`ping\`, \`snipe\`, \`vc\`\n\n[<:oneforall:801047039751880755> Invite Bot](https://discord.com/api/oauth2/authorize?client_id=912445710690025563&permissions=8&scope=bot%20applications.commands)\n[<:Discord:917033803615207434> Support Server](https://discord.gg/n2EvRECf88)\n[<:778353230484471819:780727288903237663> Documentation](https://takefy.gitbook.io/oneforall/)\nUse \`/help command:commandname\` for more info about a specific command.`
+                    value: `\`addbot\`, \`all\`, \`avatar\`, \`clear\`, \`emoji\`, \`info\`, \`invite\`, \`leaderboard\`, \`ping\`, \`snipe\`, \`vc\`, \`poll\`\n\n[<:oneforall:801047039751880755> Invite Bot](https://discord.com/api/oauth2/authorize?client_id=912445710690025563&permissions=8&scope=bot%20applications.commands)\n[<:Discord:917033803615207434> Support Server](https://discord.gg/n2EvRECf88)\n[<:778353230484471819:780727288903237663> Documentation](https://takefy.gitbook.io/oneforall/)\nUse \`/help command:commandname\` for more info about a specific command.`
                 }
             ],
             timestamp: new Date(),
