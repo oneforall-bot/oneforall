@@ -157,6 +157,13 @@ module.exports = function (database, modelName, config) {
                 type: DataTypes.JSON,
                 allowNull: true,
                 default: {category: undefined, channel: undefined, enable: false, name: '{member} - ✨'}
+            },
+            {
+                name: 'piconly',
+                isValue: true,
+                type: DataTypes.JSON,
+                allowNull: true,
+                default: []
             }
 
         ]

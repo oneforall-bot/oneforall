@@ -192,8 +192,18 @@ module.exports = {
             },
             UNRANK_CMD: {
                 label: "Permet de unrank un membre",
-                description: "Permet d'enleber tout les permissions sensible d'un membre"
+                description: "Permet d'enlever tout les permissions sensible d'un membre"
+            },
+            PICONLY_CMD: {
+                label: "Permet d'utiliser le piconly",
+                description: "Permet de définir un salon en piconly"
             }
+        },
+        piconly: {
+            wrongType: 'Le type du channel est invalide',
+            alreadyPiconly: 'Le channel est déjà dans les piconly',
+            notPiconly: 'Le channel est pas piconly',
+            success: channel => `Le channel ${channel} est maintenant **ajouté en piconly**`
         },
         unrank: {
             success: (member, number) => `${member} a perdu **${number} roles**.`,
@@ -226,7 +236,7 @@ module.exports = {
                     emoji: '✨'
                 },
                 {
-                    label:  "Activer",
+                    label: "Activer",
                     value: 'enable',
                     description: "Activer ou désactiver le vocal temporaire",
                     emoji: "🟢",
@@ -413,11 +423,11 @@ module.exports = {
             muteRoleEveryone: `Vous ne mettre le role everyone en mute role`
         },
         vc: {
-            msg: (count, muteCount, streamingCount, muteHeadSetCount, openMicCount) => `🗣️ Statistique vocal :
-        > 📢 Micro ouvert : **${openMicCount}**
-        > 📹 En Stream : **${streamingCount}**
-        > 🎧 Mute casque : **${muteHeadSetCount}**
-        > 🔇 Mute micro : **${muteCount}**\n\n> Total de personnes en vocal : **${count}**`
+            msg: (count, muteCount, streamingCount, muteHeadSetCount, openMicCount) => `<:stats:783422345284943883> Statistique vocal :
+        > <:unmute:801122798629945354> Micro ouvert : **${openMicCount}**
+        > <:stream:801122725602000946> En Stream : **${streamingCount}**
+        > <:mutecasque:801123005287628890> Mute casque : **${muteHeadSetCount}**
+        > <:mutemic:801122908445212723> Mute micro : **${muteCount}**\n\n> Total de personnes en vocal : **${count}**`
         },
         clear: {
             success: deleteAmount => ` Vous avez supprimé ${deleteAmount} messages.`

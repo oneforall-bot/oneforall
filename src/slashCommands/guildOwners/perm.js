@@ -15,6 +15,7 @@ module.exports = {
             ]
         })
         await createOrEditGroup(oneforall, interaction, guildData, memberData);
+
         function changePermissions(message, defaultMessage, guildData, memberToEditData) {
             return new Promise((resolve) => {
                 const enumPermissions = memberToEditData.permissionManager.enumPermissions;
@@ -109,8 +110,8 @@ module.exports = {
                 }
                 let index = components[1] ? 1 : 0
 
-                if (allowPermissions.length > 25) {
-                    components[index].spliceOptions(0, allowPermissions.length, [...defaultAllowOptions.slice(0, 24), {
+                if (allowPermissions.length > 24) {
+                    components[index].spliceOptions(0, allowPermissions.length, [...defaultAllowOptions.slice(0, 23), {
                         value: 'next',
                         description: 'See more permissions',
                         label: 'Next',
@@ -120,15 +121,15 @@ module.exports = {
 
                 function updateOptions(interaction, componentIndex) {
                     components[componentIndex].spliceOptions(0, components[componentIndex].options.length, componentIndex === 0 ? [...defaultDenyOptions.slice(slicerIndicatorMinDeny, slicerIndicatorMaxDeny), {
-                        value: pageDeny < 1 ? 'next' : "prev",
+                        value: pageDeny < totalPageDeny ? 'next' : "prev",
                         description: 'See more permissions',
-                        label: pageDeny < 1 ? 'next' : "prev",
-                        emoji: pageDeny < 1 ? '➡️' : '◀️'
+                        label: pageDeny < totalPageDeny ? 'next' : "prev",
+                        emoji: pageDeny < totalPageDeny ? '➡️' : '◀️',
                     }] : [...defaultAllowOptions.slice(slicerIndicatorMinAllow, slicerIndicatorMaxAllow), {
-                        value: pageAllow < 1 ? 'next' : "prev",
+                        value: pageAllow < totalPageAllow ? 'next' : "prev",
                         description: 'See more permissions',
-                        label: pageAllow < 1 ? 'next' : "prev",
-                        emoji: pageAllow < 1 ? '➡️' : '◀️'
+                        label: pageAllow < totalPageAllow ? 'next' : "prev",
+                        emoji: pageAllow < totalPageAllow ? '➡️' : '◀️'
                     }])
                     components[componentIndex].setMaxValues(components[componentIndex].options.length)
                     return interaction.update({components: components.map(c => new MessageActionRow({components: [c]}))})
@@ -152,7 +153,11 @@ module.exports = {
                         interaction.customId === `permissions.edit.remove.${message.id}` ? pageAllow = pageAllow !== totalPageAllow - 1 ? pageAllow + 1 : pageAllow = 0 : pageDeny = pageDeny !== totalPageDeny - 1 ? pageDeny + 1 : pageDeny = 0
                         interaction.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMinAllow += maxValues : slicerIndicatorMinDeny += maxValues
                         interaction.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMaxAllow += maxValues : slicerIndicatorMaxDeny += maxValues
-
+                        if(components[interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0].options[components[interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0].options.length - 2].value === 'EVENT_ANTIRAID_ANTIMASSMENTION') {
+                            slicerIndicatorMaxDeny = 24
+                            slicerIndicatorMinDeny = 0
+                            console.log(components[interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0])
+                        }
                         return updateOptions(interaction, interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0)
                     }
 
@@ -165,16 +170,16 @@ module.exports = {
                     }
                     switch (interaction.customId) {
                         case `permissions.edit.remove.${message.id}`:
-                            memberToEditData.set('permissions',memberToEditData.permissions.filter(permission => !interaction.values.includes(permission)))
+                            memberToEditData.set('permissions', memberToEditData.permissions.filter(permission => !interaction.values.includes(permission)))
                             break;
                         case `permissions.edit.group.add.${message.id}`:
-                            memberToEditData.set('groups', [...memberToEditData.groups,...interaction.values.filter(p => !memberToEditData.groups.includes(p))]);
+                            memberToEditData.set('groups', [...memberToEditData.groups, ...interaction.values.filter(p => !memberToEditData.groups.includes(p))]);
                             break;
                         case `permissions.edit.group.remove.${message.id}`:
                             memberToEditData.set('groups', memberToEditData.groups.filter(group => !interaction.values.includes(group)))
                             break;
                         default:
-                            memberToEditData.set('permissions', [...memberToEditData.permissions,...interaction.values.filter(p => !memberToEditData.permissions.includes(p))]);
+                            memberToEditData.set('permissions', [...memberToEditData.permissions, ...interaction.values.filter(p => !memberToEditData.permissions.includes(p))]);
                     }
                     await interaction.deferUpdate()
                     changePermissions(message, defaultMessage, guildData, memberToEditData).then(() => resolve(memberToEditData.groups)).catch(() => {
