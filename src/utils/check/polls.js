@@ -10,7 +10,7 @@ module.exports = async (oneforall) => {
                 const embed = {
                     ...oneforall.embed,
                     title: poll.question,
-                    description: `Result: \n\n${oneforall.handlers.langHandler.get(guildData.lang).yes}: **${poll.yes}** \`(${((poll.yes / (poll.yes + poll.no)) * 100).toFixed(0) ?? 0}%)\`\n\n${oneforall.handlers.langHandler.get(guildData.lang).no}: **${poll.no}** \`(${((poll.no / (poll.yes + poll.no)) * 100).toFixed(0) ?? 0}%)\``,
+                    description: `Result: \n\n${oneforall.handlers.langHandler.get(guildData.lang).yes}: **${poll.yes}** \`(${((poll.yes / (poll.yes + poll.no)) * 100)?.toFixed(0) | 0}%)\`\n\n${oneforall.handlers.langHandler.get(guildData.lang).no}: **${poll.no}** \`(${((poll.no / (poll.yes + poll.no)) * 100).toFixed(0) | 0}%)\``,
                 }
                 channel.send({embeds: [embed]})
                 const pollMessage = await channel.messages.fetch(poll.id)
