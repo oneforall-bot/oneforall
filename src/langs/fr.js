@@ -11,7 +11,8 @@ module.exports = {
         botRemoved: (guild, member, owner) => `Votre bot a été enlevé de ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
         managedRole: `Ce rôle ne peut pas être ajouté car c'est un rôle **géré par une application**`,
         pingOneforall: `Mon prefix est \`/\`\n **Si vous ne voyez aucune commandes écrivez quelque message**`,
-
+        yes: 'Oui',
+        no: 'Non',
         tryToPermsRole: `Vous ne pouvez pas ajouter un role ayant des permissions sensible`,
         noSetup: 'Vous devez setup le bot pour utiliser cette commande',
         undefined: 'Non définie',
@@ -35,6 +36,10 @@ module.exports = {
             BLACKLIST_CMD: {
                 label: "Blacklist un utilisateur.",
                 description: "Permets de Blacklist un utilisateur du serveur."
+            },
+            INFO_CMD: {
+                label: 'Utiliser la commande info',
+                description: 'Utiliser la commande info',
             },
             REACTROLE_CMD: {
                 label: "Créer des reactroles",
@@ -197,6 +202,10 @@ module.exports = {
             PICONLY_CMD: {
                 label: "Permet d'utiliser le piconly",
                 description: "Permet de définir un salon en piconly"
+            },
+            POLL_CMD: {
+                label: "Permet d'utiliser la commande poll",
+                description: "Permet de créer, supprimer des poll"
             }
         },
         piconly: {
@@ -255,6 +264,17 @@ module.exports = {
             success: (subCommand) => `Le salon est ${subCommand === 'on' ? 'fermé' : 'ouvert'}`,
             all: {
                 success: (subCommand) => `Les salons sont ${subCommand === 'on' ? 'fermés' : 'ouverts'}`,
+            }
+        },
+        set: {
+            color: {
+                notValid: color =>  `${color} n'est pas une couleur valide`,
+                success: color => {
+                    return {
+                        description: 'Voici la nouvelle couleur',
+                        color
+                    }
+                }
             }
         },
         counter: {

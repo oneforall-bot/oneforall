@@ -16,7 +16,7 @@ module.exports = {
                 title: 'Autoroles',
                 fields: !autoRoleData ? autoRoles.map((autoRole, i) => {
                     return {
-                        name: `${i + 1} - ${interaction.guild.roles.cache.get(autoRole.role)?.name || autoRole.role}`,
+                        name: `\`${i + 1}\` - ${interaction.guild.roles.cache.get(autoRole.role)?.name || autoRole.role}`,
                         value: `${autoRole.addAfter} - Enable: ${autoRole.enable ? '\`✅\`' : '\`❌\`'}`
                     }
                 }) : [
@@ -45,7 +45,7 @@ module.exports = {
         let tempAutoRole = {enable: false}
         if (numberOfAutoroles > 0) defaultOptions = [...autoRoles.map((autoRole, i) => {
             return {
-                label: `Autorole ${i + 1}`,
+                label: `Autorole \`${i + 1}\``,
                 value: `autorole.${interaction.id}.${i + 1}`,
                 description: `Modifier l'autorole: ${i + 1}`,
                 emoji: '⚙️'

@@ -5,6 +5,7 @@ const OFAManagers = require('./OFAManagers');
 const OFAHandlers = require("./OFAHandlers");
 const Permission = require('../utils/permissions/GlobalPermissions');
 const logs = require('discord-logs')
+const XpSystem = require('../utils/Xp')
 module.exports = class extends Client {
     constructor() {
         super({
@@ -21,13 +22,17 @@ module.exports = class extends Client {
         this._fs = require('fs');
         this._fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
+
         this.DataMenu = require('../utils/DataMenu')
         this.Permission = Permission;
 
         this.database.authenticate().then(async () => {
             this.managers = new OFAManagers(this);
+            this.xpManager = new XpSystem(this)
+
         });
-        this.cachedInv = new this.Collection()
+
+        this.cachedInv = new Collection()
         this.snipes = new this.Collection()
         this.slashReloaded = new Set()
         this.antiraidCmdLoaded = false

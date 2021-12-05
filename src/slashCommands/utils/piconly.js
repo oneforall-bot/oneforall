@@ -54,7 +54,7 @@ module.exports = {
                         text: `Page ${page + 1}/${totalPage ||1}`
                     },
                     description: guildData.piconly.map((id, i) => {
-                        return `${i+1} - <#${id}> **(${id})**`
+                        return `\`${i+1}\` - <#${id}> **(${id})**`
                     }).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
 
                 }

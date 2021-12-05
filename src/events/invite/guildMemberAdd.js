@@ -10,17 +10,13 @@ module.exports = async (oneforall, member) => {
     if (!channel || !message || !enable) return
     const welcomeChannel = guild.channels.cache.get(channel)
     const lang = oneforall.handlers.langHandler.get(guildData.lang)
-    const cachedInv = oneforall.cachedInv.get(guild.id);
+    const cachedInv = oneforall.cachedInv.get(guild.id)
     const newInv = await guild.invites.fetch()
-<<<<<<< Updated upstream
-   oneforall.cachedInv.set(guild.id, newInv)
-   const usedInv = newInv.find(inv => cachedInv.get(inv.code));
-  
-=======
+
     const tempMap = new oneforall.Collection()
     for(const [code, invite] of newInv) tempMap.set(code, invite.uses)
    const usedInv = newInv.find(inv => cachedInv?.get(inv.code) || 100 < inv.uses);
->>>>>>> Stashed changes
+
 
     let finalMsg =  lang.invite.cantTrace(member.toString());
     if (!usedInv) {

@@ -140,7 +140,7 @@ module.exports = {
                 backupsId.push(backup.id);
             }
             const embed = {
-                title: `List des backups des __${interaction.user.username}__`,
+                title: `List des backups de __${interaction.user.username}__`,
                 fields: [
                     {
                         name: 'Server Name',

@@ -191,7 +191,7 @@ module.exports = {
                 totalPage = Math.ceil(Object.keys(guildData.antiraid.config).length / maxPerPage)
             const embed = {
                 timestamp: new Date(),
-                color: '#36393F',
+                color: guildData.embedColor,
                 fields: fields.slice(0, maxPerPage),
                 title: `Antiraid Config (${Object.keys(guildData.antiraid.config).length})`,
                 footer: {

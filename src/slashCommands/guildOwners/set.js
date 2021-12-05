@@ -1,34 +1,43 @@
+const colorNameToHex = require("colornames");
 module.exports = {
     data: {
-        name: "set",
-        description:'Set changes on the bot',
+        name: 'set',
+        description: 'Change some data of the bot',
         options: [
             {
                 type: 'SUB_COMMAND',
                 name: 'color',
-                description: 'Change the color of the embeds',
+                description: 'Change embed color of the bot',
                 options: [
                     {
-                        name: 'color',
-                        description: 'The color to change',
-                        required: true,
                         type: 'STRING',
-                        choices: [
-                            {
-                                value: 'red',
-                                name: 'red'
-                            }
-                        ]
+                        name: 'color',
+                        description: 'The color to change (hex or english color)',
+                        required: true,
                     }
+
                 ]
+
             }
         ]
     },
     guildOwnersOnly: true,
     run: async (oneforall, interaction, memberData, guildData) => {
-        const  {options} = interaction
+        const {options} = interaction
         const subCommand = options.getSubcommand()
-        const color = options.getString('color')
-        console.log(color)
+        if (subCommand === 'color') {
+            const color = options.getString('color')
+            const validColor = colorNameToHex(color.toLowerCase()) || color
+            if (!validColor || !oneforall.functions.hexColorCheck(validColor)) return interaction.reply({
+                content: guildData.langManager.set.color.notValid(color),
+                ephemeral: true
+            })
+            guildData.embedColor = validColor
+            guildData.save().then(() => {
+                interaction.reply({embeds: [guildData.langManager.set.color.success(validColor)]})
+            })
+
+
+        }
     }
 }

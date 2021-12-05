@@ -105,7 +105,7 @@ module.exports = {
         const subCommandGroup = interaction.options.getSubcommandGroup(false)
         const subCommand = interaction.options.getSubcommand()
         const embeds = [{
-            color: '#36393F',
+            color: guildData.embedColor,
             fields: []
         }]
         if(subCommand === 'bot'){
@@ -187,7 +187,7 @@ module.exports = {
                     },
                     {
                         name: 'Bot:',
-                        value: user.bot ? '✅' : '❌',
+                        value: user.bot ? '<:authorized:917131189779845131>' : '<:xmark:917130858543075369>',
                         inline: true
                     },
 
@@ -253,7 +253,7 @@ module.exports = {
                     let row
                     embeds[1] = {
                         timestamp: new Date(),
-                        color: '#36393F',
+                        color: guildData.embedColor,
                         footer: {
                             text: `Page 1/1`,
                             icon_url: interaction.user.displayAvatarURL({dynamic: true}) || ''
@@ -367,17 +367,17 @@ module.exports = {
                     },
                     {
                         name: 'Channels:',
-                        value: `Text: ${interaction.guild.channels.cache.filter(channel => channel.isText()).size}\n Voice: ${interaction.guild.channels.cache.filter(channel => channel.isVoice()).size}`,
+                        value: `Text: \`${interaction.guild.channels.cache.filter(channel => channel.isText()).size}\`\n Voice: \`${interaction.guild.channels.cache.filter(channel => channel.isVoice()).size}\``,
                         inline: true
                     },
                     {
                         name: 'Verification Level:',
-                        value: verificationLevels[interaction.guild.verificationLevel],
+                        value: `**${verificationLevels[interaction.guild.verificationLevel]}**`,
                         inline: true
                     },
                     {
                         name: 'Boosts:',
-                        value: interaction.guild.premiumSubscriptionCount.toString(),
+                        value: `\`${interaction.guild.premiumSubscriptionCount.toString()}\``,
                         inline: true
                     },
                     {
@@ -393,7 +393,7 @@ module.exports = {
                     {
                         name: 'Members:',
                         inline: true,
-                        value: `Online: ${guildMembers.filter(member => member.presence?.status === 'online').size}\n Dnd: ${guildMembers.filter(member => member.presence?.status === 'dnd').size}\nIdle: ${guildMembers.filter(member => member.presence?.status === 'idle').size}\nOffline: ${guildMembers.filter(member => member.presence?.status !== 'online' && member.presence?.status !== 'idle' && member.presence?.status !== 'dnd').size}\nTotal: ${interaction.guild.memberCount}`
+                        value: `Online: **${guildMembers.filter(member => member.presence?.status === 'online').size}**\n Dnd: **${guildMembers.filter(member => member.presence?.status === 'dnd').size}**\nIdle: **${guildMembers.filter(member => member.presence?.status === 'idle').size}**\nOffline: **${guildMembers.filter(member => member.presence?.status !== 'online' && member.presence?.status !== 'idle' && member.presence?.status !== 'dnd').size}**\nTotal: **${interaction.guild.memberCount}**`
                     },
                     {
                         name: `Roles (${interaction.guild.roles.cache.size}):`,
@@ -406,7 +406,7 @@ module.exports = {
                     },
                     {
                         name: `Emojis (${interaction.guild.emojis.cache.size}):`,
-                        value: `Normal Emojis: ${interaction.guild.emojis.cache.filter(emoji => !emoji.animated).size}\nAnimated Emojis: ${interaction.guild.emojis.cache.filter(emoji => emoji.animated).size}`,
+                        value: `Normal Emojis: **${interaction.guild.emojis.cache.filter(emoji => !emoji.animated).size}**\nAnimated Emojis: **${interaction.guild.emojis.cache.filter(emoji => emoji.animated).size}**`,
                         inline: true
                     }
                 )
@@ -441,19 +441,19 @@ module.exports = {
                 },
                 {
                     name: 'Hoist:',
-                    value: role.hoist ? '✅' : '❌',
+                    value: role.hoist ? '<:authorized:917131189779845131>' : '<:xmark:917130858543075369>',
                     inline: true,
 
                 },
                 {
                     name: 'Managed:',
-                    value: role.managed ? '✅' : '❌',
+                    value: role.managed ? '<:authorized:917131189779845131>' : '<:xmark:917130858543075369>',
                     inline: true,
 
                 },
                 {
                     name: 'Mentionable:',
-                    value: role.mentionable ? '✅' : '❌',
+                    value: role.mentionable ? '<:authorized:917131189779845131>' : '<:xmark:917130858543075369>',
                     inline: true,
 
                 },
@@ -464,8 +464,8 @@ module.exports = {
                 },
                 {
                     name: 'Permissions:',
-                    value: role.permissions.toArray().join(', ') || 'No permissions',
-                    inline: true
+                    value: role.permissions.toArray().map(perm => `\`${perm}\``).join(', ') || 'No permissions',
+                    inline: false
                 }
             ]
             if (role.tags) embeds[0].fields.push({
