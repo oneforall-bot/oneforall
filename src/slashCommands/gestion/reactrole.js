@@ -44,7 +44,7 @@ module.exports = {
                 },
             ],
             timestamp: new Date(),
-            ...oneforall.embed
+            ...oneforall.embed(guildData)
         }
         const panel = await interaction.editReply({
             embeds: [embed], components: [row]

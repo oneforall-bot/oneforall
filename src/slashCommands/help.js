@@ -23,7 +23,7 @@ module.exports = {
                 icon_url: interaction.user.displayAvatarURL({dynamic: true}) || ''
             },
             timestamp: new Date(),
-            color: '#393B48',
+            color: guildData.embedColor,
 
         }
         if (command) {
@@ -82,7 +82,7 @@ module.exports = {
                 }
             ],
             timestamp: new Date(),
-            color: '#393B48',
+            color: guildData.embedColor,
 
         }
             await interaction.editReply({embeds: [help]})

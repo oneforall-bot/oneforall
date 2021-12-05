@@ -17,7 +17,7 @@ module.exports = async (oneforall, interaction) => {
     if(interaction.customId.includes('no')) poll.no += 1
     poll.alreadyVoted.push(interaction.user.id)
     const embed = {
-        ...oneforall.embed,
+        ...oneforall.embed(guildData),
         title: poll.question,
         timestamp: poll.endAt,
         description: `${oneforall.handlers.langHandler.get(guildData.lang).yes}: **${poll.yes}** \`(${((poll.yes / (poll.yes + poll.no)) *  100).toFixed(0)}%)\`\n\n${oneforall.handlers.langHandler.get(guildData.lang).no}: **${poll.no}** \`(${((poll.no / (poll.yes + poll.no)) * 100).toFixed(0)}%)\`\n\nTemps restant: <t:${oneforall.functions.dateToEpoch(new Date(poll.endAt))}:R>`,

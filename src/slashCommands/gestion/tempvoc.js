@@ -22,7 +22,7 @@ module.exports = {
 
         const embed = () => {
             return {
-                ...oneforall.embed,
+                ...oneforall.embed(guildData),
                 title: 'Configuration',
                 fields: [
                     {

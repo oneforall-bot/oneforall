@@ -19,7 +19,7 @@ module.exports = {
                     {dynamic: true}
                 )
             },
-            ...oneforall.embed, ...lang.counter.embed(tempCouter.member, tempCouter.voice, tempCouter.online, tempCouter.offline,
+            ...oneforall.embed(guildData), ...lang.counter.embed(tempCouter.member, tempCouter.voice, tempCouter.online, tempCouter.offline,
                 tempCouter.boostCount, tempCouter.boosterCount)
         }
         const components = [
@@ -127,7 +127,7 @@ module.exports = {
                         {dynamic: true}
                     )
                 },
-                ...oneforall.embed, ...lang.counter.embed(tempCouter.member, tempCouter.voice, tempCouter.online, tempCouter.offline,
+                ...oneforall.embed(guildData), ...lang.counter.embed(tempCouter.member, tempCouter.voice, tempCouter.online, tempCouter.offline,
                     tempCouter.boostCount, tempCouter.boosterCount)
             }
             panel.edit({

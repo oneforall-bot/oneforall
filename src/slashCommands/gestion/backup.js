@@ -154,7 +154,7 @@ module.exports = {
                     }
                 ],
                 timestamp: new Date(),
-                color: "#36393E",
+                color: guildData.embedColor,
                 footer: {
                     text: oneforall.user.username
                 }
@@ -167,7 +167,7 @@ module.exports = {
             if(!backupData) return interaction.editReply({content: lang.backup.backupNotFound})
             const channels = backupData.channels.categories.map(category => category.children)
             const embed = {
-                ...oneforall.embed,
+                ...oneforall.embed(guildData),
                 title: `Information de la backup ${backupId}`,
                 description: `Server Name - **${backupData.name}**\nNombres de roles - **${backupData.roles.length}**\nNombre d'emojis - **${backupData.emojis.length}**\nNombre de catégories - ** ${backupData.channels.categories.length}**\n Nombre de channels - **${channels.length}**\n Nombre de bannis - **${backupData.bans.length}**\n Backup créé le <t:${oneforall.functions.dateToEpoch(new Date(backupData.createdTimestamp))}:R>`,
                 footer: {

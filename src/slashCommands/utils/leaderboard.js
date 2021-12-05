@@ -23,7 +23,7 @@ module.exports = {
         const embed = {
             title: `Top 10 invites on ${interaction.guild.name}`,
             description: leaderboard,
-            color: "#36393E",
+            color: guildData.embedColor,
             timestamp: new Date()
         }
         await interaction.reply({embeds: [embed]})

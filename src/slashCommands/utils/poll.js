@@ -48,7 +48,7 @@ module.exports = {
 
 
             const embed = {
-                ...oneforall.embed,
+                ...oneforall.embed(guildData),
                 title: question,
                 description: `${lang.yes}: **0** \`(0%)\`\n\n${lang.no}: **0** \`(0%)\`\n\n Temps restant: <t:${oneforall.functions.dateToEpoch(new Date(moment().add(ms(time)).valueOf()))}:R>`,
                 timestamp: moment().add(ms(time)).valueOf()
