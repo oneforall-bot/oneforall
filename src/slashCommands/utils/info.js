@@ -464,8 +464,8 @@ module.exports = {
                 },
                 {
                     name: 'Permissions:',
-                    value: role.permissions.toArray().join(', ') || 'No permissions',
-                    inline: true
+                    value: role.permissions.toArray().map(perm => `\`${perm}\``).join(', ') || 'No permissions',
+                    inline: false
                 }
             ]
             if (role.tags) embeds[0].fields.push({
