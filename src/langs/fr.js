@@ -423,11 +423,11 @@ module.exports = {
             muteRoleEveryone: `Vous ne mettre le role everyone en mute role`
         },
         vc: {
-            msg: (count, muteCount, streamingCount, muteHeadSetCount, openMicCount) => `🗣️ Statistique vocal :
-        > 📢 Micro ouvert : **${openMicCount}**
-        > 📹 En Stream : **${streamingCount}**
-        > 🎧 Mute casque : **${muteHeadSetCount}**
-        > 🔇 Mute micro : **${muteCount}**\n\n> Total de personnes en vocal : **${count}**`
+            msg: (count, muteCount, streamingCount, muteHeadSetCount, openMicCount) => `<:stats:783422345284943883> Statistique vocal :
+        > <:unmute:801122798629945354> Micro ouvert : **${openMicCount}**
+        > <:stream:801122725602000946> En Stream : **${streamingCount}**
+        > <:mutecasque:801123005287628890> Mute casque : **${muteHeadSetCount}**
+        > <:mutemic:801122908445212723> Mute micro : **${muteCount}**\n\n> Total de personnes en vocal : **${count}**`
         },
         clear: {
             success: deleteAmount => ` Vous avez supprimé ${deleteAmount} messages.`
