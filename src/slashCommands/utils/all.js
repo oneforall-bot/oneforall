@@ -42,7 +42,7 @@ module.exports = {
                     },
                     description: admins.mapValues((member) => {
                         i++
-                        return `${i} - ${member.toString()} **(${member.id})**`
+                        return `\`${i}\` - ${member.toString()} **(${member.id})**`
                     }).toJSON().slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
 
                 }
@@ -61,7 +61,7 @@ module.exports = {
                     },
                     description: bots.mapValues((member) => {
                         i++
-                        return `${i} - ${member.toString()} **(${member.id})**`
+                        return `\`${i}\` - ${member.toString()} **(${member.id})**`
                     }).toJSON().slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
 
                 }
