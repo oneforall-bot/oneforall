@@ -37,6 +37,10 @@ module.exports = {
                 label: "Blacklist un utilisateur.",
                 description: "Permets de Blacklist un utilisateur du serveur."
             },
+            INFO_CMD: {
+                label: 'Utiliser la commande info',
+                description: 'Utiliser la commande info',
+            },
             REACTROLE_CMD: {
                 label: "Créer des reactroles",
                 description: "Permer de créer des reactroles sur le serveur."

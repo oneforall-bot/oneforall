@@ -18,6 +18,11 @@ class Permissions {
                 label: langManager.permissions["BLACKLIST_CMD"].label,
                 description: langManager.permissions["BLACKLIST_CMD"].description
             },
+            INFO_CMD: {
+                emoji: ``,
+                label: langManager.permissions["INFO_CMD"].label,
+                description: langManager.permissions["INFO_CMD"].description
+            },
             REACTROLE_CMD: {
                 emoji: ``,
                 label: langManager.permissions["REACTROLE_CMD"].label,
