@@ -1,7 +1,6 @@
 const ms = require('ms')
-const Canvas = require('canvas')
 const moment = require('moment')
-const {MessageAttachment, MessageEmbed, MessageActionRow, MessageButton} = require("discord.js");
+const { MessageActionRow, MessageButton} = require("discord.js");
 module.exports = {
     data: {
         name: 'poll',
