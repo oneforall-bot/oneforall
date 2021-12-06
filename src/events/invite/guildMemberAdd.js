@@ -15,7 +15,10 @@ module.exports = async (oneforall, member) => {
 
     const tempMap = new oneforall.Collection()
     for(const [code, invite] of newInv) tempMap.set(code, invite.uses)
-   const usedInv = newInv.find(inv => cachedInv?.get(inv.code) || 100 < inv.uses);
+   const usedInv = newInv.find(inv => {
+       if(!cachedInv) return undefined
+       return cachedInv.get(inv.code) < inv.uses
+   });
 
 
     let finalMsg =  lang.invite.cantTrace(member.toString());

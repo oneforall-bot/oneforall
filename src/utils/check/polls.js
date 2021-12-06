@@ -3,6 +3,7 @@ module.exports = async (oneforall) => {
     setInterval(() => {
         oneforall.managers.guildsManager.filter(manager => manager.polls.length > 0).forEach(async guildData => {
             const guild = oneforall.guilds.cache.get(guildData.guildId)
+            if(!guild) return
             for (const poll of guildData.polls) {
                 if (new Date(poll.endAt) >= new Date()) break
                 const channel = guild.channels.cache.get(poll.channel)

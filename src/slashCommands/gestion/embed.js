@@ -170,7 +170,7 @@ module.exports = {
                     }
                 }
                 if (indexToChange[1].includes('url')) {
-                    if (!questionAnswer.content.toLowerCase().startsWith('http') && !questionAnswer.content.toLowerCase().startsWith('https')) return oneforall.functions.tempMessage(message, lang.embedBuilder.errorUrl)
+                    if (!questionAnswer.content.toLowerCase().startsWith('http') && !questionAnswer.content.toLowerCase().startsWith('https')) return oneforall.functions.tempMessage(interaction, lang.embedBuilder.errorUrl)
                 }
                 if (!selectedOption.includes('copy')) {
                     embeds[`${selectedEmbed}`][indexToChange[0]][indexToChange[1]] = questionAnswer.content
