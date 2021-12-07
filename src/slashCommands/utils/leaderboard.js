@@ -19,7 +19,7 @@ module.exports = {
             tempData.push({memberId: memberManager.memberId, ...memberManager.invites})
         })
 
-        const leaderboard = tempData.sort((a, b) => b.total - a.total).map((memberManager, i) => `\`${i + 1}\` - <@${memberManager.memberId}>: **${memberManager.total || '0'}** invites (**${memberManager.join}** join, **${memberManager.leave}** leave, **${memberManager.fake}** fake, **${memberManager.bonus}** bonus)`).slice(0, 10).join('\n')
+        const leaderboard = tempData.sort((a, b) => oneforall.functions.getTotalInvite(b) - oneforall.functions.getTotalInvite(a)).map((memberManager, i) => `\`${i + 1}\` - <@${memberManager.memberId}>: **${oneforall.functions.getTotalInvite(memberManager) || '0'}** invites (**${memberManager.join}** join, **${memberManager.leave}** leave, **${memberManager.fake}** fake, **${memberManager.bonus}** bonus)`).slice(0, 10).join('\n')
         const embed = {
             title: `Top 10 invites on ${interaction.guild.name}`,
             description: leaderboard,

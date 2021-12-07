@@ -3,16 +3,10 @@ module.exports = function (database, modelName, config) {
         const DataTypes = database.DataTypes;
         const data = [
             {
-                name: "id",
-                type: DataTypes.INTEGER,
-                autoIncrement: true,
-                primaryKey: true
-            },
-            {
                 name: "guildId",
-                type: DataTypes.TEXT,
+                type: DataTypes.STRING(25),
                 allowNull: false,
-
+                primaryKey: true,
                 isWhere: true
             },
             {

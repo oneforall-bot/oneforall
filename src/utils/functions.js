@@ -90,5 +90,10 @@ module.exports = {
         const regexLimit = new RegExp(/(\d+)\/(\d+[s,m,h,d,w,y])/, 'gi')
         const regex = new RegExp( /(\d+)([s,m,h,d,w,y])/, 'gi')
         return limit ? regexLimit.test(string):  regex.test(string)
+    },
+
+    getTotalInvite(invites) {
+        const x =  invites.join - invites.leave - invites.bonus
+        return x < 0 ? 0 : x
     }
 }

@@ -1067,7 +1067,7 @@ module.exports = {
                 success: (user, amount, type) => `Vous avez **${type}** \`${amount}\` invite(s) à ${user}`
             },
             reset: (user) => `Vous avez reset les invites de ${user || 'tous le serveur'}`,
-            show: (user, invite) => {
+            show: (user, invite, total) => {
                 return {
                     author: {
                         name: `${user.username}#${user.discriminator}`,
@@ -1080,7 +1080,7 @@ module.exports = {
                         > Leave : **${invite.leave?.toString() || '0'}** invite(s)
                         > Fake : **${invite.fake?.toString() || '0'}** invite(s)
                         > Bonus : **${invite.bonus?.toString() || '0'}** invite(s)\n
-                        \`→\` Total : **${invite.total?.toString() || '0'}** invite(s)
+                        \`→\` Total : **${total?.toString() || '0'}** invite(s)
                     `,
                     footer: {
                         text: `${user.username}#${user.discriminator}`,
@@ -1117,7 +1117,26 @@ module.exports = {
                             color: '#36393E'
                         }
                     },
-
+                    mention: (executor, channel, mention) => {
+                        return {
+                            description: `${executor.toString()} a posté trop de mention dans ${channel}\n\nContent: ${mention}`,
+                            fields: [
+                                {
+                                    name: 'ID:',
+                                    value: `\`\`\`js\nExecutor = ${executor.id}\nChannel = ${channel.id}\`\`\``
+                                }
+                            ],
+                            author: {
+                                name: `${executor.user.username}#${executor.user.discriminator}`,
+                                icon_url: executor.user.displayAvatarURL({dynamic: true})
+                            },
+                            timestamp: new Date(),
+                            footer: {
+                                text: '🕙'
+                            },
+                            color: '#36393E'
+                        }
+                    },
                     delete: (executor, target, channel, content) => {
                         return {
                             description: `${executor.toString()} a supprimé ${target ? `le message de ${target.toString()}` : `son propre message`} dans ${channel}\n\nContent: ${content}`,

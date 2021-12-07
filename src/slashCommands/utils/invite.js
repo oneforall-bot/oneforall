@@ -244,7 +244,7 @@ module.exports = {
                 })
             }
             const {invites} = memberData
-            interaction.editReply({embeds: [lang.invite.show(user, invites)]})
+            interaction.editReply({embeds: [lang.invite.show(user, invites, oneforall.functions.getTotalInvite(invites))]})
         }
     }
 }
