@@ -10,6 +10,12 @@ module.exports = function (database, modelName, config) {
                 isWhere: true
             },
             {
+                name: 'prefix',
+                type: DataTypes.STRING(25),
+                allowNull: false,
+                default: config.prefix
+            },
+            {
                 name: "lang",
                 type: DataTypes.STRING(2),
                 allowNull: false,

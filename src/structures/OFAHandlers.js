@@ -7,6 +7,7 @@ class ofaHandlers {
         this.slashCommandHandler = new SlashCommandHandler(this);
         this.eventHandler = new EventHandler(this);
         this.contextMenuHandler = new ContextMenuHandler(this);
+        this.commandHandler = new CommandHandler(this);
     }
 
     getFiles(path, handler) {
@@ -59,6 +60,25 @@ class EventHandler {
     }
 }
 
+
+class CommandHandler {
+    constructor(ofaHandlers) {
+        this.ofaHandlers = ofaHandlers;
+        console.log(`CommandHandler Loaded`);
+
+        this.commandList = new ofaHandlers.oneforall.Collection();
+        this.aliases = new ofaHandlers.oneforall.Collection();
+
+        this.ofaHandlers.getFiles(path.resolve(__dirname, '..', 'commands'), this);
+    }
+    registerFile(file) {
+        const pull = require(file);
+        if (pull.name)
+            this.commandList.set(pull.name.toLowerCase(), pull);
+        if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(alias => this.aliases.set(alias.toLowerCase(), pull.name));
+        delete require.cache[require.resolve(file)];
+    }
+}
 
 class SlashCommandHandler {
     constructor(ofaHandlers) {

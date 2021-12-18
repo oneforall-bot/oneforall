@@ -4,7 +4,7 @@ module.exports = async (oneforall, oldMessage, newMessage) => {
     if (!newMessage.guild) return;
     if (newMessage.webhookId) return;
     if(!oldMessage.author) return
-    if(oldMessage.author.id === onefoxrall.user.id || oneforall.isOwner(oldMessage.author.id)) return
+    if(oldMessage.author.id === oneforall.user.id || oneforall.isOwner(oldMessage.author.id)) return
     if (!oneforall.functions.isLink(newMessage.content)) return
     if (!guild.me.permissions.has("MANAGE_MESSAGES")) return console.log("Permissions manage message is missing to the client");
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(guild.id, {

@@ -79,7 +79,7 @@ class DataMenu {
 
         }
 
-        await this.interaction.editReply({embeds: [this.embed()], components: [...this.getLength > 10 ? [this.row] : [] ]})
+        this.interaction instanceof CommandInteraction  ? await this.interaction.editReply({embeds: [this.embed()], components: [...this.getLength > 10 ? [this.row] : [] ]}) : await this.interaction.channel.send({embeds: [this.embed()], components: [...this.getLength > 10 ? [this.row] : [] ]})
     }
 
 }

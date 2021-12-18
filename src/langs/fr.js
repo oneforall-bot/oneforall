@@ -4,6 +4,8 @@ module.exports = {
 
     dictionary: {
         notEnoughPermissions: (command) => `Vous n'avez pas assez de permissions pour exécuter la commande \`${command}\``,
+        notEnoughPermissionsClient: (missingPerms) => `OneForAll manque de permissions (\`${missingPerms}\`) pour pouvoir utiliser cette commande.`,
+       
         cooldownMessage: (prefix, command, timeRemaining) => `Vous devez attendre \`${timeRemaining}\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         notOwner: (prefix, command) => `Vous devez être \`Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         notGuildOwner: (prefix, command) => `Vous devez être \`Guild Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
@@ -440,6 +442,7 @@ module.exports = {
             noOneToBring: `Il y a personne à déplacer`
         },
         setup: {
+            invalideRoles: `Le role membre ou le role muet est invalide.`,
             muteRoleEveryone: `Vous ne mettre le role everyone en mute role`
         },
         vc: {
