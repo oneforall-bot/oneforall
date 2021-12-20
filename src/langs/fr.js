@@ -960,7 +960,8 @@ module.exports = {
             }
         },
         renew: {
-            success: (member) => `Le salon a été recréé par ${member}`
+            success: (member) => `Le salon a été recréé par ${member}`,
+            cannotDelete: 'Je ne peux pas **supprimer ce channel**'
         },
         ban: {
             wrongDays: `Les nombres de jours à ban doit être compris entre 0 et 7`,

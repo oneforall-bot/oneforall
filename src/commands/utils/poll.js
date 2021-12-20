@@ -24,7 +24,7 @@ module.exports = {
     const lang = guildData.langManager
     const subCommand = args[0]
     if(subCommand === 'create'){
-        const question = args.slice(3).join("")
+        const question = args.slice(3).join(" ")
         const time = args[2]
         const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[1])
         if(!oneforall.functions.isValidTime(time)) return oneforall.functions.tempMessage(message,  lang.incorrectTime)
