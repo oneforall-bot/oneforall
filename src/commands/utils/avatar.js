@@ -2,7 +2,7 @@ const { Message, Collection, MessageEmbed } = require('discord.js')
 const OneForAll = require('../../structures/OneForAll')
 module.exports = {
     name: "avatar",
-    aliases: ["pic"],
+    aliases: ["pic", "pp"],
     description: "Show the avatar of a user || Affiche l'avatar d'un utilisateur",
     usage: "avatar <member>",
     clientPermissions: ['SEND_MESSAGES', 'EMBED_MESSAGES'],

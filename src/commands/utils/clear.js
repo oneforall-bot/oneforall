@@ -1,43 +1,36 @@
+const { Message, Collection, Permissions } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'clear',
-        description: 'Clear somme messages',
-        options: [
-            {
-                type: 'INTEGER',
-                name: 'amount',
-                description: 'Amount to clear',
-                required: true
-            },
-            {
-                type: 'USER',
-                name: 'member',
-                description: 'Clear member messages',
-                required: false
-            }
-        ]
-    },
-    run: async (oneforall, message, memberData, guildData) => {
-        const hasPermission = memberData.permissionManager.has("CLEAR_CMD")
-        await message.deferReply({ephemeral: (!!!hasPermission)});
+    name: "clear",
+    aliases: [],
+    description: "Clear messages or member message || Supprimer des messages ou des messages de membre",
+    usage: "clear <amount/memer> ",
+    clientPermissions: ['SEND_MESSAGES', Permissions.FLAGS.MANAGE_MESSAGES],
+    ofaPerms: ["CLEAR_CMD"],
+    cooldown: 1000,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
         const lang = guildData.langManager
-        if (!hasPermission) return message.editReply({content: lang.notEnoughPermissions('clear')})
-        const {options} = message;
-        const member = options.getMember('member')
-        const deleteAmount = options.getInteger('amount')
-        if (member) {
+        const member = message.mentions.members.first() || (await message.guild.members.fetch(args[0]).catch(() => {})) || undefined
+        const deleteAmount = args[0];
+        message.delete()
+        if (member) {   
             const channelMessage = await message.channel.messages.fetch();
             const memberMessage = channelMessage.filter((m) => m.author.id === member.id)
             await message.channel.bulkDelete(memberMessage, true).then(async () => {
-                const msg = await message.editReply({content: `${member} messages cleared`})
-                setTimeout(() => {
-
-                    msg.delete()
-                }, 2000)
+                await oneforall.functions.tempMessage(message,`${member} messages cleared (${memberMessage.size})`)
+            
             })
         } else {
 
-
+            if(isNaN(deleteAmount)) return oneforall.functions.tempMessage(message, invalidNumber)
             let tbx = [];
 
             const chunkBy = (n) => number => {
@@ -54,15 +47,15 @@ module.exports = {
             for (let x of tbx) {
                 if ((await message.channel.messages.fetch()).size <= 0) break
 
-                    await clearMoreThan100(message.channel, x)
+                await clearMoreThan100(message.channel, x)
                 await oneforall.functions.sleep(1000)
             }
-            await message.editReply({content: lang.clear.success(deleteAmount)}).catch(() => {
+            await oneforall.functions.tempMessage(message, lang.clear.success(deleteAmount)).catch(() => {
                 oneforall.functions.tempMessage(message, lang.clear.success(deleteAmount))
             })
 
             async function clearMoreThan100(channel, limit) {
-                let collected = await channel.messages.fetch({limit});
+                let collected = await channel.messages.fetch({ limit });
                 let deletedMsg = 0;
                 if (collected.size > 0) {
                     while (deletedMsg < limit) {

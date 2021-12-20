@@ -1,86 +1,39 @@
-const {MessageActionRow, MessageSelectMenu, Util} = require("discord.js");
+const { MessageActionRow, MessageSelectMenu, Message, Collection, Permissions, Snowflake } = require("discord.js");
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'invite',
-        description: 'Send welcome message and count invites',
-        options: [
-            {
-                type: "SUB_COMMAND",
-                name: 'config',
-                description: 'Config the invite system',
-            },
-            {
-                type: "SUB_COMMAND",
-                name: 'add',
-                description: 'Add invites to a member',
-                options: [
-                    {
-                        type: 'USER',
-                        name: 'member',
-                        description: 'The member to give invites',
-                        required: true
-                    },
-                    {
-                        type: 'INTEGER',
-                        name: 'amount',
-                        description: 'The amount of invites to add',
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: "SUB_COMMAND",
-                name: 'remove',
-                description: 'Remove invites to a member',
-                options: [
-                    {
-                        type: 'USER',
-                        name: 'member',
-                        description: 'The member to remove invites',
-                        required: true
-                    },
-                    {
-                        type: 'INTEGER',
-                        name: 'amount',
-                        description: 'The amount of invites to remove',
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: "SUB_COMMAND",
-                name: 'reset',
-                description: 'Reset invites on the server or a member',
-                options: [
-                    {
-                        type: 'USER',
-                        name: 'member',
-                        description: 'The member to reset invite',
-                    }
-                ]
-            },
-            {
-                type: "SUB_COMMAND",
-                name: 'show',
-                description: 'Show invites of a member',
-                options: [
-                    {
-                        type: 'USER',
-                        name: 'member',
-                        description: 'The member to show invites',
-                    }
-                ]
-            },
-        ]
-    },
-    run: async (oneforall, message, memberData, guildData) => {
+    name: "invite",
+    aliases: [],
+    description: "Manage invites on the server || Gérer les invites sur le serveur",
+    usage: "invite [config/add/remove/reset/member] [member] [amount]",
+    clientPermissions: ['SEND_MESSAGES', Permissions.FLAGS.EMBED_LINKS],
+    cooldown: 1000,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
         const lang = guildData.langManager
-        const subCommand = message.options.getSubcommand()
+        const subCommand = args[0]
+        if (!subCommand || subCommand !== "add" && subCommand !== "remove" && subCommand !== "config" && subCommand !== "reset") {
+            let user = args[0] ? (await message.guild.members.fetch(args[0]).catch(() => {})) || message.mentions.members.first() : message.member
+
+            if (user) {
+                memberData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${message.guild.id}-${user.id}`, {
+                    guildId: message.guild.id,
+                    memberId: user.id
+                })
+            }
+            const { invites } = memberData
+            return message.channel.send({ embeds: [lang.invite.show(user.user, invites, oneforall.functions.getTotalInvite(invites))] })
+        }
         const hasPermission = memberData.permissionManager.has(`INVITE_${subCommand.toUpperCase()}_CMD`) || subCommand === 'show'
-        await message.deferReply({ephemeral: (!!!hasPermission)});
-        if (!hasPermission) return message.editReply({content: lang.notEnoughPermissions(`invite ${subCommand}`)})
+        if (!hasPermission) return oneforall.functions.tempMessage(message, lang.notEnoughPermissions(`invite ${subCommand}`))
         if (subCommand === 'config') {
-            let {invites} = guildData
+            let { invites } = guildData
             const row = new MessageActionRow()
                 .addComponents(
                     new MessageSelectMenu()
@@ -109,13 +62,13 @@ module.exports = {
                 ...oneforall.embed(guildData),
                 timestamp: new Date()
             }
-            const panel = await message.editReply({
+            const panel = await message.channel.send({
                 embeds: [embed], components: [row]
             })
             const componentFilter = {
-                    filter: messageReactrole => messageReactrole.customId === `invite.${message.id}` && messageReactrole.user.id === message.author.id,
-                    time: 900000
-                },
+                filter: messageReactrole => messageReactrole.customId === `invite.${message.id}` && messageReactrole.user.id === message.author.id,
+                time: 900000
+            },
                 awaitMessageFilter = {
                     filter: response => response.author.id === message.author.id,
                     time: 900000,
@@ -138,7 +91,7 @@ module.exports = {
                     return errorMessage(lang.invite.config.successCh(channel.toString()))
                 }
                 if (selectedOption === 'message') {
-                    const {content} = await generateQuestion(lang.invite.config.msgQ)
+                    const { content } = await generateQuestion(lang.invite.config.msgQ)
                     if (content === 'cancel') return errorMessage(lang.cancel)
 
                     invites.message = content
@@ -150,12 +103,12 @@ module.exports = {
                         description: lang.invite.config.help,
                         timestamp: new Date()
                     }
-                    message.channel.send({embeds: [helpEmbed]})
+                    message.channel.send({ embeds: [helpEmbed] })
                 }
                 if (selectedOption === 'enable') {
                     invites.enable = !invites.enable
                     row.components[0].options = lang.invite.config.selectMenuOptions(invites.enable)
-                    await panel.edit({components: [row]})
+                    await panel.edit({ components: [row] })
                     await updateEmbed()
                 }
                 if (selectedOption === 'save') {
@@ -165,7 +118,7 @@ module.exports = {
                     collector.stop()
                     messageReactrole.deleteReply()
                     errorMessage(lang.invite.config.success)
-                    await panel.delete().catch(() => {})
+                    await panel.delete().catch(() => { })
 
                 }
             })
@@ -194,27 +147,30 @@ module.exports = {
                 embed.fields[0].value = !invites.channel ? lang.undefined : `<#${invites.channel}>`;
                 embed.fields[1].value = invites.message || lang.undefined;
                 embed.fields[2].value = !invites.enable ? '\`❌\`' : '\`✅\`'
-                await panel.edit({embeds: [embed]})
+                await panel.edit({ embeds: [embed] })
             }
         }
         if (subCommand === 'add' || subCommand === 'remove') {
-            const {member, user} = message.options.get('member')
-            const amount = message.options.get('amount').value
-            const targetData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${message.guild.id}-${user.id}`, {
+            let amount = isNaN(args[2]) ? undefined : parseInt(args[2])
+            if (!amount) return oneforall.functions.tempMessage(message, 'Invalid amount')
+            
+            const member = args[1] ? (await message.guild.members.fetch(args[1]).catch(() => {})) || message.mentions.members.first() : undefined
+            if(!member) return oneforall.functions.tempMessage(message, "Missing member")
+            const targetData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${message.guild.id}-${member.id}`, {
                 guildId: message.guild.id,
-                memberId: user.id
+                memberId: member.id
             })
-            const {invites} = targetData
+            const { invites } = targetData
             subCommand === 'remove' ? invites.join -= amount : invites.join += amount
             subCommand === 'remove' ? invites.bonus -= amount : invites.bonus += amount
             targetData.save().then(() => {
-                message.editReply({content: lang.invite.add.success(user.toString(), amount, subCommand)})
+                oneforall.functions.tempMessage(message, lang.invite.add.success(member.toString(), amount, subCommand))
             })
 
         }
         if (subCommand === 'reset') {
-            let user = message.options.get('member')?.user
-            const defaultInvite = {join: 0, leave: 0, fake: 0, bonus: 0}
+            let user =args[1] ? (await message.guild.members.fetch(args[1]).catch(() => {})) || message.mentions.members.first() : undefined
+            const defaultInvite = { join: 0, leave: 0, fake: 0, bonus: 0 }
             if (user) {
                 const targetData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${message.guild.id}-${user.id}`, {
                     guildId: message.guild.id,
@@ -231,20 +187,9 @@ module.exports = {
                         memberData.save()
                     }
             }
-            await message.editReply({content: lang.invite.reset(user)})
+            await oneforall.functions.tempMessage(message, lang.invite.reset(user) )
 
         }
-        if (subCommand === 'show') {
-            let user = message.options.getUser('member')|| message.author
-
-            if (user) {
-                memberData = oneforall.managers.membersManager.getAndCreateIfNotExists(`${message.guild.id}-${user.id}`, {
-                    guildId: message.guild.id,
-                    memberId: user.id
-                })
-            }
-            const {invites} = memberData
-            message.editReply({embeds: [lang.invite.show(user, invites, oneforall.functions.getTotalInvite(invites))]})
-        }
+       
     }
 }

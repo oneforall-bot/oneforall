@@ -25,6 +25,7 @@ module.exports = {
         roleSuppThanClient: `Vous ne pouvez pas utiliser ce rôle car il est supérieur au bot`,
         roleSuppThanAuthor: `Vous ne pouvez effectuer cette action car vos rôles sont inférieure au membre`,
         incorrectTime: 'Le temps est incorrect',
+        incorrectChannel: "Le channel est incorrect",
         save: 'La configuration a été sauvegardé',
         permissions: {
             ALL: {
@@ -210,6 +211,7 @@ module.exports = {
                 description: "Permet de créer, supprimer des poll"
             }
         },
+
         piconly: {
             wrongType: 'Le type du channel est invalide',
             alreadyPiconly: 'Le channel est déjà dans les piconly',
@@ -261,6 +263,15 @@ module.exports = {
             ],
 
 
+        },
+        poll: {
+            missingQuestion: "Vous devez spécifier **une question** pour le vote",
+            success: channel => `Le vote est **lancé** dans ${channel}`,
+            delete: {
+                missingMessageId: "Vous devez spécifier **l'id du message associé au vote**",
+                notFound: "Le vote n'a pas été **trouvé**",
+                success: 'Le vote a été **supprimé**'
+            }
         },
         lock: {
             success: (subCommand) => `Le salon est ${subCommand === 'on' ? 'fermé' : 'ouvert'}`,
@@ -453,7 +464,8 @@ module.exports = {
         > <:mutemic:801122908445212723> Mute micro : **${muteCount}**\n\n> Total de personnes en vocal : **${count}**`
         },
         clear: {
-            success: deleteAmount => ` Vous avez supprimé ${deleteAmount} messages.`
+            success: deleteAmount => ` Vous avez supprimé ${deleteAmount} messages.`,
+            invalidNumber: `Le nombre de message à supprimé est invalide.`
         },
         mute: {
             add: {

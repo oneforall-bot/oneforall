@@ -1,71 +1,49 @@
-const {Util} = require('discord.js')
+const { Message, Collection, Util, Permissions } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'emoji',
-        description: 'Add delete an emoji',
-        options: [
-            {
-                type: 'SUB_COMMAND',
-                name: 'add',
-                description: 'Add an emoji',
-                options: [
-                    {
-                        type: 'STRING',
-                        required: true,
-                        description: 'The emoji to add',
-                        name: 'emoji'
-                    },
-                    {
-                        type: 'STRING',
-                        required: false,
-                        description: 'The name of the emoji to add',
-                        name: 'name'
-                    }
-                ]
-            },
-            {
-                type: 'SUB_COMMAND',
-                name: 'delete',
-                description: 'Delete an emoji',
-                options: [
-                    {
-                        type: 'STRING',
-                        required: true,
-                        description: 'The emoji to delete',
-                        name: 'emoji'
-                    }
-                ]
-            }
-        ]
-    },
-    run: async (oneforall, message, memberData, guildData) => {
+    name: "emoji",
+    aliases: [],
+    description: "Add or delete emoji || Ajouter ou supprimer des emojis",
+    usage: "emoji <add/delete> <emoji> [emojiName]",
+    clientPermissions: ['SEND_MESSAGES', Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS],
+    cooldown: 1000,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
         const hasPermission = memberData.permissionManager.has("ADD_EMOJI_CMD") || memberData.permissionManager.has("REMOVE_EMOJI_CMD");
-        await message.deferReply({ephemeral: (!!!hasPermission)});
         const lang = guildData.langManager
-        if (!hasPermission) return message.editReply({content: lang.notEnoughPermissions('emoji')})
-        const subCommand = message.options.getSubcommand()
-        const rawEmoji = message.options.get('emoji').value
+        if (!hasPermission) return oneforall.functions.tempMessage(message, lang.notEnoughPermissions('emoji'))
+        const subCommand = args[0]
+        if (subCommand !== "add" && subCommand !== "delete") return oneforall.functions.tempMessage(message, "Invalide syntax")
+        const rawEmoji = args[1]
         const emoji = Util.parseEmoji(rawEmoji)
         const link = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "png"}`
         if (subCommand === 'add') {
             const hasPermissionAdd = memberData.permissionManager.has("ADD_EMOJI_CMD")
-            if (!hasPermissionAdd) return message.editReply({content: lang.notEnoughPermissions('emoji add')})
-            const name = message.options.get('name')?.value
-            await message.guild.emojis.create(link, name || emoji.id || emoji.name, {reason: `Emoji add by ${message.author.username}`}).then((emoji) => {
-                return message.editReply({content: lang.emoji.add.success(emoji.toString())})
+            if (!hasPermissionAdd) return oneforall.functions.tempMessage(message, lang.notEnoughPermissions('emoji add'))
+            const name = args[2]
+            await message.guild.emojis.create(link, name || emoji.id || emoji.name, { reason: `Emoji add by ${message.author.username}` }).then((emoji) => {
+                return oneforall.functions.tempMessage(message, lang.emoji.add.success(emoji.toString()))
             }).catch(() => {
-                return message.editReply({content: lang.error})
+                return oneforall.functions.tempMessage(message, lang.error)
             })
         } else {
             const hasPermissionRemove = memberData.permissionManager.has("REMOVE_EMOJI_CMD")
-            if (!hasPermissionRemove) return message.editReply({content: lang.notEnoughPermissions('emoji remove')})
+            if (!hasPermissionRemove) return oneforall.functions.tempMessage(message, lang.notEnoughPermissions('emoji remove'))
             const em = await message.guild.emojis.resolve(emoji.id || emoji.name)
-            if(!em)                return message.editReply({content: lang.error})
+            if (!em) return oneforall.functions.tempMessage(message, lang.error)
 
             em.delete(`Remove emoji par ${message.author.username}`).then((emoji) => {
-                return message.editReply({content: lang.emoji.remove.success(emoji.name)})
+                return oneforall.functions.tempMessage(message, lang.emoji.remove.success(emoji.name))
             }).catch(() => {
-                return message.editReply({content: lang.error})
+                return oneforall.functions.tempMessage(message, lang.error)
+
             })
         }
     }

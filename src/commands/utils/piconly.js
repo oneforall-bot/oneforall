@@ -1,73 +1,49 @@
+const { Message, Collection } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'piconly',
-        description: 'Manage the piconly feature',
-        options: [
-            {
-                type: 'SUB_COMMAND',
-                name: 'add',
-                description: 'Add a piconly channel',
-                options: [
-                    {
-                        type: 'CHANNEL',
-                        name: 'channel',
-                        description: 'The channel to set the only image on',
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 'SUB_COMMAND',
-                name: 'remove',
-                description: 'Remove a piconly channel',
-                options: [
-                    {
-                        type: 'CHANNEL',
-                        name: 'channel',
-                        description: 'The channel to remove the only image on',
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 'SUB_COMMAND',
-                name: 'list',
-                description: 'List the piconly channels',
-            },
-        ]
-    },
-    run: async (oneforall, message, memberData, guildData) => {
-        const hasPermission = memberData.permissionManager.has("PICONLY_CMD")
-        await message.deferReply({ephemeral: (!!!hasPermission)});
+    name: "piconly",
+    aliases: ["imgonly", "onlypic"],
+    description: "Add, remove or list the piconly on the serveur | Ajouter, supprimer ou lister les piconly sur le serveur",
+    usage: "piconly <add/remove/list> [channel]",
+    clientPermissions: ['SEND_MESSAGES', "EMBED_LINKS"],
+    ofaPerms: ["PICONLY_CMD"],
+    guildOwnersOnly: false,
+    ownersOnly: false,
+    cooldown: 0,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
         const lang = guildData.langManager
-        if (!hasPermission) return message.editReply({content: lang.notEnoughPermissions('piconly')})
-
-        const {options} = message
-
-        const subCommand = options.getSubcommand()
-        if(subCommand === 'list'){
-            const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
+        const subCommand = args[0]
+        if (subCommand === 'list') {
+            const embedChange = (page, slicerIndicatorMin, slicerIndicatorMax, totalPage) => {
                 return {
                     ...oneforall.embed(guildData),
                     title: `All piconly channels (${guildData.piconly.length})`,
                     footer: {
-                        text: `Page ${page + 1}/${totalPage ||1}`
+                        text: `Page ${page + 1}/${totalPage || 1}`
                     },
                     description: guildData.piconly.map((id, i) => {
-                        return `\`${i+1}\` - <#${id}> **(${id})**`
+                        return `\`${i + 1}\` - <#${id}> **(${id})**`
                     }).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
 
                 }
             }
             return await new oneforall.DataMenu(guildData.piconly, embedChange, message, oneforall).sendEmbed()
         }
-        const channel = options.getChannel('channel', false)
-        if(!channel.isText()) return message.editReply({content: lang.piconly.wrongType})
-        if(guildData.piconly.includes(channel.id) && subCommand === 'add') return message.editReply({content: lang.piconly.alreadyPiconly})
-        if(!guildData.piconly.includes(channel.id) && subCommand === 'remove') return message.editReply({content: lang.piconly.notPiconly})
+        const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[1]) || message.channel
+        if (!channel.isText()) return oneforall.functions.tempMessage(message, lang.piconly.wrongType)
+        if (guildData.piconly.includes(channel.id) && subCommand === 'add') return oneforall.functions.tempMessage(message, lang.piconly.alreadyPiconly)
+        if (!guildData.piconly.includes(channel.id) && subCommand === 'remove') return oneforall.functions.tempMessage(message, lang.piconly.notPiconly)
         subCommand === 'add' ? guildData.piconly.push(channel.id) : guildData.piconly = guildData.piconly.filter(id => id !== channel.id)
-        guildData.save().then(() =>{
-            message.editReply({content: lang.piconly.success(channel.toString())})
+        guildData.save().then(() => {
+            oneforall.functions.tempMessage(message, lang.piconly.success(channel.toString()))
         })
 
     }
