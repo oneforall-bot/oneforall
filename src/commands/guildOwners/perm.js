@@ -1,12 +1,26 @@
-const {MessageSelectMenu, MessageActionRow} = require("discord.js");
+const { MessageSelectMenu, MessageActionRow } = require("discord.js");
+const { Message, Collection } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'permissions',
-        description: 'Manage the oneforall permissions of a user',
-    },
+    name: "permissions",
+    aliases: ["perms", "perm"],
+    description: "Manage the oneforall permissions of a member | Gérer les permissions oneforall d'un membre",
+    usage: "permissions",
+    clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
     guildOwnersOnly: true,
-    run: async (oneforall, message, memberData, guildData) => {
-        message.reply({
+    guildCrownOnly: false,
+    ownersOnly: false,
+    cooldown: 1000,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
+        message.channel.send({
             embeds: [
                 {
                     title: `Liste des groupes`,
@@ -130,7 +144,7 @@ module.exports = {
                         emoji: pageAllow < totalPageAllow ? '➡️' : '◀️'
                     }])
                     components[componentIndex].setMaxValues(components[componentIndex].options.length)
-                    return message.update({components: components.map(c => new MessageActionRow({components: [c]}))})
+                    return message.edit({ components: components.map(c => new MessageActionRow({ components: [c] })) })
                 }
 
                 defaultMessage.edit({
@@ -139,53 +153,53 @@ module.exports = {
                             description: `D'accord, voici le membre ou le role que vous modifié: <@${memberToEditData.roleId ? '&' : ""}${memberToEditData.memberId || memberToEditData.roleId}> \n\n Maintenant, je vous demande de choisir les permissions ou les groupes. \n\nGroupes actuel: \n\n ${groupsIn.size > 0 ? groupsIn.map(g => `\`${g.groupName}\``) : `\`Aucun groupe\``}  \n\n Permissions actuellement acordé:  \n\n ${allowPermissions.length > 0 ? allowPermissions.map(v => `\`${v}\` (*${enumPermissions.permissions[v].description}*)`).join('\n') : `\`Aucune permissions\``}`,
                         }
                     ],
-                    components: components.map(c => new MessageActionRow({components: [c]}))
+                    components: components.map(c => new MessageActionRow({ components: [c] }))
                 });
                 const collector = message.channel.createMessageComponentCollector({
-                    filter: message => [`permissions.edit.add.${message.id}`, `permissions.edit.remove.${message.id}`, `permissions.edit.group.add.${message.id}`, `permissions.edit.group.remove.${message.id}`].includes(message.customId) && message.author.id === message.user.id,
+                    filter: interaction => [`permissions.edit.add.${message.id}`, `permissions.edit.remove.${message.id}`, `permissions.edit.group.add.${message.id}`, `permissions.edit.group.remove.${message.id}`].includes(interaction.customId) && message.author.id === interaction.user.id,
                     time: 60 * 1000
                 })
-                collector.on('collect', async message => {
+                collector.on('collect', async interaction => {
 
-                    if (message.values[0] === 'next') {
-                        message.customId === `permissions.edit.remove.${message.id}` ? pageAllow = pageAllow !== totalPageAllow - 1 ? pageAllow + 1 : pageAllow = 0 : pageDeny = pageDeny !== totalPageDeny - 1 ? pageDeny + 1 : pageDeny = 0
-                        message.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMinAllow += maxValues : slicerIndicatorMinDeny += maxValues
-                        message.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMaxAllow += maxValues : slicerIndicatorMaxDeny += maxValues
-                        if(components[message.customId === `permissions.edit.remove.${message.id}` ? index : 0].options[components[message.customId === `permissions.edit.remove.${message.id}` ? index : 0].options.length - 2].value === 'EVENT_ANTIRAID_ANTIMASSMENTION') {
+                    if (interaction.values[0] === 'next') {
+                        interaction.customId === `permissions.edit.remove.${message.id}` ? pageAllow = pageAllow !== totalPageAllow - 1 ? pageAllow + 1 : pageAllow = 0 : pageDeny = pageDeny !== totalPageDeny - 1 ? pageDeny + 1 : pageDeny = 0
+                        interaction.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMinAllow += maxValues : slicerIndicatorMinDeny += maxValues
+                        interaction.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMaxAllow += maxValues : slicerIndicatorMaxDeny += maxValues
+                        if (components[interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0].options[components[interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0].options.length - 2].value === 'EVENT_ANTIRAID_ANTIMASSMENTION') {
                             slicerIndicatorMaxDeny = 24
                             slicerIndicatorMinDeny = 0
-                            console.log(components[message.customId === `permissions.edit.remove.${message.id}` ? index : 0])
+                            console.log(components[interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0])
                         }
-                        return updateOptions(message, message.customId === `permissions.edit.remove.${message.id}` ? index : 0)
+                        return updateOptions(message, interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0)
                     }
 
-                    if (message.values[0] === 'prev') {
-                        message.customId === `permissions.edit.remove.${message.id}` ? pageAllow = pageAllow === 0 ? pageAllow = totalPageAllow - 1 : pageAllow <= totalPageAllow - 1 ? pageDeny -= 1 : pageDeny += 1 : pageDeny = pageDeny === 0 ? pageDeny = totalPageDeny - 1 : pageDeny <= totalPageDeny - 1 ? pageDeny -= 1 : pageDeny += 1
-                        message.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMinAllow -= maxValues : slicerIndicatorMinDeny -= maxValues
-                        message.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMaxAllow -= maxValues : slicerIndicatorMaxDeny -= maxValues
-                        return updateOptions(message, message.customId === `permissions.edit.remove.${message.id}` ? index : 0)
+                    if (interaction.values[0] === 'prev') {
+                        interaction.customId === `permissions.edit.remove.${message.id}` ? pageAllow = pageAllow === 0 ? pageAllow = totalPageAllow - 1 : pageAllow <= totalPageAllow - 1 ? pageDeny -= 1 : pageDeny += 1 : pageDeny = pageDeny === 0 ? pageDeny = totalPageDeny - 1 : pageDeny <= totalPageDeny - 1 ? pageDeny -= 1 : pageDeny += 1
+                        interaction.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMinAllow -= maxValues : slicerIndicatorMinDeny -= maxValues
+                        interaction.customId === `permissions.edit.remove.${message.id}` ? slicerIndicatorMaxAllow -= maxValues : slicerIndicatorMaxDeny -= maxValues
+                        return updateOptions(message, interaction.customId === `permissions.edit.remove.${message.id}` ? index : 0)
 
                     }
-                    switch (message.customId) {
+                    switch (interaction.customId) {
                         case `permissions.edit.remove.${message.id}`:
-                            memberToEditData.set('permissions', memberToEditData.permissions.filter(permission => !message.values.includes(permission)))
+                            memberToEditData.set('permissions', memberToEditData.permissions.filter(permission => !interaction.values.includes(permission)))
                             break;
                         case `permissions.edit.group.add.${message.id}`:
-                            memberToEditData.set('groups', [...memberToEditData.groups, ...message.values.filter(p => !memberToEditData.groups.includes(p))]);
+                            memberToEditData.set('groups', [...memberToEditData.groups, ...interaction.values.filter(p => !memberToEditData.groups.includes(p))]);
                             break;
                         case `permissions.edit.group.remove.${message.id}`:
-                            memberToEditData.set('groups', memberToEditData.groups.filter(group => !message.values.includes(group)))
+                            memberToEditData.set('groups', memberToEditData.groups.filter(group => !interaction.values.includes(group)))
                             break;
                         default:
-                            memberToEditData.set('permissions', [...memberToEditData.permissions, ...message.values.filter(p => !memberToEditData.permissions.includes(p))]);
+                            memberToEditData.set('permissions', [...memberToEditData.permissions, ...interaction.values.filter(p => !memberToEditData.permissions.includes(p))]);
                     }
-                    await message.deferUpdate()
+                    await interaction.deferUpdate()
                     changePermissions(message, defaultMessage, guildData, memberToEditData).then(() => resolve(memberToEditData.groups)).catch(() => {
                     });
                     collector.stop()
                 })
                 defaultMessage.awaitReactions({
-                    filter: (reaction, user) => reaction.emoji.name === "✅" && user.id === message.user.id,
+                    filter: (reaction, user) => reaction.emoji.name === "✅" && user.id === message.author.id,
                     time: 60 * 1000,
                     max: 1
                 })
@@ -206,7 +220,7 @@ module.exports = {
                 ]
             });
             message.channel.awaitMessages({
-                filter: m => m.author.id === message.user.id,
+                filter: m => m.author.id === message.author.id,
                 max: 1,
                 time: 30000,
                 errors: ['time']
@@ -246,5 +260,4 @@ module.exports = {
         }
     }
 }
-
 

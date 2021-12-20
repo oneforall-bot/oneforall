@@ -44,12 +44,11 @@ class DataMenu {
                     .setStyle('SECONDARY')
             )
             const componentFilter = {
-                filter: interactionChanger => interactionChanger.customId.includes(this.interaction.id) && interactionChanger.user.id === this.interaction.user.id,
+                filter: interactionChanger => interactionChanger.customId.includes(this.interaction.id) && interactionChanger.user.id === (this.interaction instanceof CommandInteraction ? this.interaction.user.id : this.interaction.author.id),
                 time: 900000
             }
             this.collector = this.interaction.channel.createMessageComponentCollector(componentFilter)
             this.collector.on('collect', async (interactionChanger) => {
-                await interactionChanger.deferUpdate()
                 const selectedButton = interactionChanger.customId.split('.')[0]
                 if (selectedButton === 'left') {
                     this.page = this.page === 0 ? this.page = this.totalPage - 1 : this.page <= this.totalPage - 1 ? this.page -= 1 : this.page += 1
@@ -72,7 +71,7 @@ class DataMenu {
                     this.slicerIndicatorMin = 0
                     this.slicerIndicatorMax = this.maxPerPage
                 }
-                await this.interaction.editReply({
+                await interactionChanger.message.edit({
                     embeds: [this.embed()]
                 })
             })

@@ -51,6 +51,8 @@ module.exports = async (oneforall, message) => {
             return message.reply(oneforall.langManager().get(guildData.lang).notGuildOwner(prefix, command));
         }
 
+        if(command.guildCrownOnly && message.author.id !== message.guild.ownerId) return message.reply(oneforall.langManager.get(guildData.lang).notCrown(prefix, command));
+
         if (command.cooldown) {
             const cooldownKey = `${message.guild.id}-${message.author.id}-${command.name}`;
             if (cooldown.has(cooldownKey))

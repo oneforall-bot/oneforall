@@ -28,7 +28,7 @@ module.exports = {
                 })
             }
             const { invites } = memberData
-            return message.channel.send({ embeds: [lang.invite.show(user.user, invites, oneforall.functions.getTotalInvite(invites))] })
+            return message.channel.send({ embeds: [{...lang.invite.show(user.user, invites, oneforall.functions.getTotalInvite(invites)),color: guildData.embedColor}] })
         }
         const hasPermission = memberData.permissionManager.has(`INVITE_${subCommand.toUpperCase()}_CMD`) || subCommand === 'show'
         if (!hasPermission) return oneforall.functions.tempMessage(message, lang.notEnoughPermissions(`invite ${subCommand}`))

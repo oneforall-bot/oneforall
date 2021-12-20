@@ -1,78 +1,54 @@
-const {DataMenu} = require("../../structures/OneForAll");
+const {Message, Collection} = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'owner',
-        description: 'Manage the owners on the guild',
-        options: [
-            {
-                type: 'SUB_COMMAND',
-                name: 'add',
-                description: 'Add a member to the guild owner',
-                options: [
-                    {
-                        type: 'USER',
-                        name: 'member',
-                        description: 'The member to add to the owner list',
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 'SUB_COMMAND',
-                name: 'remove',
-                description: 'Remove a member to the guild owner',
-                options: [
-                    {
-                        type: 'USER',
-                        name: 'member',
-                        description: 'The member to remove to the owner list',
-                        required: true
-                    }
-                ]
-            },
-            {
-                type: 'SUB_COMMAND',
-                name: 'list',
-                description: 'List the owners list',
-            }
-        ]
-    },
-    guildCrownOnly: true,
-    run: async (oneforall, message, memberData, guildData) => {
-        const subCommand = message?.options.getSubcommand()
-        const lang = guildData.langManager
-        let { guildOwners } = guildData
-        await message.deferReply({ephemeral: true})
-        const user = message?.options.getUser('member')
-        if(subCommand === 'add'){
-            const isOwner = guildOwners.includes(user.id)
-            if(isOwner) return message.editReply({content: lang.owners.add.alreadyOwner})
-            guildData.guildOwners.push(user.id)
-            guildData.save().then(() => {
-                message.editReply({content: lang.owners.add.success(user.toString())})
-            })
-        }
-        if(subCommand === 'remove'){
-            const isOwner = guildOwners.includes(user.id)
-            if(!isOwner) return message.editReply({content: lang.owners.remove.notOwner})
-            guildData.guildOwners = guildData.guildOwners.filter(id => id !== user.id)
-            guildData.save().then(() => {
-                message.editReply({content: lang.owners.remove.success(user.toString())})
-            })
-        }
-        if(subCommand === 'list'){
-            const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
-                return {
-                    ...oneforall.embed(guildData),
-                    title: `Owner list (${guildOwners.length})`,
-                    footer: {
-                      text: `Owner Page ${page + 1}/${totalPage ||1}`
-                    },
-                    description: guildOwners.map((id, i) => `${i+1} - <@${id}>`).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
-                }
-            }
-            const menu = new oneforall.DataMenu(guildOwners,embedChange, message, oneforall)
-            await menu.sendEmbed()
-        }
+   name: "owner",
+   aliases: [],
+   description: "Add, remove, list the guild owners | Ajouter, enlever ou lister les owners du serveur",
+   usage: "owner <add/remove/list> [member]",
+   clientPermissions: ['SEND_MESSAGES', "EMBED_LINKS"],
+   guildCrownOnly: true,
+   cooldown: 0,
+  /**
+  * 
+  * @param {OneForAll} oneforall
+  * @param {Message} message 
+  * @param {Collection} memberData 
+  * @param {Collection} guildData 
+  * @param {[]} args
+  */
+   run: async (oneforall, message, guildData, memberData, args) => {
+    const subCommand = args[0]
+    const lang = guildData.langManager
+    let { guildOwners } = guildData
+    const user = args[1] ? (await oneforall.users.fetch(args[1]).catch(() => {})) || message.mentions.users.first() : undefined
+    if(subCommand === 'add'){
+        const isOwner = guildOwners.includes(user.id)
+        if(isOwner) return oneforall.functions.tempMessage(message, lang.owners.add.alreadyOwner)
+        guildData.guildOwners.push(user.id)
+        guildData.save().then(() => {
+            oneforall.functions.tempMessage(message, lang.owners.add.success(user.toString()))
+        })
     }
+    if(subCommand === 'remove'){
+        const isOwner = guildOwners.includes(user.id)
+        if(!isOwner) return oneforall.functions.tempMessage(message, lang.owners.remove.notOwner)
+        guildData.guildOwners = guildData.guildOwners.filter(id => id !== user.id)
+        guildData.save().then(() => {
+            oneforall.functions.tempMessage(message, lang.owners.remove.success(user.toString()))
+        })
+    }
+    if(subCommand === 'list'){
+        const embedChange = (page, slicerIndicatorMin,  slicerIndicatorMax, totalPage) => {
+            return {
+                ...oneforall.embed(guildData),
+                title: `Owner list (${guildOwners.length})`,
+                footer: {
+                  text: `Owner Page ${page + 1}/${totalPage ||1}`
+                },
+                description: guildOwners.map((id, i) => `${i+1} - <@${id}>`).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
+            }
+        }
+        await new oneforall.DataMenu(guildOwners,embedChange, message, oneforall).sendEmbed()
+    }
+}
 }

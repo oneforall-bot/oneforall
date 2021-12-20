@@ -9,6 +9,7 @@ module.exports = {
         cooldownMessage: (prefix, command, timeRemaining) => `Vous devez attendre \`${timeRemaining}\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         notOwner: (prefix, command) => `Vous devez être \`Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         notGuildOwner: (prefix, command) => `Vous devez être \`Guild Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
+        notCrown: (prefix, command) => `Vous devez être \`la couronne\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         botAdded: (guild, member, owner) => `Votre bot a été ajouté sur ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
         botRemoved: (guild, member, owner) => `Votre bot a été enlevé de ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
         managedRole: `Ce rôle ne peut pas être ajouté car c'est un rôle **géré par une application**`,

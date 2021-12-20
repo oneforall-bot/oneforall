@@ -1,39 +1,27 @@
-const {MessageSelectMenu, MessageActionRow} = require("discord.js");
+const { MessageSelectMenu, MessageActionRow } = require("discord.js");
+const { Message, Collection } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'group',
-        description: 'Manage the groups system',
-        options: [
-            {
-                type: 'SUB_COMMAND',
-                name: 'create',
-                description: 'Create or edit a new group'
-            },
-            {
-                type: 'SUB_COMMAND',
-                name: 'list',
-                description: 'List all the groups'
-            },
-            {
-                type: 'SUB_COMMAND',
-                name: 'delete',
-                description: 'Delete a group',
-                options: [
-                    {
-                        type: 'STRING',
-                        name: 'name',
-                        description: 'The name of the group to delete',
-                        required: true
-                    }
-                ]
-            }
-        ]
-    },
+    name: "group",
+    aliases: ["groupes", "groups"],
+    description: "Create, delete or list oneforall groups | Créer, supprimer ou lister les groupes oneforall",
+    usage: "group <create/delete/list> [name]",
+    clientPermissions: ['SEND_MESSAGES', "EMBED_LINKS"],
+    ofaPerms: [],
     guildOwnersOnly: true,
-    run: async (oneforall, message, memberData, guildData) => {
-        const subCommand = message.options.getSubcommand()
-        if(subCommand === 'list'){
-            message.reply({
+    cooldown: 1000,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
+        const subCommand = args[0]
+        if (subCommand === 'list') {
+            message.channel.send({
                 embeds: [
                     {
                         title: `Liste des groupes`,
@@ -42,8 +30,8 @@ module.exports = {
                 ]
             })
         }
-        if(subCommand === 'create'){
-            message.reply({
+        if (subCommand === 'create') {
+            message.channel.send({
                 embeds: [
                     {
                         title: `Liste des groupes`,
@@ -81,14 +69,14 @@ module.exports = {
                         components.push(new MessageSelectMenu({
                             customId: `group.edit.add.${message.id}`,
                             placeholder: `Ajouté des permissions.`,
-                            maxValues: denyPermissions.length <= 25 ?  denyPermissions.length : 25,
+                            maxValues: denyPermissions.length <= 25 ? denyPermissions.length : 25,
                             options: defaultDenyOptions
                         }))
                     if (allowPermissions.length > 0)
                         components.push(new MessageSelectMenu({
                             customId: `group.edit.remove.${message.id}`,
                             placeholder: `Retiré des permissions.`,
-                            maxValues: allowPermissions.length <= 25 ?  allowPermissions.length : 25,
+                            maxValues: allowPermissions.length <= 25 ? allowPermissions.length : 25,
                             options: defaultAllowOptions
                         }))
 
@@ -123,14 +111,14 @@ module.exports = {
                             description: 'See more permissions',
                             label: pageDeny < 1 ? 'next' : "prev",
                             emoji: pageDeny < 1 ? '➡️' : '◀️'
-                        }] : [...defaultAllowOptions.slice(slicerIndicatorMinAllow,  slicerIndicatorMaxAllow), {
+                        }] : [...defaultAllowOptions.slice(slicerIndicatorMinAllow, slicerIndicatorMaxAllow), {
                             value: pageAllow < 1 ? 'next' : "prev",
                             description: 'See more permissions',
                             label: pageAllow < 1 ? 'next' : "prev",
                             emoji: pageAllow < 1 ? '➡️' : '◀️'
                         }])
                         components[componentIndex].setMaxValues(components[componentIndex].options.length)
-                        return message.update({components: components.map(c => new MessageActionRow({components: [c]}))})
+                        return message.edit({ components: components.map(c => new MessageActionRow({ components: [c] })) })
                     }
 
                     defaultMessage.edit({
@@ -139,42 +127,43 @@ module.exports = {
                                 description: `D'accord, voici le groupe que vous modifié: \`${roleData.groupName}\` \n\n Maintenant, je vous demande de choisir les permissions du groupe. \n\n Permissions actuellement acordé: \n\n ${allowPermissions.length > 0 ? allowPermissions.map(v => `\`${v}\` (*${enumPermissions.permissions[v].description}*)`).join('\n') : `\`Aucune permissions\``}`,
                             }
                         ],
-                        components: components.map(c => new MessageActionRow({components: [c]}))
+                        components: components.map(c => new MessageActionRow({ components: [c] }))
                     });
                     const collector = message.channel.createMessageComponentCollector({
-                        filter: message => [`group.edit.add.${message.id}`, `group.edit.remove.${message.id}`].includes(message.customId) && message.author.id === message.user.id,
+                        filter: interaction => [`group.edit.add.${message.id}`, `group.edit.remove.${message.id}`].includes(interaction.customId) && interaction.user.id === message.author.id,
                         time: 60 * 1000
                     })
-                    collector.on('collect', async message => {
-                        if (message.values[0] === 'next') {
-                            message.customId === `group.edit.remove.${message.id}` ? pageAllow = pageAllow !== totalPageAllow - 1 ? pageAllow + 1 : pageAllow = 0 : pageDeny = pageDeny !== totalPageDeny - 1 ? pageDeny + 1 : pageDeny = 0
-                            message.customId === `group.edit.remove.${message.id}` ?  slicerIndicatorMinAllow += maxValues : slicerIndicatorMinDeny += maxValues
-                            message.customId === `group.edit.remove.${message.id}` ?  slicerIndicatorMaxAllow += maxValues : slicerIndicatorMaxDeny += maxValues
+                    collector.on('collect', async interaction => {
+                        if (interaction.values[0] === 'next') {
+                            interaction.customId === `group.edit.remove.${interaction.id}` ? pageAllow = pageAllow !== totalPageAllow - 1 ? pageAllow + 1 : pageAllow = 0 : pageDeny = pageDeny !== totalPageDeny - 1 ? pageDeny + 1 : pageDeny = 0
+                            interaction.customId === `group.edit.remove.${interaction.id}` ? slicerIndicatorMinAllow += maxValues : slicerIndicatorMinDeny += maxValues
+                            interaction.customId === `group.edit.remove.${interaction.id}` ? slicerIndicatorMaxAllow += maxValues : slicerIndicatorMaxDeny += maxValues
 
-                            return updateOptions(message, message.customId === `group.edit.remove.${message.id}` ? 1 : 0)
+                            return updateOptions(message, interaction.customId === `group.edit.remove.${message.id}` ? 1 : 0)
                         }
-                        if (message.values[0] === 'prev') {
-                            message.customId === `group.edit.remove.${message.id}` ? pageAllow = pageAllow === 0 ? pageAllow = totalPageAllow - 1 : pageAllow <= totalPageAllow - 1 ? pageDeny -= 1 : pageDeny += 1 :pageDeny = pageDeny === 0 ? pageDeny = totalPageDeny - 1 : pageDeny <= totalPageDeny - 1 ? pageDeny -= 1 : pageDeny += 1
-                            message.customId === `group.edit.remove.${message.id}` ?  slicerIndicatorMinAllow -= maxValues : slicerIndicatorMinDeny -= maxValues
-                            message.customId === `group.edit.remove.${message.id}` ?  slicerIndicatorMaxAllow -= maxValues : slicerIndicatorMaxDeny -= maxValues
-                            return updateOptions(message, message.customId === `group.edit.remove.${message.id}` ? 1 : 0)
+                        if (interaction.values[0] === 'prev') {
+                            interaction.customId === `group.edit.remove.${interaction.id}` ? pageAllow = pageAllow === 0 ? pageAllow = totalPageAllow - 1 : pageAllow <= totalPageAllow - 1 ? pageDeny -= 1 : pageDeny += 1 : pageDeny = pageDeny === 0 ? pageDeny = totalPageDeny - 1 : pageDeny <= totalPageDeny - 1 ? pageDeny -= 1 : pageDeny += 1
+                            interaction.customId === `group.edit.remove.${interaction.id}` ? slicerIndicatorMinAllow -= maxValues : slicerIndicatorMinDeny -= maxValues
+                            interaction.customId === `group.edit.remove.${interaction.id}` ? slicerIndicatorMaxAllow -= maxValues : slicerIndicatorMaxDeny -= maxValues
+                            return updateOptions(message, interaction.customId === `group.edit.remove.${message.id}` ? 1 : 0)
 
                         }
-                        switch (message.customId) {
+                        switch (interaction.customId) {
                             case `group.edit.remove.${message.id}`:
-                                roleData.permissions = roleData.permissions.filter(p => !message.values.includes(p));
+                                roleData.permissions = roleData.permissions.filter(p => !interaction.values.includes(p));
                                 break;
                             default:
-                                roleData.permissions.push(...message.values);
+                                roleData.permissions.push(...interaction.values);
                         }
-                        await message.deferUpdate()
+                        await interaction.deferUpdate()
                         collector.stop()
-                        changePermissions(message, defaultMessage, memberData, roleData).then(resolve).catch(() => {
+                        changePermissions(message, defaultMessage, memberData, roleData).then(resolve).catch((e) => {
+                            console.log(e);
                         });
                     })
 
                     defaultMessage.awaitReactions({
-                        filter: (reaction, user) => reaction.emoji.name === "✅" && user.id === message.user.id,
+                        filter: (reaction, user) => reaction.emoji.name === "✅" && user.id === message.author.id,
                         time: 60 * 1000,
                         max: 1
                     })
@@ -195,7 +184,7 @@ module.exports = {
                 });
 
                 message.channel.awaitMessages({
-                    filter: m => m.author.id === message.user.id,
+                    filter: m => m.author.id === message.author.id,
                     max: 1,
                     time: 30000,
                     errors: ['time']
@@ -226,18 +215,20 @@ module.exports = {
                             components: []
                         }).catch(e => console.log(e))
                         roleData.save();
-                    }).catch(() => {
+                    }).catch((e) => {
+                        console.log(e);
                     })
                 }).catch(() => {
                 });
             }
         }
-        if(subCommand === 'delete'){
-            const groupName = message.options.getString('name')
+        if (subCommand === 'delete') {
+            const groupName = args.slice(1).join(" ")
+            if(!groupName) return
             const group = oneforall.managers.groupsManager.getIfExist(`${message.guildId}-${groupName}`)
-            if(!group) return message.reply({content: 'Le groupe existe pas !', ephemeral: true})
+            if (!group) return message.reply({ content: 'Le groupe existe pas !'})
             group.delete()
-            message.reply({content: 'Le groupe est supprimé'})
+            message.reply({ content: 'Le groupe est supprimé' })
         }
 
 
