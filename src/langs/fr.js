@@ -729,6 +729,7 @@ module.exports = {
 
         },
         massrole: {
+            missingRole:  `Veuillez spécifier un rôle`,
             notMembersToEdit: `Il n'y a aucun membres à modifier les **rôles**`,
             success: (role, member, type) => `${member} membre(s)  ${type === 'add' ? 'ont reçu' : 'ont été vue enlevé'} le rôle **${role}**`
         },
@@ -1110,8 +1111,30 @@ module.exports = {
             oauth: (member) => `${member} a été invité en utilisant l'oauth`
         },
         logs: {
+            baseMenu : [
+                {
+                    value: 'message',
+                    label: 'Message',
+                
+                },
+                {
+                    value: 'moderation',
+                    label: 'Moderation',
+                
+                },
+                {
+                    value: 'antiraid',
+                    label: 'Antiraid',
+                },
+                {
+                    value: 'voice',
+                    label: 'Vocal',
+                },
+              
+            ],
+            question : 'Quel est le salon ?',
             notText: `Le channel doit être est un channel textuel`,
-            success: (logs, channel) => `Vous avez définie les logs **${logs}** sur ${channel}`,
+            // success: (logs, channel) => `Vous avez définie les logs **${logs}** sur ${channel}`,
             template: {
                 message: {
                     link: (executor, channel, link) => {

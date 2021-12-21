@@ -1,78 +1,99 @@
+const { Message, Collection, MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'logs',
-        description: 'Set the logs for the server',
-        options: [
-            {
-                type: 'SUB_COMMAND',
-                name: 'set',
-                description: 'Set the logs',
-                options: [
-                    {
-                        name: 'logs',
-                        description: 'The logs to set the channel on',
-                        type: 'STRING',
-                        required: true,
-                        choices: [
-                            {
-                                name: 'voice',
-                                value: 'voice'
-                            },
-                            {
-                                name: 'message',
-                                value: 'message'
-                            },
-                            {
-                                name: 'moderation',
-                                value: 'moderation'
-                            },
-                            {
-                                name: 'antiraid',
-                                value: 'antiraid'
-                            },
-                        ]
-                    },
-                    {
-                        name: 'channel',
-                        description: 'The channel to set the log on',
-                        required: true,
-                        type: 'CHANNEL'
-                    },
-                ]
-            },
-            {
-                name: 'show',
-                description: 'Show the current logs configuration',
-                type: 'SUB_COMMAND'
-            },
-        ]
-    },
-    run: async (oneforall, message, memberData, guildData) => {
-        const hasPermission = memberData.permissionManager.has("SETLOGS_CMD");
-        await message.deferReply({ephemeral: (!!!hasPermission)});
+    name: "setlogs",
+    aliases: ["logs"],
+    description: "Set the logs on the server | Définir les logs sur le serveur",
+    usage: "setlogs",
+    clientPermissions: ['SEND_MESSAGES'],
+    ofaPerms: ["SETLOGS_CMD"],
+    guildOwnersOnly: false,
+    guildCrownOnly: false,
+    ownersOnly: false,
+    cooldown: 0,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
         const lang = guildData.langManager
-        if (!hasPermission) return await message.editReply({content: lang.notEnoughPermissions('setlogs')})
-        if (message.options.getSubcommand() === 'show') {
-            const embed = {
+        const tempLogs = { ...guildData.logs }
+        const embed = () => {
+            return {
                 timestamp: new Date(),
                 color: guildData.embedColor,
                 title: `Configuration of logs`,
-                description: `**Message:** ${guildData.logs.message ? `<#${guildData.logs.message}>` : 'Non définie'}\n**Moderation:** ${guildData.logs.moderation ? `<#${guildData.logs.moderation}>` : 'Non définie'}\n**Antiraid:** ${guildData.logs.antiraid ? `<#${guildData.logs.antiraid}>` : 'Non définie'}\n**Voice:** ${guildData.logs.voice ? `<#${guildData.logs.voice}>` : 'Non définie'}`,
+                description: `**Message:** ${tempLogs.message ? `<#${tempLogs.message}>` : 'Non définie'}\n**Moderation:** ${tempLogs.moderation ? `<#${tempLogs.moderation}>` : 'Non définie'}\n**Antiraid:** ${tempLogs.antiraid ? `<#${tempLogs.antiraid}>` : 'Non définie'}\n**Voice:** ${tempLogs.voice ? `<#${tempLogs.voice}>` : 'Non définie'}`,
                 footer: {
                     text: `Logs`,
-                    icon_url: message.author.displayAvatarURL({dynamic: true}) || ''
+                    icon_url: message.author.displayAvatarURL({ dynamic: true }) || ''
                 },
             }
-            return message.editReply({embeds: [embed]})
         }
-        const {channel} = message.options.get('channel')
-        const logs = message.options.get('logs').value
-        if (!channel.isText()) {
-            return message.editReply({content: lang.logs.notText})
-        }
-        guildData.logs[logs] = channel.id
-        guildData.save().then(() => {
-            message.editReply({content: lang.logs.success(logs, channel.toString())})
+        const componentFilter = {
+            filter: interaction => interaction.customId.includes(message.id) && interaction.user.id === message.author.id,
+            time: 900000
+        },
+            awaitMessageFilter = {
+                filter: response => response.author.id === message.author.id,
+                time: 900000,
+                limit: 1,
+                max: 1,
+                errors: ['time']
+            }
+        const collector = message.channel.createMessageComponentCollector(componentFilter)
+        const components = [
+            new MessageSelectMenu()
+                .setOptions(lang.logs.baseMenu)
+                .setPlaceholder('Choose an logs')
+                .setCustomId(`logs.${message.id}`),
+            new MessageButton()
+                .setCustomId(`valid.${message.id}`)
+                .setEmoji('✅')
+                .setStyle('SECONDARY')
+        ]
+
+        const panel = await message.channel.send({ embeds: [embed()], components: components.map(c => new MessageActionRow({ components: [c] })) })
+        collector.on('collect', async (interaction) => {
+            if (interaction.componentType === 'BUTTON') {
+                guildData.logs = tempLogs
+                return guildData.save().then(() => {
+                    oneforall.functions.tempMessage(message, lang.save)
+                    collector.stop()
+                    panel.delete()
+                })
+            }
+            await interaction.deferUpdate()
+            const selectedOption = interaction.values[0]
+
+            const questionAnswer = await generateQuestion(lang.logs.question)
+            const channel = questionAnswer.mentions.channels.first() || message.guild.channels.cache.get(questionAnswer.content);
+            if (!channel?.isText()) {
+                return oneforall.functions.tempMessage(message, lang.logs.notText)
+            }
+            tempLogs[selectedOption] = channel.id
+            panel.edit({embeds: [embed()]})
+
         })
+        async function generateQuestion(question) {
+            const messageQuestion = await message.channel.send(question)
+            components[0].setDisabled(true)
+            await panel.edit({
+                components: components.map(c => new MessageActionRow({ components: [c] }))
+            })
+            const collected = await messageQuestion.channel.awaitMessages(awaitMessageFilter)
+            await messageQuestion.delete()
+            await collected.first().delete()
+            components[0].setDisabled(false)
+            await panel.edit({
+                components: components.map(c => new MessageActionRow({ components: [c] }))
+            })
+            return collected.first()
+        }
+
     }
 }

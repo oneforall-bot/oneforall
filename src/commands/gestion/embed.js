@@ -1,32 +1,33 @@
-const {MessageActionRow, MessageSelectMenu} = require("discord.js"),
+const { MessageActionRow, MessageSelectMenu } = require("discord.js"),
     colorNameToHex = require("colornames"),
-    fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+    fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
+const { Message, Collection } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: `embed`,
-        description: `Allows you to create embeds`,
-        options: [
-            {
-                name: "amount",
-                description: "Amount of needed embeds",
-                required: false,
-                type: "INTEGER"
-            }
-        ]
-    },
-    run: async (oneforall, message, memberData, guildData) => {
+    name: "embed",
+    aliases: [],
+    description: "Create embeds | Créer des embeds",
+    usage: "embed [amount]",
+    clientPermissions: ['SEND_MESSAGES', 'EMBED_LINK'],
+    ofaPerms: ["EMBED_CMD"],
+    cooldown: 1500,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
         const lang = guildData.langManager
-        const hasPermission = memberData.permissionManager.has("EMBED_CMD");
-        await message.deferReply({ephemeral: (!!!hasPermission)});
-        if (!hasPermission)
-            return message.editReply({
-                content: lang.notEnoughPermissions('embed')
-            });
-        const numberOfEmbed = message.options.get('amount') ? message.options.get('amount').value : 1
+
+        const numberOfEmbed = !isNaN(args[0]) ? parseInt(args[0]) : 1
         let embeds = []
         let defaultOptions = lang.embedBuilder.baseMenu
         if (numberOfEmbed && numberOfEmbed > 1) {
-            if (numberOfEmbed > 10) return message.editReply({content: lang.embedBuilder.invalidNumberOfEmbed})
+            if (numberOfEmbed > 10) return oneforall.functions.tempMessage(message, lang.embedBuilder.invalidNumberOfEmbed)
             defaultOptions = []
             for (let i = 0; i < numberOfEmbed; i++) {
                 embeds.push({
@@ -64,9 +65,9 @@ module.exports = {
             )
 
         const componentFilter = {
-                filter: embedmessage => embedmessage.customId === `embed.${message.id}` && embedmessage.author.id === message.author.id,
-                time: 900000
-            },
+            filter: interaction => interaction.customId === `embed.${message.id}` && interaction.user.id === message.author.id,
+            time: 900000
+        },
             awaitMessageFilter = {
                 filter: response => response.author.id === message.author.id,
                 time: 900000,
@@ -74,11 +75,11 @@ module.exports = {
                 max: 1,
                 errors: ['time']
             }
-        const panel = await message.editReply({components: [row], embeds})
+        const panel = await message.channel.send({ components: [row], embeds })
         const collector = message.channel.createMessageComponentCollector(componentFilter);
         let selectedEmbed = 0
-        collector.on('collect', async (embedmessage) => {
-            const selectedOption = embedmessage.values[0]
+        collector.on('collect', async (interaction) => {
+            const selectedOption = interaction.values[0]
             if (numberOfEmbed > 1 && selectedOption.split('.')[2]) {
                 selectedEmbed = selectedOption.split('.')[2] - 1
                 row.components[0].options = [...lang.embedBuilder.baseMenu, {
@@ -87,15 +88,15 @@ module.exports = {
                     description: 'Go to back to the embed selector',
                     emoji: '↩'
                 }]
-                await panel.edit({components: [row]})
-                return embedmessage.deferUpdate()
+                await panel.edit({ components: [row] })
+                return interaction.deferUpdate()
             }
             const menuSelected = lang.embedBuilder.baseMenu.find(options => options.value === selectedOption) || lang.embedBuilder.footerOptions.find(options => options.value === selectedOption) || lang.embedBuilder.authorOptions.find(options => options.value === selectedOption) || lang.embedBuilder.copyOptions.find(options => options.value === selectedOption)
             if (selectedOption.includes('back')) {
                 if (selectedOption === 'back')
-                    return updateOptions(embedmessage, 'Select the embed to edit')
+                    return updateOptions(interaction, 'Select the embed to edit')
                 else
-                    return updateOptions(embedmessage, 'Create your embed', !numberOfEmbed || numberOfEmbed === 1 ? lang.embedBuilder.baseMenu : [...lang.embedBuilder.baseMenu, {
+                    return updateOptions(interaction, 'Create your embed', !numberOfEmbed || numberOfEmbed === 1 ? lang.embedBuilder.baseMenu : [...lang.embedBuilder.baseMenu, {
                         label: 'Back',
                         value: 'back',
                         description: 'Go to back to the embed selector',
@@ -104,7 +105,7 @@ module.exports = {
 
             }
             if (menuSelected.questionOnly) {
-                await embedmessage.deferUpdate()
+                await interaction.deferUpdate()
                 const questionAnswer = await generateQuestion(menuSelected.question)
                 if (questionAnswer.content.toLowerCase() === 'cancel') {
                     delete questionAnswer.content
@@ -117,13 +118,13 @@ module.exports = {
                 if (menuSelected.value === 'thumbnail' || menuSelected.value === 'image') {
                     if (questionAnswer.attachments.size > 0) {
                         const imgData = await uploadImage(questionAnswer.attachments.first().url)
-                        questionAnswer.content = {url: imgData.data.link}
+                        questionAnswer.content = { url: imgData.data.link }
                     } else if (questionAnswer.content) {
                         if (!questionAnswer.content.includes('i.imgur.com') && !questionAnswer.content.includes('tenor.com')) {
                             const imgData = await uploadImage(questionAnswer.content)
-                            questionAnswer.content = {url: imgData.data.link}
+                            questionAnswer.content = { url: imgData.data.link }
                         }
-                        questionAnswer.content = {url: questionAnswer.content}
+                        questionAnswer.content = { url: questionAnswer.content }
                     }
                 }
                 if (menuSelected.value !== 'send') {
@@ -132,16 +133,16 @@ module.exports = {
                 } else {
                     const channel = questionAnswer.mentions.channels.first() || message.guild.channels.cache.get(questionAnswer.content)
                     if (!channel && channel.deleted) return oneforall.functions.tempMessage(message, lang.embedBuilder.errorChannel)
-                    await channel.send({embeds})
+                    await channel.send({ embeds })
                     collector.stop()
                     oneforall.functions.tempMessage(message, `Embed(s) sent in ${channel.toString()}`)
                     return await panel.delete()
                 }
             } else {
                 if (menuSelected.value === 'footer' || menuSelected.value === 'copy' || menuSelected.value === 'author') {
-                    return updateOptions(embedmessage, lang.embedBuilder[`${selectedOption}Placeholder`], lang.embedBuilder[`${selectedOption}Options`])
+                    return updateOptions(interaction, lang.embedBuilder[`${selectedOption}Placeholder`], lang.embedBuilder[`${selectedOption}Options`])
                 }
-                await embedmessage.deferUpdate()
+                await interaction.deferUpdate()
                 if (selectedOption === 'copy-valid') {
                     if (!tempCopy.channel) return oneforall.functions.tempMessage(message, lang.embedBuilder.errorChannel)
                     const channel = message.guild.channels.cache.get(tempCopy.channel)
@@ -183,7 +184,7 @@ module.exports = {
                     }
                     if (selectedOption === 'copy-id') {
                         if (!tempCopy.channel) return oneforall.functions.tempMessage(message, lang.embedBuilder.errorChannel)
-                        const channel = embedmessage.guild.channels.cache.get(tempCopy.channel)
+                        const channel = interaction.guild.channels.cache.get(tempCopy.channel)
                         if (isNaN(questionAnswer.content)) return oneforall.functions.tempMessage(message, lang.embedBuilder.errorWrongId)
                         const fetchMessage = await channel.messages.fetch(questionAnswer.content)
                         if (!fetchMessage) return oneforall.functions.tempMessage(message, lang.embedBuilder.errorWrongId)
@@ -194,9 +195,9 @@ module.exports = {
             }
         })
 
-        function updateOptions(embedmessage, placeholder, options = defaultOptions) {
+        function updateOptions(interaction, placeholder, options = defaultOptions) {
             row.components[0].spliceOptions(0, row.components[0].options.length, options).setPlaceholder(placeholder)
-            return embedmessage.update({components: [row]})
+            return interaction.update({ components: [row] })
         }
 
         async function generateQuestion(question) {

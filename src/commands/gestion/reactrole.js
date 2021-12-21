@@ -1,19 +1,25 @@
-const {MessageActionRow, MessageSelectMenu, Util} = require("discord.js");
+const { MessageActionRow, MessageSelectMenu, Util } = require("discord.js");
+const { Message, Collection } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: `reactrole`,
-        description: `Allows you to create reactroles`,
-
-    },
-    run: async (oneforall, message, memberData, guildData) => {
+    name: "reactrole",
+    aliases: [],
+    description: "Create react role | Créer un reactrole",
+    usage: "reactrole",
+    clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
+    ofaPerms: ["REACTROLE_CMD"],
+    cooldown: 1500,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData) => {
         const lang = guildData.langManager
-        const hasPermission = memberData.permissionManager.has("REACTROLE_CMD");
-        await message.deferReply({ephemeral: (!!!hasPermission)});
-        if (!hasPermission)
-            return message.editReply({
-                content: lang.notEnoughPermissions('reactrole')
-            });
-        let {reactroles} = guildData
+        let { reactroles } = guildData
         const row = new MessageActionRow()
             .addComponents(
                 new MessageSelectMenu()
@@ -46,13 +52,13 @@ module.exports = {
             timestamp: new Date(),
             ...oneforall.embed(guildData)
         }
-        const panel = await message.editReply({
+        const panel = await message.channel.send({
             embeds: [embed], components: [row]
         })
         const componentFilter = {
-                filter: messageReactrole => messageReactrole.customId === `reactrole.${message.id}` && messageReactrole.user.id === message.author.id,
-                time: 900000
-            },
+            filter: interaction => interaction.customId === `reactrole.${message.id}` && interaction.user.id === message.author.id,
+            time: 900000
+        },
             awaitMessageFilter = {
                 filter: response => response.author.id === message.author.id,
                 time: 900000,
@@ -61,9 +67,9 @@ module.exports = {
                 errors: ['time']
             }
         const collector = message.channel.createMessageComponentCollector(componentFilter)
-        collector.on('collect', async (messageReactrole) => {
-            await messageReactrole.deferUpdate()
-            const selectedOption = messageReactrole.values[0]
+        collector.on('collect', async (interaction) => {
+            await interaction.deferUpdate()
+            const selectedOption = interaction.values[0]
             if (selectedOption === "channel") {
                 const questionAnswer = await generateQuestion(guildData.langManager.reactrole.chQ)
                 if (questionAnswer.content === 'cancel') return errorMessage(guildData.langManager.cancel)
@@ -75,7 +81,7 @@ module.exports = {
                 return errorMessage(guildData.langManager.reactrole.successCh(channel.toString()))
             }
             if (selectedOption === 'message') {
-                const {content} = await generateQuestion(guildData.langManager.reactrole.msgIdQ)
+                const { content } = await generateQuestion(guildData.langManager.reactrole.msgIdQ)
                 if (content === 'cancel') return errorMessage(guildData.langManager.cancel)
                 if (isNaN(content)) return errorMessage(guildData.langManager.reactrole.notId)
                 if (reactRole.channel === guildData.langManager.undefined || !message.guild.channels.cache.get(reactRole.channel)) return errorMessage(guildData.langManager.reactrole.noChannel)
@@ -109,7 +115,7 @@ module.exports = {
                         const questionAddEmoji = await generateQuestion(guildData.langManager.reactrole.emojiDoesNotExist)
                         const name = questionAddEmoji.content
                         const link = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "png"}`
-                        emoji = await message.guild.emojis.create(link, name, {reason: `emoji reaction role by ${message.author.username + '#' + message.author.discriminator}`})
+                        emoji = await message.guild.emojis.create(link, name, { reason: `emoji reaction role by ${message.author.username + '#' + message.author.discriminator}` })
                     } else {
                         emoji = tempEmoji
                     }
@@ -216,7 +222,7 @@ module.exports = {
             embed.fields[0].value = channelMsg;
             embed.fields[1].value = reactRole.message;
             embed.fields[2].value = emoji.join('\n');
-            panel.edit({embeds: [embed]})
+            panel.edit({ embeds: [embed] })
         }
     }
 }

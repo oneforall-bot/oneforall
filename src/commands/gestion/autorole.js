@@ -1,14 +1,24 @@
-const {MessageActionRow, MessageSelectMenu} = require("discord.js");
+const { MessageActionRow, MessageSelectMenu } = require("discord.js");
+const { Message, Collection } = require('discord.js')
+const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'autorole',
-        description: 'Configure the autorole feature',
-    },
-    run: async (oneforall, message, memberData, guildData) => {
-        const hasPermission = memberData.permissionManager.has("AUTOROLE_CMD");
-        await message.deferReply({ephemeral: (!!!hasPermission)});
+    name: "autorole",
+    aliases: [],
+    description: "Manage autoroles | Gerer les autoroles",
+    usage: "autorole",
+    clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
+    ofaPerms: ["AUTOROLE_CMD"],
+    cooldown: 1000,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
         const lang = guildData.langManager
-        if (!hasPermission) return message.editReply({content: lang.notEnoughPermissions('autorole')});
         const autoRoles = guildData.autoroles
         const numberOfAutoroles = autoRoles.length
         const embed = (autoRoleData) => {
@@ -35,14 +45,14 @@ module.exports = {
                 ],
                 timestamp: new Date(),
                 footer: {
-                    icon_url: message.author.displayAvatarURL({dynamic: true}) || '',
+                    icon_url: message.author.displayAvatarURL({ dynamic: true }) || '',
                     text: 'Autoroles'
                 },
                 ...oneforall.embed(guildData)
             }
         }
         let defaultOptions = lang.autorole.baseMenu
-        let tempAutoRole = {enable: false}
+        let tempAutoRole = { enable: false }
         if (numberOfAutoroles > 0) defaultOptions = [...autoRoles.map((autoRole, i) => {
             return {
                 label: `Autorole \`${i + 1}\``,
@@ -62,11 +72,11 @@ module.exports = {
                 .setOptions(defaultOptions)
                 .setPlaceholder('Manage your autoroles')
         )
-        const panel = await message.editReply({embeds: [embed()], components: [row]})
+        const panel = await message.channel.send({ embeds: [embed()], components: [row] })
         const componentFilter = {
-                filter: embedmessage => embedmessage.customId === `autorole.${message.id}` && embedmessage.author.id === message.author.id,
-                time: 900000
-            },
+            filter: interaction => interaction.customId === `autorole.${message.id}` && interaction.user.id === message.author.id,
+            time: 900000
+        },
             awaitMessageFilter = {
                 filter: response => response.author.id === message.author.id,
                 time: 900000,
@@ -77,9 +87,9 @@ module.exports = {
         const collector = message.channel.createMessageComponentCollector(componentFilter);
         let selectedAutorole = 0
         let editing = false
-        collector.on('collect', async (messageAutorole) => {
-            const selectedOption = messageAutorole.values[0]
-            messageAutorole.deferUpdate()
+        collector.on('collect', async (interaction) => {
+            const selectedOption = interaction.values[0]
+            interaction.deferUpdate()
             if (numberOfAutoroles >= 1 && selectedOption.split('.')[2]) {
                 selectedAutorole = selectedOption.split('.')[2] - 1
                 tempAutoRole = autoRoles[selectedAutorole]
@@ -91,15 +101,15 @@ module.exports = {
                     emoji: '↩'
                 }]
                 updateEmbed()
-                return await panel.edit({components: [row]})
+                return await panel.edit({ components: [row] })
             }
             const selectMenu = lang.autorole.baseMenu.find(options => options.value === selectedOption)
             switch (selectedOption) {
                 case 'create':
-                    tempAutoRole = {enable: false}
+                    tempAutoRole = { enable: false }
 
                     updateEmbed()
-                    updateOptions(messageAutorole, 'Configure your autorole', [
+                    updateOptions(interaction, 'Configure your autorole', [
                         ...lang.autorole.baseMenu, {
                             label: 'Back',
                             value: 'back',
@@ -109,16 +119,16 @@ module.exports = {
                     ])
                     break
                 case 'save':
-                    if(!tempAutoRole.role || !tempAutoRole.addAfter) return oneforall.functions.tempMessage(message, lang.autorole.notAllOptions)
-                    if(!editing)
+                    if (!tempAutoRole.role || !tempAutoRole.addAfter) return oneforall.functions.tempMessage(message, lang.autorole.notAllOptions)
+                    if (!editing)
                         guildData.autoroles.push(tempAutoRole)
                     else
                         guildData.autoroles[selectedAutorole] = tempAutoRole
-                    guildData.save().then(() => message.editReply({content: lang.save}))
+                    guildData.save().then(() => oneforall.functions.tempMessage(message,  lang.save ))
                     break
                 case 'back':
                     tempAutoRole = undefined
-                    updateOptions(messageAutorole, 'Select the autorole to edit')
+                    updateOptions(interaction, 'Select the autorole to edit')
                     break
                 case 'enable':
                     tempAutoRole.enable = !tempAutoRole.enable
@@ -145,9 +155,9 @@ module.exports = {
 
         })
 
-        function updateOptions(messageAutorole, placeholder, options = defaultOptions) {
+        function updateOptions(interaction, placeholder, options = defaultOptions) {
             row.components[0].setOptions(options).setPlaceholder(placeholder)
-            return panel.edit({embeds: [embed(tempAutoRole)], components: [row]})
+            return panel.edit({ embeds: [embed(tempAutoRole)], components: [row] })
         }
 
         async function generateQuestion(question) {
@@ -167,7 +177,6 @@ module.exports = {
         }
 
         function updateEmbed() {
-            console.log(tempAutoRole)
             panel.edit({
                 embeds: [embed(tempAutoRole)]
             }).catch(console.log)
