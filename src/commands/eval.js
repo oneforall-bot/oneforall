@@ -5,7 +5,7 @@ module.exports = {
     aliases: [],
     description: "",
     usage: "",
-    clientPermissions: ['SEND_MESSAGES'],
+    oneforallPermissions: ['SEND_MESSAGES'],
     ofaPerms: [],
     guildOwnersOnly: false,
     guildCrownOnly: false,
@@ -30,20 +30,16 @@ module.exports = {
                     depth: 0
                 });
             }
-            if (output.includes(client.token)) {
-                output = output.replace(client.token, "T0K3N");
+            if (output.includes(oneforall.token)) {
+                output = output.replace(oneforall.token, "T0K3N");
             }
-            message.channel.send(output, {
-                code: "js"
-            });
+            message.channel.send(`\`\`\`js\n${output}\`\`\``);
         }).catch((err) => {
             err = err.toString();
-            if (err.includes(client.token)) {
-                err = err.replace(client.token, "T0K3N");
+            if (err.includes(oneforall.token)) {
+                err = err.replace(oneforall.token, "T0K3N");
             }
-            message.channel.send(err, {
-                code: "js"
-            });
+            message.channel.send(`\`\`\`js\n${err}\`\`\``);
         });
     }
 }
