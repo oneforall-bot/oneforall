@@ -47,11 +47,11 @@ module.exports = async (oneforall, message) => {
         if (command.ownersOnly && !oneforall.isOwner(message.author.id))
             return message.reply(oneforall.langManager().get(guildData.lang).notOwner(prefix, command));
 
-        if (command.guildOwnersOnly && !oneforall.isGuildOwner(message.author.id, guildData.owners)) {
+        if (command.guildOwnersOnly && !oneforall.isGuildOwner(message.author.id, guildData.guildOwners)) {
             return message.reply(oneforall.langManager().get(guildData.lang).notGuildOwner(prefix, command));
         }
 
-        if(command.guildCrownOnly && message.author.id !== message.guild.ownerId) return message.reply(oneforall.langManager.get(guildData.lang).notCrown(prefix, command));
+        if(command.guildCrownOnly && message.author.id !== message.guild.ownerId) return message.reply(oneforall.langManager().get(guildData.lang).notCrown(prefix, command));
 
         if (command.cooldown) {
             const cooldownKey = `${message.guild.id}-${message.author.id}-${command.name}`;
@@ -65,10 +65,11 @@ module.exports = async (oneforall, message) => {
             guildId: message.guild.id,
             memberId: message.author.id
         });
+        memberData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, message.author.id, memberData, guildData);
 
         if (command.ofaPerms) {
             for (const ofaPerm of command.ofaPerms) {
-                if (!memberData.has(ofaPerm)) {
+                if (!memberData.permissionManager.has(ofaPerm)) {
                     return oneforall.functions.tempMessage(message, oneforall.langManager().get(guildData.lang).notEnoughPermissions(command.name))
                 }
             }
@@ -82,7 +83,6 @@ module.exports = async (oneforall, message) => {
 
         guildData.langManager = oneforall.handlers.langHandler.get(guildData.lang);
 
-        memberData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, message.author.id, memberData, guildData);
         command.run(oneforall, message,guildData, memberData, args);
     }
 

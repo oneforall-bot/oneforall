@@ -59,7 +59,7 @@ module.exports = class extends Client {
     }
 
     isGuildOwner(authorId, guildOwners) {
-        return !!(this.isOwner(authorId) && guildOwners.includes(authorId))
+        return this.isOwner(authorId) || guildOwners.includes(authorId)
     }
 
     langManager() {
