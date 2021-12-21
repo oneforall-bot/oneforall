@@ -21,7 +21,7 @@ module.exports = {
             let i = 0
             return {
                 ...oneforall.embed(guildData),
-                title: `All admins (${oneforall.managers.mutesManager.size})`,
+                title: `All mutes (${oneforall.managers.mutesManager.size})`,
                 footer: {
                     text: `Page ${page + 1}/${totalPage || 1}`
                 },
