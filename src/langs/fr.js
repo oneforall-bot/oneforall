@@ -1010,7 +1010,34 @@ module.exports = {
             }
         },
         antiraid: {
+            wrongSanctionType: `Vous devez choisir une sanction valide \`(mute/unrank/kick/ban)\``,
             config: {
+                configMenu : (enable, limit) => {
+                    return [
+                        {
+                            value: 'enable',
+                            label: !enable ? 'Activer' : 'Désactiver',
+                            emoji: enable ? '❌' : '✅',
+                        },
+                        {
+                            value: 'sanction',
+                            label: 'Sanction',
+                            emoji: '🎯',
+                            question: 'Quel est la sanction ? \`(mute/unrank/kick/ban)\`'
+                        },
+                        ...limit ? [{
+                            value: 'limit',
+                            label: 'Limite',
+                            emoji: '✨',
+                            question: 'Quelle est la limite ?'
+                        }] : [],
+                        {
+                            value: 'back',
+                            label: 'Back',
+                            emoji: '↩️',
+                        },
+                    ]
+                },
                 success: (feature, sanction) => `Vous avez changé la fonctionnalité \`${feature}\` pour **${sanction}**.`
             },
             enable: {
