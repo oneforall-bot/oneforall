@@ -1,93 +1,83 @@
-const {MessageActionRow, MessageButton} = require("discord.js");
+const { Message, Collection, MessageEmbed } = require('discord.js')
+const OneForAll = require('../structures/OneForAll')
 module.exports = {
-    data: {
-        name: 'help',
-        description: 'Get the help',
-        options: [
-            {
-                type: 'STRING',
-                description: 'A specific command to get help for',
-                name: 'command',
-            }
-        ]
-    },
-    run: async (oneforall, message, memberData, guildData) => {
-        const {options} = message
-        let command = oneforall.handlers.slashCommandHandler.slashCommandList.get(options?.getString("command")?.toLowerCase())
-        await message.deferReply({ephemeral: true})
+    name: "help",
+    aliases: [],
+    description: "",
+    usage: "",
+    clientPermissions: ['SEND_MESSAGES'],
+    ofaPerms: [],
+    guildOwnersOnly: false,
+    guildCrownOnly: false,
+    ownersOnly: false,
+    cooldown: 0,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
+        const lang = guildData.langManager
+        const category = await oneforall._fs.readdirSync('./src/commands').filter(folder => !folder.endsWith('.js'))
+        const commandWithCat = []
 
-        let embed = {
-            title: `Help on ${message.guild.name}`,
-            description: '> *All bot is in slash command so prefix is /*',
-            footer: {
-                icon_url: message.author.displayAvatarURL({dynamic: true}) || ''
-            },
-            timestamp: new Date(),
-            color: guildData.embedColor,
-
-        }
-        if (command) {
-            command = {...command.data}
-            embed.title = 'Help for the command' + command.name
-            embed.fields = [
-                {
-                    name: 'Name:',
-                    value: command.name,
-                    inline: true
-                },
-                {
-                    name: 'Description:',
-                    value: command.description,
-                    inline: true
-                },
-            ]
-            if (command.options)
-                embed.fields.push({
-                    name: 'Options:',
-                    value: command.options.map(option => `${option.name} - ${option.description} - Required: ${option.required ? '\`✅\`' : '\`❌\`'}`).join('\n')
-                })
-            await message.editReply({embeds: [embed]})
-
-        } else {
-            const commandFolder = oneforall._fs.readdirSync('./src/slashCommands/').filter(file => !file.endsWith('.js'))
-            embed.fields = commandFolder.map(folder => {
-                return {
-                    name: folder.toUpperCase(),
-                    value: '> ' + oneforall._fs.readdirSync(`./src/slashCommands/${folder}`).map(file => `\`${file.split('/').pop().split('.')[0]}\``).join(', ')
-                }
+        for await (const cat of category) {
+            const commandsFiles = await oneforall._fs.readdirSync('./src/commands/' + cat).filter(folder => folder.endsWith('.js'))
+            const t = {}
+            t[cat] = []
+            commandsFiles.forEach(file => {
+                const command = require(`./${cat}/${file}`)
+                if (command.name)
+                    t[cat].push(command.usage || command.name)
+                delete require.cache[`./${cat}/${file}`];
             })
+            commandWithCat.push(t)
+        }
 
-        let help = {
-            title: `All Available Commands`,
-            description: '> *All bot is in slash command so prefix is \`/\`*',
-            footer: {
-                icon_url: message.author.displayAvatarURL({dynamic: true}) || ''
-            },
-            fields: [
-                {
-                    name: '<:gestion:917030086627180544> __**Gestion**__:',
-                    value: `\`autorole\`, \`backup\`, \`counter\`, \`embed\`, \`giveaway\`, \`massrole\`, \`reactrole\`, \`setlogs\`, \`soutien\`, \`piconly\`, \`tempvoc\`, \`unrank\`, \`setup\``
-                },
-                {
-                    name: '<:guildowner:917030845540347924> __**GuildOwner**__:',
-                    value: `\`group\`, \`owner\`, \`perm\`, \`antiraid\`, \`blacklist\``
-                },
-                {
-                    name: '<:moderation:917031239955914803> __**Moderation**__:',
-                    value: `\`ban\`, \`kick\`, \`lock\`, \`mute\`, \`renew\`, \`unban\`, \`bring\``
-                },
-                {
-                    name: '<:general:917031771181297684> __**General**__:',
-                    value: `\`addbot\`, \`all\`, \`avatar\`, \`clear\`, \`emoji\`, \`info\`, \`invite\`, \`leaderboard\`, \`ping\`, \`snipe\`, \`vc\`, \`poll\`\n\n[<:oneforall:801047039751880755> Invite Bot](https://discord.com/api/oauth2/authorize?client_id=912445710690025563&permissions=8&scope=bot%20applications.commands)\n[<:Discord:917033803615207434> Support Server](https://discord.gg/n2EvRECf88)\n[<:778353230484471819:780727288903237663> Documentation](https://takefy.gitbook.io/oneforall/)\nUse \`/help command:commandname\` for more info about a specific command.`
+        const helpEmbed = {
+            fields: commandWithCat.map(cmdCat => {
+                return {
+                    name: Object.keys(cmdCat)[0].toUpperCase() + ':',
+                    value: Object.values(cmdCat)[0].map(cmd => `\`${cmd}\``).join(', ')
                 }
-            ],
-            timestamp: new Date(),
+            }),
             color: guildData.embedColor,
+            timestamp: new Date(),
+            thumbnail: {
+                url: `https://images-ext-1.discordapp.net/external/io8pRqFGLz1MelORzIv2tAiPB3uulaHCX_QH7XEK0y4/%3Fwidth%3D588%26height%3D588/https/media.discordapp.net/attachments/780528735345836112/780725370584432690/c1258e849d166242fdf634d67cf45755cc5af310r1-1200-1200v2_uhq.jpg`
+            },
+            author: {
+                name: lang.help.information, icon_url: `https://media.discordapp.net/attachments/780528735345836112/780725370584432690/c1258e849d166242fdf634d67cf45755cc5af310r1-1200-1200v2_uhq.jpg?width=588&height=588`
+            },
+            footer: {
+                text: lang.help.information, icon_url: `https://media.discordapp.net/attachments/780528735345836112/780725370584432690/c1258e849d166242fdf634d67cf45755cc5af310r1-1200-1200v2_uhq.jpg?width=588&height=588`
+            }
 
         }
-            await message.editReply({embeds: [help]})
+
+        if (args[0] && args[0].includes('@')) return message.channel.send({ embeds: [helpEmbed] })
+        if (args[0]) {
+            const cmd = oneforall.handlers.commandHandler.commandList.get(args[0].toLowerCase().normalize()) || await oneforall.handlers.commandHandler.aliases.get(args[0].toLocaleLowerCase().normalize());
+
+            if (!cmd) return message.channel.send(lang.help.noCommand(args[0])).then((mp) => mp.delete({ timeout: 4000 }))
+            const prefix = guildData.prefix
+            const embed = new MessageEmbed()
+                .setTitle(`${cmd.name} command`)
+                .setDescription(lang.help.requiredOrNot)
+                .setThumbnail(`https://media.discordapp.net/attachments/780360844696616962/818128852105691166/ddw3h8b-5dd50e8b-32f3-4d51-9328-e55cab4aa546.gif`)
+                .addField('ALIASES', cmd.aliases.length < 1 ? lang.help.noAliases : cmd.aliases.join(', '), true)
+                .addField('COOLDOWN:', `${cmd.cooldown / 1000}s`, true)
+                .addField('DESCRIPTION:', cmd.description, false)
+                .addField('USAGE:', cmd.usage === '' ? lang.help.noUsage : `${prefix}${cmd.usage}`, true)
+                .addField('Client Permissions', cmd.clientPermissions.length < 1 ? 'Aucune' : cmd.clientPermissions.join(', '), true)
+                .addField('OneForAll Permissions', cmd.ofaPerms.length < 1 ? 'Aucune' : cmd.ofaPerms.join(', '), true)
+                .setColor(guildData.embedColor)
+                .setFooter(`${lang.help.footer} ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true }))
+            return message.channel.send({ embeds: [embed] })
         }
-
-
+        message.channel.send({ embeds: [helpEmbed] })
     }
 }

@@ -5,7 +5,23 @@ module.exports = {
     dictionary: {
         notEnoughPermissions: (command) => `Vous n'avez pas assez de permissions pour exécuter la commande \`${command}\``,
         notEnoughPermissionsClient: (missingPerms) => `OneForAll manque de permissions (\`${missingPerms}\`) pour pouvoir utiliser cette commande.`,
-       
+        help: {
+            information2: prefix => `<:778353230484471819:780727288903237663> Le préfixe de ce serveur est \`${prefix}\`.\n<:desc2:783422775821729792> Pour obtenir plus d'informations sur une commande, tapez simplement \`${prefix}help\` \`<command>\`.\n<:folder:783422648196923452> Vous pouvez également taper \`${prefix}help commands\` ou réagir avec 📄 pour obtenir toutes mes commandes.`,
+            noCommand: args => `Je ne trouve pas la commande **__${args}__** dans mes commandes`,
+            information: `Information and commands`,
+            noAliases: `Pas d'aliases`,
+            cmdTitle: `Aide sur la commande`,
+            footer: `Demandé par`,
+            titleNoArgs: `Page d'aide général`,
+            command: `Afficher toutes les commandes`,
+            search: `Chercher une aide détaillé sur un commande`,
+            noUsage: `Pas d'usage en particuler`,
+            requiredOrNot: `\`< >\` sont les arguments requis et \`[ ]\` sont les arguments optionnel`
+        },
+        setprefix: {
+            errorNoValid: 'Veuillez utiliser les prefixes suivants: ``!‎``, ``@``, ``#‎``, ``$‎``, ``%‎``, ``^‎``, ``&‎``, ``*‎``, ``(‎``, ``)‎``, ``_‎``, ``+‎``, ``\\‎``, ``-‎``, ``=‎``, ``{‎``, ``}‎``, ``;‎``, ``\'‎``, ``:‎``, ``"‎``, ``|‎``, ``,‎``, ``.‎``, ``<‎``, ``>‎``, ``/‎``, ``?``',
+            success: newPrefix => `\`SUCCÈS\` Le prefix a été mise à jour en **${newPrefix}** `,
+        },
         cooldownMessage: (prefix, command, timeRemaining) => `Vous devez attendre \`${timeRemaining}\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         notOwner: (prefix, command) => `Vous devez être \`Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,
         notGuildOwner: (prefix, command) => `Vous devez être \`Guild Owner\` avant de pouvoir exécuter la commande \`${prefix}${command.name}\`.`,

@@ -1,43 +1,49 @@
+const { Message, Collection } = require('discord.js')
+const OneForAll = require('../structures/OneForAll')
 module.exports = {
+    name: "eval",
+    aliases: [],
+    description: "",
+    usage: "",
+    clientPermissions: ['SEND_MESSAGES'],
+    ofaPerms: [],
+    guildOwnersOnly: false,
+    guildCrownOnly: false,
     ownersOnly: true,
-    data: {
-        name: 'eval',
-        description: 'Eval command',
-        options: [
-            {
-                type: 'STRING',
-                name: 'content',
-                description: 'The content to eval',
-                required: true
-            }
-        ],
-        permissions: [
-            {
-                id: '708047733994553344',
-                type: 2,
-                permission: true
-            }
-        ]
-    },
-    run: async(oneforall, message, memberData, guildData) => {
-        const content = message.options.getString('content')
+    cooldown: 0,
+    /**
+    * 
+    * @param {OneForAll} oneforall
+    * @param {Message} message 
+    * @param {Collection} memberData 
+    * @param {Collection} guildData 
+    * @param {[]} args
+    */
+    run: async (oneforall, message, guildData, memberData, args) => {
+
+        const content = message.content.split(" ").slice(1).join(" ");
         const result = new Promise((resolve) => resolve(eval(content)));
+
         return result.then((output) => {
             if (typeof output !== "string") {
                 output = require("util").inspect(output, {
                     depth: 0
                 });
             }
-            if (output.includes(oneforall.token)) {
-                output = output.replace(oneforall.token, "T0K3N");
+            if (output.includes(client.token)) {
+                output = output.replace(client.token, "T0K3N");
             }
-            message.reply({content: `\`\`\`js\n${output}\`\`\``, ephemeral: true})
+            message.channel.send(output, {
+                code: "js"
+            });
         }).catch((err) => {
             err = err.toString();
-            if (err.includes(oneforall.token)) {
-                err = err.replace(oneforall.token, "T0K3N");
+            if (err.includes(client.token)) {
+                err = err.replace(client.token, "T0K3N");
             }
-            message.reply({content: `\`\`\`js\n${err}\`\`\``, ephemeral: true})
+            message.channel.send(err, {
+                code: "js"
+            });
         });
     }
 }

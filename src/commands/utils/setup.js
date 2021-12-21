@@ -6,7 +6,6 @@ module.exports = {
     aliases: [],
     description: "Setup the bot",
     usage: "setup <memberRole> <muteRole> [true/false (autosetup role mute in channels)]",
-
     clientPermissions: [Permissions.FLAGS.MANAGE_ROLES, Permissions.FLAGS.MANAGE_CHANNELS],
     guildOwnersOnly: true,
     cooldown: 1000,

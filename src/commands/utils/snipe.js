@@ -1,9 +1,9 @@
 const {Message, Collection} = require('discord.js')
 const OneForAll = require('../../structures/OneForAll')
 module.exports = {
-   name: "",
+   name: "snipe",
    aliases: [],
-   description: "",
+   description: "Get the last message delete of a channel | Avoir le dernier message supprimer d'un channel",
    usage: "",
    clientPermissions: ['SEND_MESSAGES'],
    ofaPerms: [],

@@ -17,7 +17,7 @@ module.exports = {
     * @param {[]} args
     */
     run: async (oneforall, message, memberData, guildData, args) => {
-        message.reply({ content: 'https://discord.com/api/oauth2/authorize?client_id=912445710690025563&permissions=8&scope=bot%20applications.commands'})
+        message.reply({ content: `https://discord.com/api/oauth2/authorize?client_id=${oneforall.user.id}&permissions=8&scope=bot%20applications.commands`})
 
     }
 }
