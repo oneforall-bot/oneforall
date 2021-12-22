@@ -4,7 +4,7 @@ module.exports = {
     name: "unrank",
     aliases: ["derank"],
     description: "Unrank a member with sensible permissions",
-    usage: "",
+    usage: "unrank <member>",
     clientPermissions: ['SEND_MESSAGES'],
     ofaPerms: ["UNRANK_CMD"],
     cooldown: 0,
@@ -16,7 +16,7 @@ module.exports = {
     * @param {Collection} guildData 
     * @param {[]} args
     */
-    run: async (oneforall, message, memberData, guildData) => {
+    run: async (oneforall, message, guildData, memberData, args) => {
         const lang = guildData.langManager
         const member = args[1] ? (await message.guild.members.fetch(args[1]).catch(() => {})) || message.mentions.members.first() : undefined
         if(!member) return oneforall.functions.tempMessage(message, "Missing member")

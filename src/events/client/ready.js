@@ -10,16 +10,13 @@ module.exports = async (oneforall) => {
     await checkMute(oneforall)
     await checkCounter(oneforall)
     await checkPolls(oneforall)
-    oneforall.user.setPresence({
-        status: 'online',
-        activities: [{name: `${oneforall.guilds.cache.size} Servers | .gg/oneforall`, type: 'WATCHING'}]
-    })
     setInterval(async () => {
+        if(oneforall.shard.ids.lenght >= oneforall.shard.count)
+            oneforall.user.setPresence({
+                status: 'online',
+                activities: [{ name: `${(await oneforall.shard.broadcastEval(client => client.guilds.cache.size)).filter(g => g.available).reduce((acc, guildCount) => acc + guildCount, 0)} Servers | !help`, type: 'WATCHING' }]
+            })
 
-        oneforall.user.setPresence({
-            status: 'online',
-            activities: [{name: `${oneforall.guilds.cache.size} Servers | .gg/oneforall`, type: 'WATCHING'}]
-        })
     }, 60000);
 
     oneforall.giveawaysManager = new GiveawaysManager(oneforall, {
