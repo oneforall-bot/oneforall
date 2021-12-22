@@ -14,10 +14,11 @@ module.exports = async (oneforall, message) => {
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(message.guild.id, {
         guildId: message.guild.id
     });
-    if (message.mentions.users.first() === oneforall.user.id && !message.content.includes('@here') && !message.content.includes('@everyone')) {
-        message.reply({ content: oneforall.handlers.langHandler.get(guildData.lang).pingOneforall })
-    }
     const prefix = guildData.prefix || oneforall.config.prefix;
+
+    if (message.content === `<@!${oneforall.user.id}>` && !message.content.includes('@here') && !message.content.includes('@everyone')) {
+        message.reply({ content: oneforall.langManager().get(guildData.lang).pingOneforall(prefix) })
+    }
     if (message.author.bot || message.author.system || !message.content.startsWith(prefix)) {
         return await oneforall.setCommands(message.guild.id, guildData)
     }

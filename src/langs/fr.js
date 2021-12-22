@@ -29,7 +29,7 @@ module.exports = {
         botAdded: (guild, member, owner) => `Votre bot a été ajouté sur ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
         botRemoved: (guild, member, owner) => `Votre bot a été enlevé de ${guild} (${member} membres) ${owner.toString()} (${owner.id}}`,
         managedRole: `Ce rôle ne peut pas être ajouté car c'est un rôle **géré par une application**`,
-        pingOneforall: `Mon prefix est \`/\`\n **Si vous ne voyez aucune commandes écrivez quelque message**`,
+        pingOneforall: prefix => `Mon prefix est \`${prefix}\``,
         yes: 'Oui',
         no: 'Non',
         tryToPermsRole: `Vous ne pouvez pas ajouter un role ayant des permissions sensible`,
