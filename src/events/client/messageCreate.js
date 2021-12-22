@@ -19,9 +19,9 @@ module.exports = async (oneforall, message) => {
     if (message.content === `<@!${oneforall.user.id}>` && !message.content.includes('@here') && !message.content.includes('@everyone')) {
         message.reply({ content: oneforall.langManager().get(guildData.lang).pingOneforall(prefix) })
     }
-    if (message.author.bot || message.author.system || !message.content.startsWith(prefix)) {
-        return await oneforall.setCommands(message.guild.id, guildData)
-    }
+    // if (message.author.bot || message.author.system || !message.content.startsWith(prefix) ) {
+    //     return await oneforall.setCommands(message.guild.id, guildData)
+    // }
     const args = message.content.slice(prefix.length).trim().split(/ +/g),
         cmd = args.shift().toLowerCase();
     if (!cmd) return;
@@ -41,6 +41,7 @@ module.exports = async (oneforall, message) => {
                 memberId: message.author.id
             });
             memberData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, message.author.id, memberData, guildData);
+            console.log(`Command ${command.name} ${args.join(' ')} has been executed on ${message.guild.name} by ${message.author.name}`);
             return command.run(oneforall, message, guildData, memberData, args);
 
         }
@@ -83,7 +84,7 @@ module.exports = async (oneforall, message) => {
         }
 
         guildData.langManager = oneforall.handlers.langHandler.get(guildData.lang);
-
+        console.log(`Command ${command.name} ${args.join(' ')} has been executed on ${message.guild.name} by ${message.author.name}`);
         command.run(oneforall, message,guildData, memberData, args);
     }
 

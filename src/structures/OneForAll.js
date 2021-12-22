@@ -10,7 +10,7 @@ module.exports = class extends Client {
     constructor() {
         super({
             partials: ['MESSAGE', 'REACTION', 'CHANNEL'],
-            intents: Object.keys(Intents.FLAGS),
+            intents: 32511
         });
         this.Collection = Collection;
         this.functions = require('../utils/functions');
@@ -68,7 +68,7 @@ module.exports = class extends Client {
 
     async setCommands(guildId, guildData){
         if (!this.slashReloaded.has(guildId)) {
-            if (!this.application?.owner) await this.application?.fetch();
+            if (!this.application?.owner) await this.application?.fetch().catch(() => {});
             this.slashReloaded.add(guildId);
             if (!this.antiraidCmdLoaded) {
                 const antiraidCmd = this.handlers.slashCommandHandler.slashCommandList.get('antiraid')
@@ -93,7 +93,6 @@ module.exports = class extends Client {
             }
             await this.application?.commands.set(this.handlers.contextMenuHandler.contextMenuList.concat(this.handlers.slashCommandHandler.slashCommandList).sort((a, b) => a.order - b.order).map(s => s.data), guildId).then(e => {
             }).catch((e) => {
-                console.log(e)
                 this.slashReloaded.delete(guildId);
             });
 

@@ -1,4 +1,4 @@
-const {Message, Collection} = require('discord.js')
+const {Message, Collection, MessageEmbed} = require('discord.js')
 const OneForAll = require('../../structures/OneForAll')
 module.exports = {
    name: "snipe",
