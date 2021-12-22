@@ -16,7 +16,7 @@ module.exports = {
     * @param {Collection} guildData 
     * @param {[]} args
     */
-    run: async (oneforall, message, guildData, memberData, args) => {
+    run: async (oneforall, message, guildData, memberData) => {
         const lang = guildData.langManager
         const member = args[1] ? (await message.guild.members.fetch(args[1]).catch(() => {})) || message.mentions.members.first() : undefined
         if(!member) return oneforall.functions.tempMessage(message, "Missing member")

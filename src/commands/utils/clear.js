@@ -4,7 +4,7 @@ module.exports = {
     name: "clear",
     aliases: [],
     description: "Clear messages or member message || Supprimer des messages ou des messages de membre",
-    usage: "clear <amount/memer> ",
+    usage: "clear <amount/member> ",
     clientPermissions: ['SEND_MESSAGES', Permissions.FLAGS.MANAGE_MESSAGES],
     ofaPerms: ["CLEAR_CMD"],
     cooldown: 1000,

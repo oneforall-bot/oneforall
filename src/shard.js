@@ -1,10 +1,10 @@
 const { ShardingManager } = require('discord.js'),
     {token} = require('./config')
 
-const manager = new ShardingManager('./src/index.js', { token,	shardArgs: ['--ansi', '--color'],});
+const manager = new ShardingManager('./src/index.js', { token, respawn: true,  totalShards: "auto"});
 
 manager.on('shardCreate', shard => {
-    shard.on('ready', () => {
+    shard.on('ready', () => {   
         // hook.send(`\`[${new Date().toString().split(" ", 5).join(" ")}]\` <:online2:464520569975603200> Shard \`#${shard.id + 1}\`  prêt \n▬▬▬▬▬▬▬▬`)
 
     })

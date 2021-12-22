@@ -55,10 +55,7 @@ module.exports = function (database, modelName) {
                 allowNull: true,
                 isValue: true,
                 default: {
-                    join: 0, leave: 0, fake: 0, bonus: 0, get total(){
-                        const x =  this.join - this.leave - this.bonus
-                        return x < 0 ? 0 : x
-                    }
+                    join: 0, leave: 0, fake: 0, bonus: 0
                 }
             },
             {

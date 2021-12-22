@@ -1,27 +1,30 @@
 const moment = require('moment')
 module.exports = async (oneforall, member) => {
-    const {guild} = member;
+    const { guild } = member;
     const guildData = oneforall.managers.guildsManager.getAndCreateIfNotExists(guild.id, {
         guildId: guild.id
     })
-    const {invites} = guildData;
-    const {channel, message, enable} = invites;
+    const { invites } = guildData;
+    const { channel, message, enable } = invites;
 
     if (!channel || !message || !enable) return
     const welcomeChannel = guild.channels.cache.get(channel)
     const lang = oneforall.handlers.langHandler.get(guildData.lang)
     const cachedInv = oneforall.cachedInv.get(guild.id)
-    const newInv = await guild.invites.fetch()
+    let newInv;
+    if (guild.me?.permissions.has('MANAGE_GUILD')) {
+        newInv = await guild.invites.fetch()
 
-    const tempMap = new oneforall.Collection()
-    for(const [code, invite] of newInv) tempMap.set(code, invite.uses)
-   const usedInv = newInv.find(inv => {
-       if(!cachedInv) return undefined
-       return cachedInv.get(inv.code) < inv.uses
-   });
+        const tempMap = new oneforall.Collection()
+        for (const [code, invite] of newInv) tempMap.set(code, invite.uses)
+    }
+    const usedInv = newInv?.find(inv => {
+        if (!cachedInv) return undefined
+        return cachedInv.get(inv.code) < inv.uses
+    });
 
 
-    let finalMsg =  lang.invite.cantTrace(member.toString());
+    let finalMsg = lang.invite.cantTrace(member.toString());
     if (!usedInv) {
         if (guild.vanityURLCode) finalMsg = lang.invite.vanity(member.toString())
         if (member.user.bot) finalMsg = lang.invite.oauth(member.toString())
@@ -34,7 +37,7 @@ module.exports = async (oneforall, member) => {
                 memberId: usedInv.inviter.id
             })
 
-            let {invites} = userData;
+            let { invites } = userData;
             invites.join += 1;
             if (fake) invites.fake += 1;
             userData.save()
