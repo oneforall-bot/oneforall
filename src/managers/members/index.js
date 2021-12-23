@@ -61,7 +61,7 @@ module.exports = function (database, modelName) {
             {
                 name: 'xp',
                 type: DataTypes.JSON,
-                allowNull: false,
+                allowNull: true,
                 isValue: true,
                 default: {xp: 0, level: 0, lastUpdated: new Date()}
             },

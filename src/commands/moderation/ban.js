@@ -36,7 +36,6 @@ module.exports = {
     const banOptions = {reason: args.slice(1).join(" ") || `Ban by ${message.author.username}#${message.author.discriminator}`}
     const time = args[2] ? parseInt(args[2]) : undefined
     const member = args[0] ? (await message.guild.members.fetch(args[0]).catch(() => {})) || message.mentions.members.first() : undefined
-    console.log(member);
     const user  = !member ? (await oneforall.users.fetch(args[1]).catch(() => {})) : undefined
     if (time) {
         if (time < 0 || time > 7) return message.editReply({content: lang.ban.wrongDays})

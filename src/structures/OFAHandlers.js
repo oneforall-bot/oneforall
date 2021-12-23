@@ -55,7 +55,16 @@ class EventHandler {
 
     registerFile(file) {
         const event = require(file);
-        this.ofaHandlers.oneforall.on(file.split('/').pop().split('.')[0], event.bind(null, this.ofaHandlers.oneforall));
+        this.ofaHandlers.oneforall.on(file.split('/').pop().split('.')[0], (...args) => {
+            try{
+                event.call(null, this.ofaHandlers.oneforall, ...args)
+
+            }catch(e){
+                console.log(e);
+            }
+                
+           
+        });
         delete require.cache[require.resolve(file)];
     }
 }
