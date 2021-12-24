@@ -14,11 +14,11 @@ module.exports = {
    ownersOnly: false,
    cooldown: 1500,
   /**
-  * 
+  *
   * @param {OneForAll} oneforall
-  * @param {Message} message 
-  * @param {Collection} memberData 
-  * @param {Collection} guildData 
+  * @param {Message} message
+  * @param {Collection} memberData
+  * @param {Collection} guildData
   * @param {[]} args
   */
    run: async (oneforall, message, guildData, memberData,args) => {
@@ -115,7 +115,7 @@ module.exports = {
         })
 
         function updateEmbed() {
-            row.components[0].options = lang.soutien.config.baseMenu(tempSoutien.enable)
+            row.components[0].setOptions(lang.soutien.config.baseMenu(tempSoutien.enable))
             panel.edit({embeds: [embed()], components: [row]})
         }
 

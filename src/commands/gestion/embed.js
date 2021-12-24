@@ -13,11 +13,11 @@ module.exports = {
     ofaPerms: ["EMBED_CMD"],
     cooldown: 1500,
     /**
-    * 
+    *
     * @param {OneForAll} oneforall
-    * @param {Message} message 
-    * @param {Collection} memberData 
-    * @param {Collection} guildData 
+    * @param {Message} message
+    * @param {Collection} memberData
+    * @param {Collection} guildData
     * @param {[]} args
     */
     run: async (oneforall, message, guildData, memberData, args) => {
@@ -82,12 +82,12 @@ module.exports = {
             const selectedOption = interaction.values[0]
             if (numberOfEmbed > 1 && selectedOption.split('.')[2]) {
                 selectedEmbed = selectedOption.split('.')[2] - 1
-                row.components[0].options = [...lang.embedBuilder.baseMenu, {
+                row.components[0].setOptions([...lang.embedBuilder.baseMenu, {
                     label: 'Back',
                     value: 'back',
                     description: 'Go to back to the embed selector',
                     emoji: '↩'
-                }]
+                }])
                 await panel.edit({ components: [row] })
                 return interaction.deferUpdate()
             }

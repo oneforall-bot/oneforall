@@ -43,7 +43,7 @@ module.exports = {
             reason,
             authorId: message.author.id
         }).save().then(() => {
-            member.roles.add(guildData.mute, reason)
+            member.timeout(ms(time), reason)
             oneforall.functions.tempMessage(message, lang.mute.add.success(`${member.user.username}#${member.user.discriminator}`, ms(time), reason))
 
         })

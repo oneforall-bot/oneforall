@@ -30,7 +30,7 @@ module.exports = {
         guildId: message.guildId,
         memberId: member.id
     }).delete()
-    member.roles.remove(guildData.mute, `Unmuted by ${message.author.username}#${message.author.discriminator}`).then(() => {
+    member.timeout(null, `Unmuted by ${message.author.username}#${message.author.discriminator}`).then(() => {
         oneforall.functions.tempMessage(message,  lang.mute.remove.success(`${member.user.username}#${member.user.discriminator}`))
     })
    }

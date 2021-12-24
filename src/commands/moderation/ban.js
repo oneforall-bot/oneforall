@@ -36,7 +36,7 @@ module.exports = {
     const banOptions = {reason: args.slice(1).join(" ") || `Ban by ${message.author.username}#${message.author.discriminator}`}
     const time = args[2] ? parseInt(args[2]) : undefined
     const member = args[0] ? (await message.guild.members.fetch(args[0]).catch(() => {})) || message.mentions.members.first() : undefined
-    const user  = !member ? (await oneforall.users.fetch(args[1]).catch(() => {})) : undefined
+    const user  = !member ? (await oneforall.users.fetch(args[0]).catch(() => {})) : message.mentions.users.first() || undefined
     if (time) {
         if (time < 0 || time > 7) return message.editReply({content: lang.ban.wrongDays})
         banOptions.days = time.value
@@ -57,6 +57,9 @@ module.exports = {
         await message.guild.bans.create(user, banOptions).then(() => {
             message.channel.send({embeds: [lang.ban.success(user.toString(), banOptions.reason, message.author.toString())]})
         }).catch(e => {
+            console.log(e);
+            oneforall.functions.tempMessage(message,  lang.ban.error)
+
         })
     }
     const roleLogs = guildData.logs.moderation

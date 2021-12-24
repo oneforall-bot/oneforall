@@ -154,7 +154,7 @@ module.exports = {
                 }
                 if (selectedOption === 'enable') {
                     invites.enable = !invites.enable
-                    row.components[0].options = lang.invite.config.selectMenuOptions(invites.enable)
+                    row.components[0].setOptions(lang.invite.config.selectMenuOptions(invites.enable))
                     await panel.edit({components: [row]})
                     await updateEmbed()
                 }

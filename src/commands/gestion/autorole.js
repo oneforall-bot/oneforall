@@ -10,11 +10,11 @@ module.exports = {
     ofaPerms: ["AUTOROLE_CMD"],
     cooldown: 1000,
     /**
-    * 
+    *
     * @param {OneForAll} oneforall
-    * @param {Message} message 
-    * @param {Collection} memberData 
-    * @param {Collection} guildData 
+    * @param {Message} message
+    * @param {Collection} memberData
+    * @param {Collection} guildData
     * @param {[]} args
     */
     run: async (oneforall, message, guildData, memberData, args) => {
@@ -94,12 +94,12 @@ module.exports = {
                 selectedAutorole = selectedOption.split('.')[2] - 1
                 tempAutoRole = autoRoles[selectedAutorole]
                 editing = true
-                row.components[0].options = [...lang.autorole.baseMenu, {
+                row.components[0].setOptions([...lang.autorole.baseMenu, {
                     label: 'Back',
                     value: 'back',
                     description: 'Go to back to the autorole selector',
                     emoji: '↩'
-                }]
+                }])
                 updateEmbed()
                 return await panel.edit({ components: [row] })
             }

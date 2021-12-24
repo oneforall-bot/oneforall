@@ -73,7 +73,7 @@ module.exports = {
                 .addField('DESCRIPTION:', cmd.description, false)
                 .addField('USAGE:', cmd.usage === '' ? lang.help.noUsage : `${prefix}${cmd.usage}`, true)
                 .addField('Client Permissions', cmd.clientPermissions.length < 1 ? 'Aucune' : cmd.clientPermissions.join(', '), true)
-                .addField('OneForAll Permissions', cmd.ofaPerms.length < 1 ? 'Aucune' : cmd.ofaPerms.join(', '), true)
+                .addField('OneForAll Permissions', !cmd.ofaPerms || cmd.ofaPerms.length < 1 ? 'Aucune' : cmd.ofaPerms.join(', '), true)
                 .setColor(guildData.embedColor)
                 .setFooter(`${lang.help.footer} ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true }))
             return message.channel.send({ embeds: [embed] })

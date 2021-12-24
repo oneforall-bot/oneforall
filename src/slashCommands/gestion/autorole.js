@@ -84,12 +84,12 @@ module.exports = {
                 selectedAutorole = selectedOption.split('.')[2] - 1
                 tempAutoRole = autoRoles[selectedAutorole]
                 editing = true
-                row.components[0].options = [...lang.autorole.baseMenu, {
+                row.components[0].setOptions([...lang.autorole.baseMenu, {
                     label: 'Back',
                     value: 'back',
                     description: 'Go to back to the autorole selector',
                     emoji: '↩'
-                }]
+                }])
                 updateEmbed()
                 return await panel.edit({components: [row]})
             }

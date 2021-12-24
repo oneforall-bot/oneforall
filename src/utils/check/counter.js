@@ -8,7 +8,7 @@ module.exports = async (oneforall) => {
                     const channel = oneforall.channels.cache.get(guildData.counters[key]?.channel)
                     if (channel) {
                         const guild = oneforall.guilds.cache.get(guildData.guildId)
-                        if (guild.available) {
+                        if (guild?.available) {
 
                             console.log('Channel edited on guild' + guild.name)
                             const value = key === 'member' ? guild.memberCount : key === 'voice' ? (await guild.members.fetch()).filter(member => member.voice.channelId).size
