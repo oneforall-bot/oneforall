@@ -31,7 +31,7 @@ module.exports = {
             commandsFiles.forEach(file => {
                 const command = require(`./${cat}/${file}`)
                 if (command.name)
-                    t[cat].push(command.usage || command.name)
+                    t[cat].push(command.name)
                 delete require.cache[`./${cat}/${file}`];
             })
             commandWithCat.push(t)
@@ -41,7 +41,7 @@ module.exports = {
             fields: commandWithCat.map(cmdCat => {
                 return {
                     name: Object.keys(cmdCat)[0].toUpperCase() + ':',
-                    value: Object.values(cmdCat)[0].map(cmd => `\`${cmd}\``).join(', ')
+                    value: Object.values(cmdCat)[0].map(cmd => `[\`${cmd}\`](https://discord.gg/n2EvRECf88)`).join(', ')
                 }
             }),
             color: guildData.embedColor,
