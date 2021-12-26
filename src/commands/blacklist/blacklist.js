@@ -99,7 +99,7 @@ module.exports = {
                     },
                     description: blacklist.map((bl) => {
                         i++
-                        return `\`${i}\` ・ <@${bl.userId}> \`(${bl.userId})\`・ Author: <@${bl.authorId}>\`(${bl.authorId})\``;
+                        return `\`${i}\` ・ <@${bl.userId}> \`(${bl.userId})\`\nAuthor: <@${bl.authorId}>\`(${bl.authorId})\``;
 
                     }).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
 
