@@ -55,7 +55,7 @@ module.exports = {
         let tempAutoRole = { enable: false }
         if (numberOfAutoroles > 0) defaultOptions = [...autoRoles.map((autoRole, i) => {
             return {
-                label: `Autorole \`${i + 1}\``,
+                label: `Autorole ${i + 1}`,
                 value: `autorole.${message.id}.${i + 1}`,
                 description: `Modifier l'autorole: ${i + 1}`,
                 emoji: '⚙️'
