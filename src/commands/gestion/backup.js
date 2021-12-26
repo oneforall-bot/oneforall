@@ -32,7 +32,7 @@ module.exports = {
             let backupChannels = args.includes('channels')
             let backupBans = args.includes('bans')
             const doNotBackup = [!backupRoles ? "roles" : null, !backupEmojis ? "emojis" : null, !backupChannels ? "channels" : null, !backupBans ? "bans" : null]
-            const loading = await message.channel.send('Loading ...')
+            const loading = await message.channel.send('Creating the backup...')
             backup.create(message.guild, {
                 maxMessagesPerChannel: 0,
                 jsonSave: false,
