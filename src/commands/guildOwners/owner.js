@@ -45,7 +45,7 @@ module.exports = {
                 footer: {
                   text: `Owner Page ${page + 1}/${totalPage ||1}`
                 },
-                description: guildOwners.map((id, i) => `${i+1} - <@${id}>`).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
+                description: guildOwners.map((id, i) => `\`${i+1}\` - <@${id}>`).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
             }
         }
         await new oneforall.DataMenu(guildOwners,embedChange, message, oneforall).sendEmbed()
