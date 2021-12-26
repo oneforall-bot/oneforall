@@ -27,7 +27,7 @@ module.exports = {
                 },
                 description: oneforall.managers.mutesManager.map((muteManager) => {
                     i++
-                    return `\`${i}\` ・ <@${muteManager.memberId}> ・ Expire  ${!muteManager.expiredAt ? 'Never' : `<t:${oneforall.functions.dateToEpoch(new Date(muteManager.expiredAt))}:R>`} - Reason: \`${muteManager.reason}\` - Author: <@${muteManager.authorId}>`
+                    return `\`${i}\` ・ <@${muteManager.memberId}> ・ Expire  ${!muteManager.expiredAt ? 'Never' : `<t:${oneforall.functions.dateToEpoch(new Date(muteManager.expiredAt))}:R>`}\nReason: \`${muteManager.reason}\`\nAuthor: <@${muteManager.authorId}>`
                 }).slice(slicerIndicatorMin, slicerIndicatorMax).join('\n') || 'No data'
 
             }
