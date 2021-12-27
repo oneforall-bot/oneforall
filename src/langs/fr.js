@@ -43,6 +43,7 @@ module.exports = {
         roleSuppThanAuthor: `Vous ne pouvez effectuer cette action car vos rôles sont inférieure au membre`,
         incorrectTime: 'Le temps est incorrect',
         incorrectChannel: "Le channel est incorrect",
+        invalidRole: "Le role est incorrect",
         save: 'La configuration a été sauvegardé',
         permissions: {
             ALL: {
@@ -228,7 +229,15 @@ module.exports = {
                 description: "Permet de créer, supprimer des poll"
             }
         },
-
+        blacklist: {
+            role :{
+               alreadyBlacklist : (role) => `Le rôle **${role}** est déjà dans la blacklist rôle`,
+               successAdd: (role, reason) => `Le rôle **${role}** est maintenant blacklist pour \`${reason}\``,
+               notBlacklist : (role) => `Le rôle **${role}** n'est pas dans la blacklist rôle`,
+               successRemove: (role) => `Le rôle **${role}** n'est plus dans la blacklist rôle`,
+               successClear: `La blacklist rôle a été clear`
+            }
+        },
         piconly: {
             wrongType: 'Le type du channel est invalide',
             alreadyPiconly: 'Le channel est déjà dans les piconly',

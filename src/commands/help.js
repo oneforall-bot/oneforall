@@ -60,7 +60,7 @@ module.exports = {
 
         if (args[0] && args[0].includes('@')) return message.channel.send({ embeds: [helpEmbed] })
         if (args[0]) {
-            const cmd = oneforall.handlers.commandHandler.commandList.get(args[0].toLowerCase().normalize()) || await oneforall.handlers.commandHandler.aliases.get(args[0].toLocaleLowerCase().normalize());
+            const cmd = oneforall.handlers.commandHandler.commandList.get(args[0].toLowerCase().normalize()) || oneforall.handlers.commandHandler.aliases.get(args[0].toLocaleLowerCase().normalize());
 
             if (!cmd) return message.channel.send(lang.help.noCommand(args[0])).then((mp) => mp.delete({ timeout: 4000 }))
             const prefix = guildData.prefix
@@ -68,7 +68,7 @@ module.exports = {
                 .setTitle(`${cmd.name} command`)
                 .setDescription(lang.help.requiredOrNot)
                 .setThumbnail(`https://media.discordapp.net/attachments/780360844696616962/818128852105691166/ddw3h8b-5dd50e8b-32f3-4d51-9328-e55cab4aa546.gif`)
-                .addField('ALIASES', cmd.aliases.length < 1 ? lang.help.noAliases : cmd.aliases.join(', '), true)
+                .addField('ALIASES', cmd.aliases && cmd.aliases.length < 1 ? lang.help.noAliases : cmd.aliases.join(', '), true)
                 .addField('COOLDOWN:', `${cmd.cooldown / 1000}s`, true)
                 .addField('DESCRIPTION:', cmd.description, false)
                 .addField('USAGE:', cmd.usage === '' ? lang.help.noUsage : `${prefix}${cmd.usage}`, true)

@@ -4,7 +4,7 @@ module.exports = {
    name: "owner",
    aliases: [],
    description: "Add, remove, list the guild owners | Ajouter, enlever ou lister les owners du serveur",
-   usage: "owner <add/remove/list> [member]",
+   usage: "owner <add/remove/list/clear> [member]",
    clientPermissions: ['SEND_MESSAGES', "EMBED_LINKS"],
    guildCrownOnly: true,
    cooldown: 0,
@@ -27,6 +27,12 @@ module.exports = {
         guildData.guildOwners.push(user.id)
         guildData.save().then(() => {
             oneforall.functions.tempMessage(message, lang.owners.add.success(user.toString()))
+        })
+    }
+    if(subCommand === "clear"){
+        guildData.guildOwners = []
+        guildData.save().then(() => {
+            oneforall.functions.tempMessage(message, 'Owners cleared')
         })
     }
     if(subCommand === 'remove'){

@@ -15,7 +15,7 @@ module.exports = async (oneforall) => {
                 }
                 channel.send({embeds: [embed]})
                 const pollMessage = await channel.messages.fetch(poll.id)
-                if (pollMessage) pollMessage.edit({components: []})
+                if (pollMessage) pollMessage.edit({components: []}).catch(() => {})
                 guildData.polls = guildData.polls.filter(_poll => _poll.id !== poll.id)
                 guildData.save()
 

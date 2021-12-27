@@ -30,7 +30,7 @@ module.exports = async (oneforall, message) => {
     let command = commandHandler.commandList.get(cmd);
     if (!command) {
         if (commandHandler.aliases.get(cmd))
-            command = commandHandler.commandList.get(commandHandler.aliases.get(cmd).toLowerCase());
+            command = commandHandler.aliases.get(cmd);
 
     }
     if (command) {

@@ -111,6 +111,8 @@ module.exports = {
             let selectFeature;
             const collector = message.channel.createMessageComponentCollector(componentFilter)
             collector.on('collect', async (interaction) => {
+                await interaction.deferUpdate()
+
                 if (interaction.componentType === 'BUTTON') {
                     const selectedButton = interaction.customId.split('.')[1]
                     if (selectedButton === 'left') {
@@ -140,7 +142,6 @@ module.exports = {
                     if (selectOption in config)
                         selectFeature = selectOption
                     const isLimit = (selectFeature || selectOption )in limit
-                    await interaction.deferUpdate()
                     const component = components()
                     component[2].setOptions(lang.antiraid.config.configMenu(enable[selectOption], isLimit))
 

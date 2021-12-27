@@ -9,8 +9,9 @@ module.exports = async (oneforall, interaction) => {
     });
     const {polls} = guildData
 
-    if(!polls.length) return interaction.deferUpdate()
+    if(!polls.length) return
     const poll = polls.find(poll => poll.id === interaction.message.id)
+    if(!poll) return
     if(poll.alreadyVoted.includes(interaction.user.id)) return interaction.reply({content: 'Vous avez déjà voté', ephemeral: true})
 
     if(interaction.customId.includes('yes')) poll.yes += 1
@@ -22,7 +23,7 @@ module.exports = async (oneforall, interaction) => {
         timestamp: poll.endAt,
         description: `${oneforall.handlers.langHandler.get(guildData.lang).yes}: **${poll.yes}** \`(${((poll.yes / (poll.yes + poll.no)) *  100).toFixed(0)}%)\`\n\n${oneforall.handlers.langHandler.get(guildData.lang).no}: **${poll.no}** \`(${((poll.no / (poll.yes + poll.no)) * 100).toFixed(0)}%)\`\n\nTemps restant: <t:${oneforall.functions.dateToEpoch(new Date(poll.endAt))}:R>`,
     }
-    interaction.message.edit({embeds: [embed]})
+    interaction.message.edit({embeds: [embed]}).catch(() => {})
     await interaction.deferUpdate()
     guildData.polls = polls
     guildData.save()

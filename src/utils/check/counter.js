@@ -17,7 +17,7 @@ module.exports = async (oneforall) => {
                                         key === 'boostCount' ? guild.premiumSubscriptionCount : (await guild.members.fetch()).filter(member => member.premiumSince).size
                             channel.edit({
                                 name: `${guildData.counters[key].name.replace('{count}', value.toLocaleString())}`
-                            })
+                            }).catch(() => {})
                         }
                     }
                 }

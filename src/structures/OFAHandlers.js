@@ -84,7 +84,7 @@ class CommandHandler {
         const pull = require(file);
         if (pull.name)
             this.commandList.set(pull.name.toLowerCase(), pull);
-        if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(alias => this.aliases.set(alias.toLowerCase(), pull.name));
+        if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(alias => this.aliases.set(alias.toLowerCase(), pull));
         delete require.cache[require.resolve(file)];
     }
 }

@@ -180,6 +180,13 @@ module.exports = function (database, modelName, config) {
               type: DataTypes.JSON,
               allowNull: true,
               default: "#36393E"
+            },
+            {
+                name: 'blacklistRoles',
+                isValue: true,
+                type: DataTypes.JSON,
+                allowNull: true,
+                default: [],
             }
 
         ]

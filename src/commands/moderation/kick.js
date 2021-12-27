@@ -41,7 +41,7 @@ module.exports = {
         const moderationPosition = message.member.roles.highest.position;
         if (moderationPosition < memberPosition && message.guild.ownerId !== message.author.id && !oneforall.isOwner(message.author.id)) return oneforall.functions.tempMessage(message, lang.kick.errorRl(member.user.username))
         member.kick(reason).then(() => {
-            message.channel.send({ embeds: [lang.kick.success(user.toString(), reason, message.author.toString())] })
+            message.channel.send({ embeds: [lang.kick.success(member.toString(), reason, message.author.toString())] })
         }).catch(e => {
             console.log(e)
             oneforall.functions.tempMessage(message, lang.kick.error)
