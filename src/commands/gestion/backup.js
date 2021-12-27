@@ -23,31 +23,44 @@ module.exports = {
     run: async (oneforall, message, guildData, memberData, args) => {
         const subCommand = args[0]
         const lang = guildData.langManager
-        const userBackups = oneforall.managers.backupsManager.getAndCreateIfNotExists(message.author.id, {
-            userId: message.author.id
-        })
+    
+        let userBackups = (await oneforall.shard.broadcastEval((client, { authorId }) => {
+            return client.managers.backupsManager.getAndCreateIfNotExists(authorId, {
+                userId: authorId
+            }).backups
+        }, { context: { authorId: message.author.id } })).reduce((acc, backup, i, array) => {
+            return [...backup]
+        }, [])
+        userBackups = userBackups.filter((backup, i) => userBackups.indexOf(backup) == i)
         if (subCommand === 'create') {
             let backupRoles = args.includes('roles')
             let backupEmojis = args.includes('emojis')
             let backupChannels = args.includes('channels')
             let backupBans = args.includes('bans')
             const doNotBackup = [!backupRoles ? "roles" : null, !backupEmojis ? "emojis" : null, !backupChannels ? "channels" : null, !backupBans ? "bans" : null]
-            const loading = await message.channel.send('Creating the backup...')
+            const loading = await message.channel.send('Loading ...')
             backup.create(message.guild, {
                 maxMessagesPerChannel: 0,
                 jsonSave: false,
                 jsonBeautify: true,
                 doNotBackup
             }).then(backupData => {
-                userBackups.backups.push(backupData)
-                userBackups.save().then(() => {
-                    loading.edit({content: lang.backup.create.success(backupData.id)})
-                })
+                userBackups.push(backupData)
+                oneforall.shard.broadcastEval((client, { authorId, backupData }) => {
+                    client.managers.backupsManager.getAndCreateIfNotExists(authorId, {
+                        userId: authorId
+                    }).backups.push(backupData)
+                }, { context: { authorId: message.author.id, backupData } }).then(() =>{ 
+                    oneforall.managers.backupsManager.getAndCreateIfNotExists(message.author.id, {
+                        userId: message.author.id
+                    }).save()
+                    loading.edit({ content: lang.backup.create.success(backupData.id) })})
+                
             })
         }
         if (subCommand === 'load') {
             const backupId = args[1]
-            const backupData = userBackups.backups.find(backup => backup.id === backupId)
+            const backupData = userBackups.find(backup => backup.id === backupId)
             if (!backupData) return oneforall.functions.tempMessage(message, lang.backup.backupNotFound)
             await backup.load(backupData, message.guild, {
                 clearGuildBeforeRestore: true
@@ -57,16 +70,26 @@ module.exports = {
             const backupId = args[1]
             const backupData = userBackups.backups.find(backup => backup.id === backupId)
             if (!backupData) return oneforall.functions.tempMessage(message, lang.backup.backupNotFound)
-            userBackups.backups = userBackups.backups.filter(backup => backup.id !== backupData.id)
-            userBackups.save().then(() => {
-                oneforall.functions.tempMessage(message, lang.backup.delete.success(backupId))
+            userBackups = userBackups.filter(backup => backup.id !== backupData.id)
+            oneforall.shard.broadcastEval((client, { authorId, userBackups }) => {
+                client.managers.backupsManager.getAndCreateIfNotExists(authorId, {
+                    userId: authorId
+                }).backups = userBackups
+                
+
+            }, { context: { authorId: message.author.id, userBackups } }).then(() => { 
+                oneforall.functions.tempMessage(message, lang.backup.delete.success(backupId)) 
+                oneforall.managers.backupsManager.getAndCreateIfNotExists(message.author.id, {
+                    userId: message.author.id
+                }).save()
             })
+           
         }
         if (subCommand === 'list') {
-            if (!userBackups.backups.length) return oneforall.functions.tempMessage(message, 'No backups')
+            if (!userBackups.length) return oneforall.functions.tempMessage(message, 'No backups')
             const backupsName = [];
             const backupsId = [];
-            for (const backup of userBackups.backups) {
+            for (const backup of userBackups) {
                 backupsName.push(backup.name + '  **:**');
                 backupsId.push(backup.id);
             }
@@ -94,7 +117,7 @@ module.exports = {
         }
         if (subCommand === 'info') {
             const backupId = args[1]
-            const backupData = userBackups.backups.find(backup => backup.id === backupId)
+            const backupData = userBackups.find(backup => backup.id === backupId)
             if (!backupData) return oneforall.functions.tempMessage(message, lang.backup.backupNotFound)
             const channels = backupData.channels.categories.map(category => category.children)
             const embed = {
