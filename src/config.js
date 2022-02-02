@@ -1,9 +1,9 @@
 module.exports = {
-    token: "ODY0NTI2MzkwMTc0OTQxMTg0.YO2u8Q.Nq7_N_7avkKn4CRiK9irGzNP80k",
+    token: "k",
     prefix: '!',
     database: {
         username: 'takefydev',
-        password: 'murphy7777',
+        password: ',',
         name: 'oneforall'
     },
     owners: ["708047733994553344", "659038301331783680", "295947937756872709"]
