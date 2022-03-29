@@ -120,6 +120,7 @@ module.exports = {
                         emoji = tempEmoji
                     }
                 }
+                console.log(emoji);
                 if (reactRole.emojiRoleMapping.has(!emoji.id ? emoji.name : emoji.id)) return errorMessage(guildData.langManager.reactrole.emojiAlready)
                 reactRole.emojiRoleMapping.set(!emoji.id ? emoji.name : emoji.id, role.id)
                 return await updateEmbed()
@@ -157,6 +158,7 @@ module.exports = {
                 if (!reactRole.emojiRoleMapping.size) return errorMessage(guildData.langManager.reactrole.noEmoji)
                 const fetchedMsg = await message.guild.channels.cache.get(reactRole.channel).messages.fetch(reactRole.message)
                 for (const [key, value] of reactRole.emojiRoleMapping) {
+                    console.log(key)
                     await fetchedMsg.react(`${key}`)
                 }
                 reactRole.emojiRoleMapping = Object.fromEntries(reactRole.emojiRoleMapping);

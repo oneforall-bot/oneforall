@@ -91,11 +91,30 @@ module.exports = function (database, modelName, config) {
                         antiLink: '2/10s',
                         antiToken: '10/1Os',
                         antiMassMention: '10/10s',
-
                     },
                     activeLimits: {
                         antiToken: {recentJoined: [], counter: 0}
                     },
+                    channelBypass: {
+                        webhookUpdate: [],
+                        roleCreate: [],
+                        roleUpdate: [],
+                        roleDelete: [],
+                        channelCreate: [],
+                        channelUpdate: [],
+                        channelDelete: [],
+                        antiSpam: [],
+                        antiMassBan: [],
+                        antiBot: [],
+                        roleAdd: [],
+                        antiLink: [],
+                        antiMassKick: [],
+                        antiDc: [],
+                        nameUpdate: [],
+                        vanityUpdate: [],
+                        antiToken: [],
+                        antiMassMention: [],
+                    }
 
                 },
 

@@ -43,7 +43,7 @@ module.exports = async (oneforall, message) => {
             });
             memberData.permissionManager = new oneforall.Permission(oneforall, message.guild.id, message.author.id, memberData, guildData);
             console.log(`Command ${command.name} ${args.join(' ')} has been executed on ${message.guild.name} by ${message.author.username}`);
-            return command.run(oneforall, message, guildData, memberData, args).catch(console.error);
+            return command.run(oneforall, message, guildData, memberData, args)
 
         }
 
@@ -87,7 +87,7 @@ module.exports = async (oneforall, message) => {
         guildData.langManager = oneforall.handlers.langHandler.get(guildData.lang);
         console.log(`Command ${command.name} ${args.join(' ')} has been executed on ${message.guild.name} by ${message.author.username}`);
             
-        command.run(oneforall, message,guildData, memberData, args).catch(console.error);
+        command.run(oneforall, message,guildData, memberData, args)
     }
 
 

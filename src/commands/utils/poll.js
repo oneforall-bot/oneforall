@@ -22,7 +22,8 @@ module.exports = {
   */
    run: async (oneforall, message, guildData, memberData, args) => {
     const lang = guildData.langManager
-    const subCommand = args[0]
+    const subCommand = args[0];
+
     if(subCommand === 'create'){
         const question = args.slice(3).join(" ")
         const time = args[2]
