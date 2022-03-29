@@ -8,8 +8,10 @@ module.exports = async (oneforall, guild) => {
     oneforall.managers.rolesManager.filter(g => g.guildId === guild.id).forEach(g_ => g_.delete())
     oneforall.managers.membersManager.filter(g => g.guildId === guild.id).forEach(g => g.delete())
     oneforall.managers.groupsManager.filter(g => g.guildId === guild.id).forEach(g => g.delete())
-    oneforall.managers.groupsManager.filter(g => g.guildId === guild.id).forEach(g => g.delete())
+    oneforall.managers.mutesManager.filter(g => g.guildId === guild.id).forEach(g => g.delete())
+    oneforall.managers.rolesManager.filter(g => g.guildId === guild.id).forEach(g => g.delete())
     oneforall.slashReloaded.delete(guild.id)
+    if(!guild.available) return
     const embed = {
         title: `Oneforall retirer de ${guild.name}`,
         fields: [
@@ -19,7 +21,7 @@ module.exports = async (oneforall, guild) => {
             },
             {
                 name: 'membercount',
-                value: guild.memberCount.toString()
+                value: guild.memberCount?.toString() || 'N/A'
             }
         ]
     }

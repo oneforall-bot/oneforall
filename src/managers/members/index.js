@@ -55,16 +55,13 @@ module.exports = function (database, modelName) {
                 allowNull: true,
                 isValue: true,
                 default: {
-                    join: 0, leave: 0, fake: 0, bonus: 0, get total(){
-                        const x =  this.join - this.leave - this.bonus
-                        return x < 0 ? 0 : x
-                    }
+                    join: 0, leave: 0, fake: 0, bonus: 0
                 }
             },
             {
                 name: 'xp',
                 type: DataTypes.JSON,
-                allowNull: false,
+                allowNull: true,
                 isValue: true,
                 default: {xp: 0, level: 0, lastUpdated: new Date()}
             },

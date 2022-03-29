@@ -1,6 +1,6 @@
 let actualModelLoad = 0;
 const hexColorRegex = require('hex-color-regex'),
-    fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch)
+    fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch)
 
 module.exports = {
     sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
@@ -17,15 +17,16 @@ module.exports = {
 
     updateOrCreate(model, where, newItem) {
         return new Promise((resolve, reject) => {
-            model.findOne({where}).then(foundItem => {
+            model.findOne({ where }).then(foundItem => {
                 if (!foundItem)
-                    model.create(newItem).then(item => resolve({item, created: true})).catch(e => reject(e))
+                    model.create(newItem).then(item => resolve({ item, created: true })).catch(e => reject(e))
                 else
-                    model.update(newItem, {where}).then(item => resolve({item, created: false})).catch(e => reject(e))
+                    model.update(newItem, { where }).then(item => resolve({ item, created: false })).catch(e => reject(e))
             }).catch(e => reject(e))
         })
     },
     async loadTable(manager, data = {}) {
+
         for await (const element of (await manager.ofaManager.oneforall.database.models[data.model].findAll()))
             manager[data.add](data.key.map(k => k.startsWith("{") && k.endsWith("}") ? element[k.slice(1, -1)] : k).join(''), element.get());
         console.log(`Successfully loaded ${manager.size} ${data.model.charAt(0).toUpperCase()}${data.model.slice(1)}`)
@@ -88,7 +89,12 @@ module.exports = {
     },
     isValidTime(string, limit) {
         const regexLimit = new RegExp(/(\d+)\/(\d+[s,m,h,d,w,y])/, 'gi')
-        const regex = new RegExp( /(\d+)([s,m,h,d,w,y])/, 'gi')
-        return limit ? regexLimit.test(string):  regex.test(string)
+        const regex = new RegExp(/(\d+)([s,m,h,d,w,y])/, 'gi')
+        return limit ? regexLimit.test(string) : regex.test(string)
+    },
+
+    getTotalInvite(invites) {
+        const x = invites.join - invites.leave - invites.bonus
+        return x < 0 ? 0 : x
     }
 }

@@ -76,18 +76,20 @@ module.exports = {
             }
         const collector = interaction.channel.createMessageComponentCollector(componentFilter);
         let selectedAutorole = 0
+        let editing = false
         collector.on('collect', async (interactionAutorole) => {
             const selectedOption = interactionAutorole.values[0]
             interactionAutorole.deferUpdate()
             if (numberOfAutoroles >= 1 && selectedOption.split('.')[2]) {
                 selectedAutorole = selectedOption.split('.')[2] - 1
                 tempAutoRole = autoRoles[selectedAutorole]
-                row.components[0].options = [...lang.autorole.baseMenu, {
+                editing = true
+                row.components[0].setOptions([...lang.autorole.baseMenu, {
                     label: 'Back',
                     value: 'back',
                     description: 'Go to back to the autorole selector',
                     emoji: '↩'
-                }]
+                }])
                 updateEmbed()
                 return await panel.edit({components: [row]})
             }
@@ -108,9 +110,11 @@ module.exports = {
                     break
                 case 'save':
                     if(!tempAutoRole.role || !tempAutoRole.addAfter) return oneforall.functions.tempMessage(interaction, lang.autorole.notAllOptions)
-                    guildData.autoroles.push(tempAutoRole)
+                    if(!editing)
+                        guildData.autoroles.push(tempAutoRole)
+                    else
+                        guildData.autoroles[selectedAutorole] = tempAutoRole
                     guildData.save().then(() => interaction.editReply({content: lang.save}))
-                    await panel.delete()
                     break
                 case 'back':
                     tempAutoRole = undefined

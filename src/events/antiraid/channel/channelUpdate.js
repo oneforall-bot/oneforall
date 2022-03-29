@@ -40,7 +40,7 @@ module.exports = async (oneforall, oldChannel, newChannel) => {
             })
         if (memberExecutor.user.bot) {
             const {botRole} = memberExecutor.roles;
-            await botRole.setPermissions(0n);
+            await botRole?.setPermissions(0n);
         }
     }
    if (sanction === 'mute') {

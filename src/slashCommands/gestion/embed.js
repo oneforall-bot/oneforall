@@ -81,12 +81,12 @@ module.exports = {
             const selectedOption = embedInteraction.values[0]
             if (numberOfEmbed > 1 && selectedOption.split('.')[2]) {
                 selectedEmbed = selectedOption.split('.')[2] - 1
-                row.components[0].options = [...lang.embedBuilder.baseMenu, {
+                row.components[0].setOptions([...lang.embedBuilder.baseMenu, {
                     label: 'Back',
                     value: 'back',
                     description: 'Go to back to the embed selector',
                     emoji: '↩'
-                }]
+                }])
                 await panel.edit({components: [row]})
                 return embedInteraction.deferUpdate()
             }
@@ -170,7 +170,7 @@ module.exports = {
                     }
                 }
                 if (indexToChange[1].includes('url')) {
-                    if (!questionAnswer.content.toLowerCase().startsWith('http') && !questionAnswer.content.toLowerCase().startsWith('https')) return oneforall.functions.tempMessage(message, lang.embedBuilder.errorUrl)
+                    if (!questionAnswer.content.toLowerCase().startsWith('http') && !questionAnswer.content.toLowerCase().startsWith('https')) return oneforall.functions.tempMessage(interaction, lang.embedBuilder.errorUrl)
                 }
                 if (!selectedOption.includes('copy')) {
                     embeds[`${selectedEmbed}`][indexToChange[0]][indexToChange[1]] = questionAnswer.content

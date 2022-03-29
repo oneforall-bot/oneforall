@@ -3,17 +3,18 @@ module.exports = function (database, modelName, config) {
         const DataTypes = database.DataTypes;
         const data = [
             {
-                name: "id",
-                type: DataTypes.INTEGER,
-                autoIncrement: true,
-                primaryKey: true
+                name: "guildId",
+                type: DataTypes.STRING(25),
+                allowNull: false,
+                primaryKey: true,
+                isWhere: true
             },
             {
-                name: "guildId",
-                type: DataTypes.TEXT,
+                name: 'prefix',
+                isValue: true,
+                type: DataTypes.STRING(25),
                 allowNull: false,
-
-                isWhere: true
+                default: config.prefix
             },
             {
                 name: "lang",
@@ -90,11 +91,30 @@ module.exports = function (database, modelName, config) {
                         antiLink: '2/10s',
                         antiToken: '10/1Os',
                         antiMassMention: '10/10s',
-
                     },
                     activeLimits: {
                         antiToken: {recentJoined: [], counter: 0}
                     },
+                    channelBypass: {
+                        webhookUpdate: [],
+                        roleCreate: [],
+                        roleUpdate: [],
+                        roleDelete: [],
+                        channelCreate: [],
+                        channelUpdate: [],
+                        channelDelete: [],
+                        antiSpam: [],
+                        antiMassBan: [],
+                        antiBot: [],
+                        roleAdd: [],
+                        antiLink: [],
+                        antiMassKick: [],
+                        antiDc: [],
+                        nameUpdate: [],
+                        vanityUpdate: [],
+                        antiToken: [],
+                        antiMassMention: [],
+                    }
 
                 },
 
@@ -179,6 +199,13 @@ module.exports = function (database, modelName, config) {
               type: DataTypes.JSON,
               allowNull: true,
               default: "#36393E"
+            },
+            {
+                name: 'blacklistRoles',
+                isValue: true,
+                type: DataTypes.JSON,
+                allowNull: true,
+                default: [],
             }
 
         ]

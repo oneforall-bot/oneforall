@@ -114,7 +114,7 @@ module.exports = {
             })
 
             function updateEmbed() {
-                row.components[0].options = lang.soutien.config.baseMenu(tempSoutien.enable)
+                row.components[0].setOptions(lang.soutien.config.baseMenu(tempSoutien.enable))
                 panel.edit({embeds: [embed()], components: [row]})
             }
 

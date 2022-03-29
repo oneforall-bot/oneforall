@@ -14,13 +14,13 @@ module.exports = async (oneforall) => {
                             if(member.presence?.status === 'online' || member.presence?.status === 'dnd' || member.presence?.status === 'idle')
                                 member.roles.remove(soutien.role, `Ready check for non soutien member`).then(() => {
                                     console.log(`Removed soutien role to ${member.user.username}`)
-                                })
+                                }).catch(() => {})
                     })
                 if(memberWithStatusButNotRole.size > 0)
                     memberWithStatusButNotRole.forEach(member => {
                             member.roles.add(soutien.role, `Ready check for soutien`).then(() => {
                                 console.log(`Added soutien role to ${member.user.username}`)
-                            })
+                            }).catch(() => {})
                     })
             }
 
